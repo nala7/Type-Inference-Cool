@@ -50,11 +50,15 @@ param_list %= param + comma + param_list, lambda h,s: [ s[1] ] + s[3]
 
 param %= idx + colon + idx, lambda h,s: [s[1], s[3]]
 
-expr_list %= expr + semi, lambda h,s: [s[1]]
+expr_list %= expr, lambda h,s: [s[1]]
 expr_list %= expr + semi + expr_list, lambda h,s: [s[1]] + s[3]
 
 expr = idx + arrow + expr, lambda h,s: AssignNode(s[1], s[3])
-###############
+expr = expr + dot + idx + opar + expr_list + cpar, lambda h,s: CallNode(s[1], s[3], s[5])
+##<id>(<expr>,...,<expr>)
+## <expr>@<type>.id(<expr>,...,<expr>)
+
+############
 
 expr %= let + idx + colon + idx + equal + expr, lambda h,s:VarDeclarationNode(s[2], s[4], s[6])
 expr %= let + idx + equal + expr, lambda h,s: AssignNode(s[2], s[4])

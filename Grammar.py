@@ -10,7 +10,7 @@ program = G.NonTerminal('<program>', startSymbol=True)
 class_list, def_class = G.NonTerminals('<class-list> <def-class>')
 feature_list, def_attr, def_func, let_var, branch = G.NonTerminals('<feature-list> <def-attr> <def-func> <let_var> <branch>')
 param_list, param, expr_list, block_expr_list, let_var_list, branch_list = G.NonTerminals('<param-list> <param> <expr-list> <block_expr_list> <let_var_list> <branch_list>')
-expr, arith, term, factor, atom = G.NonTerminals('<expr> <arith> <term> <factor> <atom>')
+expr, arith, boolean, term, factor, atom = G.NonTerminals('<expr> <arith> <bool> <term> <factor> <atom>')
 func_call, arg_list  = G.NonTerminals('<func-call> <arg-list>')
 
 
@@ -18,10 +18,10 @@ func_call, arg_list  = G.NonTerminals('<func-call> <arg-list>')
 classx, let, defx, printx = G.Terminals('class let def print')
 inherits, ifx, thenx, elsex, fi, whilex, loop, pool = G.Terminals('inherits if then else fi while loop pool')
 let, inx, case, of, esac, isvoid = G.Terminals('let in case of esac isvoid')
-semi, colon, comma, dot, opar, cpar, ocur, ccur = G.Terminals('; : , . ( ) { } ')
+semi, colon, comma, dot, opar, cpar, ocur, ccur, quotation = G.Terminals('; : , . ( ) { } "')
 left_arrow, right_arrow, at = G.Terminals('<- => @')
-equal, plus, minus, star, div, greater, greater_equal = G.Terminals('= + - * / < <=')
-idx, num, new, notx = G.Terminals('id int new not')
+equal, plus, minus, star, div, less, less_equal = G.Terminals('= + - * / < <=')
+idx, num, strx, new, notx, truex, falsex = G.Terminals('id int str new not true false')
 
 
 # productions
@@ -82,9 +82,12 @@ expr %= case + expr + of + branch_list + esac, lambda h,s: CaseNode(s[2], s[4])
 
 expr %= isvoid + expr, lambda h,s: s[2]
 
-expr %= 
+expr %= boolean, lambda h,s: s[1]
 
-atom %= new + idx, lambda h,s: InstantiateNode(s[2])
+boolean %= expr + less + expr, lambda h,s: LessNode(s[1], s[3])
+boolean %= expr + less_equal + expr, lambda h,s: LessEqualNode(s[1], s[3])
+boolean %= expr + equal + expr, lambda h,s: EqualNode(s[1], s[3])
+boolean %= notx + expr, lambda h,s: NotNode(s[2])
 
 expr %= arith, lambda h,s: s[1]
 
@@ -99,14 +102,11 @@ term %= factor, lambda h,s: s[1]
 factor %= atom, lambda h,s: s[1]
 factor %= opar + expr + cpar, lambda h,s: s[2]
 
+atom %= new + idx, lambda h,s: InstantiateNode(s[2])
 atom %= num, lambda h,s: ConstantNumNode(s[1])
 atom %= idx, lambda h,s: VariableNode(s[1])
-atom %= func_call, lambda h,s: s[1]
-atom %= new + idx + opar + cpar, lambda h,s: InstantiateNode(s[2])
-
-func_call %= atom + dot + idx + opar + arg_list + cpar, lambda h,s: CallNode(s[1], s[3], s[5])
-
-arg_list %= expr, lambda h,s: [ s[1] ]
-arg_list %= expr + comma + arg_list, lambda h,s: [ s[1] ] + s[3]
+atom %= opar + expr + cpar, lambda h,s: s[2]
+atom %= truex, lambda h,s: BoolNode(s[1])
+atom %= quotation + strx + quotation, lambda h,s: StringNode(strx)
 
 if __name__ == '__main__': print(G)

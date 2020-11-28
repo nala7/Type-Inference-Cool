@@ -76,6 +76,10 @@ class IsVoidNode(ExpressionNode):
     def __init__(self, expr):
         self.expr = expr
 
+class NotNode(ExpressionNode):
+    def __init__(self, expr):
+        self.expr = expr
+
 class AtomicNode(ExpressionNode):
     def __init__(self, lex):
         self.lex = lex
@@ -91,15 +95,11 @@ class VariableNode(AtomicNode):
     pass
 class StringNode(AtomicNode):
     pass
-class TrueNode(AtomicNode):
-    pass
-class FalseNode(AtomicNode):
+class BoolNode(AtomicNode):
     pass
 class InstantiateNode(AtomicNode):
     pass
 class ComplementNode(AtomicNode):
-    pass
-class NotNode(AtomicNode):
     pass
 class PlusNode(BinaryNode):
     pass
@@ -109,9 +109,9 @@ class StarNode(BinaryNode):
     pass
 class DivNode(BinaryNode):
     pass
+class LessNode(BinaryNode):
+    pass
+class LessEqualNode(BinaryNode):
+    pass
 class EqualNode(BinaryNode):
-    pass
-class GreaterNode(BinaryNode):
-    pass
-class GreaterEqualNode(BinaryNode):
     pass

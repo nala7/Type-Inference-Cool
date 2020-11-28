@@ -8,17 +8,20 @@ G = Grammar()
 # non-terminals
 program = G.NonTerminal('<program>', startSymbol=True)
 class_list, def_class = G.NonTerminals('<class-list> <def-class>')
-feature_list, def_attr, def_func = G.NonTerminals('<feature-list> <def-attr> <def-func>')
-param_list, param, expr_list = G.NonTerminals('<param-list> <param> <expr-list>')
+feature_list, def_attr, def_func, let_var, branch = G.NonTerminals('<feature-list> <def-attr> <def-func> <let_var> <branch>')
+param_list, param, expr_list, block_expr_list, let_var_list, branch_list = G.NonTerminals('<param-list> <param> <expr-list> <block_expr_list> <let_var_list> <branch_list>')
 expr, arith, term, factor, atom = G.NonTerminals('<expr> <arith> <term> <factor> <atom>')
 func_call, arg_list  = G.NonTerminals('<func-call> <arg-list>')
 
 
 # terminals
-classx, let, defx, printx, inherits = G.Terminals('class let def print inherits')
-semi, colon, comma, dot, opar, cpar, ocur, ccur, arrow = G.Terminals('; : , . ( ) { } <-')
-equal, plus, minus, star, div = G.Terminals('= + - * /')
-idx, num, new = G.Terminals('id int new')
+classx, let, defx, printx = G.Terminals('class let def print')
+inherits, ifx, thenx, elsex, fi, whilex, loop, pool = G.Terminals('inherits if then else fi while loop pool')
+let, inx, case, of, esac, isvoid = G.Terminals('let in case of esac isvoid')
+semi, colon, comma, dot, opar, cpar, ocur, ccur = G.Terminals('; : , . ( ) { } ')
+left_arrow, right_arrow, at = G.Terminals('<- => @')
+equal, plus, minus, star, div, greater, greater_equal = G.Terminals('= + - * / < <=')
+idx, num, new, notx = G.Terminals('id int new not')
 
 
 # productions
@@ -35,33 +38,54 @@ feature_list %= def_func + feature_list, lambda h,s: [s[1]] + s[2]
 feature_list %= G.Epsilon, lambda h,s: []
 
 def_attr %= idx + colon + idx + semi, lambda h,s: AttrDeclarationNode(s[1], s[3])
-def_attr %= idx + colon + idx + arrow + expr + semi, lambda h,s: AttrDeclarationNode(s[1], s[3], s[5])
+def_attr %= idx + colon + idx + left_arrow + expr + semi, lambda h,s: AttrDeclarationNode(s[1], s[3], s[5])
 
 param_list %= param + comma + param_list, lambda h,s: [s[1]] + s[3]
 param_list %= param , lambda h,s: [s[1]] 
 
-func_param = idx + colon + idx
+param %= idx + colon + idx, lambda h,s: [s[1], s[3]]
+
+func_param = idx + colon + idx, lambda h,s: [s[1], s[3]]
+
 
 def_func %= idx + opar + param_list + cpar + colon + idx + ocur + expr + ccur + semi, lambda h,s: FuncDeclarationNode(s[1], s[3], s[6], s[8])
 def_func %= defx+ idx + opar + param_list + cpar + colon + idx + ocur + expr_list + ccur, lambda h,s: FuncDeclarationNode(s[2], s[4], s[7], s[9])
 
-param_list %= param, lambda h,s: [ s[1] ]
-param_list %= param + comma + param_list, lambda h,s: [ s[1] ] + s[3]
-
-param %= idx + colon + idx, lambda h,s: [s[1], s[3]]
+expr %= idx + left_arrow + expr, lambda h,s: AssignNode(s[1], s[3])
+expr %= expr + dot + idx + opar + expr_list + cpar, lambda h,s: CallNode(s[1], s[3], s[5])
 
 expr_list %= expr, lambda h,s: [s[1]]
 expr_list %= expr + semi + expr_list, lambda h,s: [s[1]] + s[3]
 
-expr = idx + arrow + expr, lambda h,s: AssignNode(s[1], s[3])
-expr = expr + dot + idx + opar + expr_list + cpar, lambda h,s: CallNode(s[1], s[3], s[5])
-##<id>(<expr>,...,<expr>)
-## <expr>@<type>.id(<expr>,...,<expr>)
+expr %= idx + opar + expr_list + cpar, lambda h,s: CallNode('SELF_TYPE', idx, expr_list)
 
-############
+expr %= expr + at + idx + dot + idx + opar + expr_list + cpar, lambda h,s: CallNode(s[1], s[5], s[7], s[3])
+expr %= ifx + expr + thenx + expr + elsex + expr + fi, lambda h,s: CondNode(s[2], s[4], s[6])
+expr %= whilex + expr + loop + expr + pool, lambda h,s: LoopNode(s[2], s[4])
 
-expr %= let + idx + colon + idx + equal + expr, lambda h,s:VarDeclarationNode(s[2], s[4], s[6])
-expr %= let + idx + equal + expr, lambda h,s: AssignNode(s[2], s[4])
+block_expr_list %= expr + semi, lambda h,s: s[1]
+block_expr_list %= expr + semi + block_expr_list, lambda h,s: [s[1]] + s[3]
+
+expr %= ocur + block_expr_list + ccur, lambda h,s: s[2]
+
+let_var %= idx + colon + idx, lambda h,s: [s[1], s[3]]
+let_var %= idx + colon + idx + left_arrow + expr, lambda h,s: [s[1], s[3], s[5]]
+let_var_list %= let_var, lambda h,s: s[1]
+let_var_list %= let_var + comma + let_var_list, lambda h,s: [s[1]] + s[3]
+
+expr %= let + let_var_list + inx + expr, lambda h,s: LetNode(s[2], s[4])
+
+branch %= idx + colon + idx + right_arrow + expr, lambda h,s: [s[1], s[3], s[5]]
+branch_list %= branch + branch_list, lambda h,s: [s[1]] + s[2]
+
+expr %= case + expr + of + branch_list + esac, lambda h,s: CaseNode(s[2], s[4])
+
+expr %= isvoid + expr, lambda h,s: s[2]
+
+expr %= 
+
+atom %= new + idx, lambda h,s: InstantiateNode(s[2])
+
 expr %= arith, lambda h,s: s[1]
 
 arith %= arith + plus + term, lambda h,s: PlusNode(s[1], s[3])

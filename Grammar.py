@@ -1,5 +1,5 @@
-from AST.AST_Hierarchy import *
 from cmp.pycompiler import Grammar
+from AST.AST_Hierarchy import *
 
 # grammar
 G = Grammar()
@@ -44,7 +44,8 @@ def_attr %= idx + colon + idx + left_arrow + expr + semi, lambda h,s: AttrDeclar
 
 def_func %= defx + idx + opar + param_list + cpar + colon + idx + ocur + expr + ccur + semi, lambda h,s: FuncDeclarationNode(s[2], s[4], s[7], s[9])
 
-expr %= ocur + block_expr_list + ccur, lambda h,s: BlockNode(s[2])
+param_list %= param, lambda h,s: [ s[1] ]
+param_list %= param + comma + param_list, lambda h,s: [ s[1] ] + s[3]
 
 param %= idx + colon + idx, lambda h,s: (s[1], s[3])
 
@@ -55,20 +56,8 @@ expr %= letx + let_var_list + inx + expr, lambda h,s: LetNode(s[2], s[4])
 expr %= casex + expr + ofx + branch_list + esacx, lambda h,s: CaseNode(s[2], s[4])
 expr %= arith, lambda h,s: s[1]
 
-expr %= let + let_var_list + inx + expr, lambda h,s: LetNode(s[2], s[4])
-
-let_var_list %= let_var, lambda h,s: [s[1]]
-let_var_list %= let_var + comma + let_var_list, lambda h,s: [s[1]] + s[3]
-let_var %= idx + colon + idx, lambda h,s: (s[1], s[3], None)
-let_var %= idx + colon + idx + left_arrow + expr, lambda h,s: (s[1], s[3], s[5])
-
-expr %= case + expr + of + branch_list + esac, lambda h,s: CaseNode(s[2], s[4])
-
-branch_list %= branch, lambda h,s:[s[1]]
-branch_list %= branch + branch_list, lambda h,s: [s[1]] + s[2]
-branch %= idx + colon + idx + right_arrow + expr + semi, lambda h,s: (s[1], s[3], s[5])
-
-expr %= new + idx, lambda h,s: InstantiateNode(s[2])
+expr_list %= expr + semi, lambda h,s: [s[1]]
+expr_list %= expr + semi + expr_list, lambda h,s: [s[1]] + s[3]
 
 let_var_list %= param , lambda h,s: [(s[1],None)]
 let_var_list %= param + left_arrow + expr, lambda h,s: [(s[1], s[3])]
@@ -80,11 +69,6 @@ branch_list %= param + right_arrow + expr + semi + branch_list, lambda h,s: [(s[
 
 arith %= arith + plus + term, lambda h,s: PlusNode(s[1], s[3])
 arith %= arith + minus + term, lambda h,s: MinusNode(s[1], s[3])
-arith %= arith + less + term, lambda h,s: LessNode(s[1], s[3])
-arith %= arith + less_equal + term, lambda h,s: LessEqualNode(s[1], s[3])
-arith %= arith + equal + term, lambda h,s: EqualNode(s[1], s[3])
-arith %= arith + expr, lambda h,s: NotNode(s[2])
-
 arith %= term, lambda h,s: s[1]
 
 term %= term + star + factor, lambda h,s: StarNode(s[1], s[3])
@@ -96,19 +80,10 @@ factor %= opar + expr + cpar, lambda h,s: s[2]
 
 atom %= num, lambda h,s: ConstantNumNode(s[1])
 atom %= idx, lambda h,s: VariableNode(s[1])
-atom %= truex, lambda h,s: BoolNode(s[1])
-atom %= quotation + strx + quotation, lambda h,s: StringNode(strx)
-atom %= idx + left_arrow + atom, lambda h,s: AssignNode(s[1], s[3])
-atom %= isvoid + atom, lambda h,s: IsVoidNode(s[2])
-atom %= notx + atom, lambda h,s: NotNode(s[2])
-atom %= tilde + atom, lambda h,s: ComplementNode(s[2])
 atom %= func_call, lambda h,s: s[1]
 atom %= new + idx, lambda h,s: InstantiateNode(s[2])
 
+func_call %= atom + dot + idx + opar + arg_list + cpar, lambda h,s: CallNode(s[1], s[3], s[5])
 
-func_call %= expr + dot + idx + opar + expr_list + cpar, lambda h,s: CallNode(s[1], s[3], s[5])
-func_call %= idx + opar + expr_list + cpar, lambda h,s: CallNode('SELF_TYPE', s[1], s[3])
-func_call %= expr + at + idx + dot + idx + opar + expr_list + cpar, lambda h,s: CallNode(s[1], s[5], s[7], s[3])
-
-
-if __name__ == '__main__': print(G)
+arg_list %= expr, lambda h,s: [ s[1] ]
+arg_list %= expr + comma + arg_list, lambda h,s: [ s[1] ] + s[3]

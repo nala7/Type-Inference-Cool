@@ -143,6 +143,7 @@ class UnknownToken(Token):
 def tokenizer(G, fixed_tokens):
     def decorate(func):
         def tokenize_text(text):
+            errors = []
             tokens = []
             for lex in text.split():
                 try:
@@ -155,7 +156,30 @@ def tokenizer(G, fixed_tokens):
                         pass
                 tokens.append(token)
             tokens.append(Token('$', G.EOF))
-            return tokens
+
+            to_return_tokens = []
+            str_terminal = None
+            for terminal in G.terminals:
+                if terminal.name == 'str':
+                    str_terminal = terminal
+            for i in range(0, len(tokens)):
+                if(tokens[i].lex == '"'):
+                    str = ''
+                    found_close = False
+                    i+=1
+                    while i < len(tokens):
+                        if tokens[i].lex == '"':
+                            found_close = True
+                            break
+                        str += ' ' + tokens[i]
+                        i+=1
+                    if not found_close:
+                        errors.append('String not closed')
+                    to_return_tokens.append(Token(str, str_terminal))
+                else:
+                    to_return_tokens.append(tokens[i])
+
+            return to_return_tokens, errors
 
 
             #to_return_tokens = []

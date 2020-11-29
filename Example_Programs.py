@@ -22,11 +22,60 @@ program1 = '''
     } ;
     '''
 
-program10 = '''
+class_with_attr = '''
+    class A {
+        a : int ;
+        a : K ;
+    } ;
+    class B {
+        a : int ;
+    } ;
+    '''
+class_with_herency = '''
+    class A inherits K {
+        a : int ;
+        a : K ;
+    } ;
+    class B {
+        a : int ;
+    } ;
+    class W inherits B {
+        s : int ;
+    } ;
+    '''
+class_attr_assignation = '''
+    class A inherits K {
+        a : int <- 6 ;
+        a : K <- 8 + 9 ;
+    } ;
+    class B {
+        a : int ;
+    } ;
+    '''
+method_definition = '''
+    class A inherits K {
+        a : int <- 6 ;
+        a : K <- 8 + 9 ;
+        def f ( ) : A {
+            8
+        } ;
+        def k ( i : int , j : Z ) : int {
+            4
+        } ;
+    } ;
+    class B {
+        a : int ;
+        def j ( m : I ) : A {
+            1
+        } ;
+    } ;
+    '''
+
+let_program = '''
     class A {
         a : int ;
         def suma ( a : int , b : int ) : int {
-            a . f ( 8 + 1 , b )
+            a + 5 / 8 < 7 = true
         } ;
     } ;
     '''

@@ -10,7 +10,7 @@ from SemanticChecker.Type_Checker import TypeChecker
 
 
 
-tokens = tokenize_text(program1)
+tokens = tokenize_text(method_definition)
 pprint_tokens(tokens)
 
 parser = LR1Parser(G)

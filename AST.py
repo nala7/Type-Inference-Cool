@@ -25,7 +25,7 @@ class FuncDeclarationNode(DeclarationNode):
 
 class AttrDeclarationNode(DeclarationNode):
     def __init__(self, idx, typex, expr = None):
-        self.id = idx
+        self.id 
         self.type = typex
         self.expr = expr
 

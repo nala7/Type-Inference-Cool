@@ -1,14 +1,36 @@
 program1 = '''
-class Main inherits IO {
-    main ( ) : AUTO_TYPE {
-        let x : AUTO_TYPE <- 3 + 2 in {
-            case x of
-            y : Int => out_string ( " Ok " ) ;
-            esac
-        }
+    class A {
+        a : int ;
+        def suma ( a : int , b : int ) : int {
+            if { 4 ; 7 + 3 ; } then a + b else a + b + b fi
+        } ;
+        b : int ;
     } ;
-} ;
-'''
+
+    class B inherits A {
+        c : int <- ( 56 + 6 ) ;
+        def f ( d : int , a : A ) : void {
+            while 4 + 4
+            loop let a : F , b : A <- 4 + 6 in 5
+            pool
+        } ;
+        def k ( a : int ) : int {
+            case new A
+            of a : r => 5 + 8 ;
+            esac
+        } ;
+    } ;
+    '''
+
+program10 = '''
+    class A {
+        a : int ;
+        def suma ( a : int , b : int ) : int {
+            let a : F , b : A <- 4 + 6 in 5
+        } ;
+    } ;
+    '''
+
 
 program2 = '''
 class Point {

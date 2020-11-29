@@ -51,12 +51,6 @@ class CaseNode(ExpressionNode):
         self.expr = expr
         self.branch_list = branch_list
 
-class VarDeclarationNode(ExpressionNode):
-    def __init__(self, idx, typex, expr):
-        self.id = idx
-        self.type = typex
-        self.expr = expr
-
 class AssignNode(ExpressionNode):
     def __init__(self, idx, expr):
         self.id = idx

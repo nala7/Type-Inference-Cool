@@ -63,10 +63,11 @@ class AssignNode(ExpressionNode):
         self.expr = expr
 
 class CallNode(ExpressionNode):
-    def __init__(self, obj, idx, args):
+    def __init__(self, obj, idx, args, ancestor_type = None):
         self.obj = obj
         self.id = idx
         self.args = args
+        self.ancestor_type = ancestor_type
 
 class AtomicNode(ExpressionNode):
     def __init__(self, lex):
@@ -82,6 +83,14 @@ class VariableNode(AtomicNode):
     pass
 class InstantiateNode(AtomicNode):
     pass
+class NotNode(AtomicNode):
+    pass
+class IsVoidNode(AtomicNode):
+    pass
+class TildeNode(AtomicNode):
+    pass
+class BoolNode(AtomicNode):
+    pass
 class PlusNode(BinaryNode):
     pass
 class MinusNode(BinaryNode):
@@ -89,4 +98,10 @@ class MinusNode(BinaryNode):
 class StarNode(BinaryNode):
     pass
 class DivNode(BinaryNode):
+    pass
+class LessNode(BinaryNode):
+    pass
+class LessEqualNode(BinaryNode):
+    pass
+class EqualNode(BinaryNode):
     pass

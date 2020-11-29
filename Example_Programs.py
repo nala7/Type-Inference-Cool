@@ -2,7 +2,7 @@ program1 = '''
     class A {
         a : int ;
         def suma ( a : int , b : int ) : int {
-            if { 4 ; 7 + 3 ; } then a + b else a + b + b fi
+            if { 4 ; 7 + 3 ; } then a . func ( 8 + 7 , a ) else a + b + b fi
         } ;
         b : int ;
     } ;
@@ -26,7 +26,7 @@ program10 = '''
     class A {
         a : int ;
         def suma ( a : int , b : int ) : int {
-            let a : F , b : A <- 4 + 6 in 5
+            a . f ( 8 + 1 , b )
         } ;
     } ;
     '''

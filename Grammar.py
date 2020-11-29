@@ -21,9 +21,10 @@ ifx, thenx, elsex, fi = G.Terminals('if then else fi')
 whilex, loopx, poolx = G.Terminals('while loop pool')
 letx, inx = G.Terminals('let in')
 casex, ofx, esacx = G.Terminals('case of esac')
-semi, colon, comma, dot, opar, cpar, ocur, ccur= G.Terminals('; : , . ( ) { }')
-equal, plus, minus, star, div, left_arrow, right_arrow = G.Terminals('= + - * / <- =>')
-idx, num, new = G.Terminals('id int new')
+semi, colon, comma, dot, opar, cpar, ocur, ccur, at= G.Terminals('; : , . ( ) { } @')
+equal, plus, minus, star, div, left_arrow, right_arrow, tilde = G.Terminals('= + - * / <- => ~')
+less, less_equal = G.Terminals('< <=')
+idx, num, new, notx, isvoid, truex, falsex = G.Terminals('id int new not isvoid true false')
 
 
 # productions
@@ -54,7 +55,12 @@ expr %= whilex + expr + loopx + expr + poolx, lambda h,s: LoopNode(s[2], s[4])
 expr %= ocur + expr_list + ccur, lambda h,s: BlockNode(s[2])
 expr %= letx + let_var_list + inx + expr, lambda h,s: LetNode(s[2], s[4])
 expr %= casex + expr + ofx + branch_list + esacx, lambda h,s: CaseNode(s[2], s[4])
+# expr %= notx + expr, lambda h,s: NotNode(s[2])
+# expr %= isvoid + expr, lambda h,s: IsVoidNode(s[2])
+# expr %= tilde  + expr, lambda h,s: TildeNode(s[2])
+expr %= func_call, lambda h,s: s[1]
 expr %= arith, lambda h,s: s[1]
+
 
 expr_list %= expr + semi, lambda h,s: [s[1]]
 expr_list %= expr + semi + expr_list, lambda h,s: [s[1]] + s[3]
@@ -67,8 +73,15 @@ let_var_list %= param + left_arrow + expr + comma + let_var_list, lambda h,s: [(
 branch_list %= param + right_arrow + expr + semi, lambda h,s: [(s[1], s[3])]
 branch_list %= param + right_arrow + expr + semi + branch_list, lambda h,s: [(s[1], s[3])] + s[5]
 
+func_call %= expr + dot + idx + opar + arg_list + cpar, lambda h,s: CallNode(s[1],s[3],s[5])
+func_call %= idx + opar + arg_list + cpar, lambda h,s: CallNode('SELF_TYPE', s[1], s[3])
+func_call %= expr + at + idx + dot + idx + opar + arg_list + cpar, lambda h,s: CallNode(s[1], s[5], s[7], s[3])
+
 arith %= arith + plus + term, lambda h,s: PlusNode(s[1], s[3])
 arith %= arith + minus + term, lambda h,s: MinusNode(s[1], s[3])
+arith %= arith + less + term, lambda h,s: LessNode(s[1], s[3])
+arith %= arith + less_equal + term, lambda h,s: LessEqualNode(s[1], s[3])
+arith %= arith + equal + term, lambda h,s: EqualNode(s[1], s[3])
 arith %= term, lambda h,s: s[1]
 
 term %= term + star + factor, lambda h,s: StarNode(s[1], s[3])
@@ -80,10 +93,11 @@ factor %= opar + expr + cpar, lambda h,s: s[2]
 
 atom %= num, lambda h,s: ConstantNumNode(s[1])
 atom %= idx, lambda h,s: VariableNode(s[1])
-atom %= func_call, lambda h,s: s[1]
+atom %= truex, lambda h,s: BoolNode(s[1])
+atom %= falsex, lambda h,s: BoolNode(s[1])
 atom %= new + idx, lambda h,s: InstantiateNode(s[2])
 
-func_call %= atom + dot + idx + opar + arg_list + cpar, lambda h,s: CallNode(s[1], s[3], s[5])
+
 
 arg_list %= expr, lambda h,s: [ s[1] ]
 arg_list %= expr + comma + arg_list, lambda h,s: [ s[1] ] + s[3]

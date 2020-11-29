@@ -18,17 +18,18 @@ class FormatVisitor(object):
         ans = '\t' * tabs + f'\\__ClassDeclarationNode: class {node.id} {parent} {{ <feature> ... <feature> }}'
         features = '\n'.join(self.visit(child, tabs + 1) for child in node.features)
         return f'{ans}\n{features}'
+
+    @visitor.when(FuncDeclarationNode)
+    def visit(self, node, tabs=0):
+        params = ', '.join(':'.join(param) for param in node.params)
+        ans = '\t' * tabs + f'\\__FuncDeclarationNode: def {node.id}({params}) : {node.type} -> <body>'
+        body = '\n'.join(self.visit(child, tabs + 1) for child in node.body)
+        return f'{ans}\n{body}'
     
     @visitor.when(AttrDeclarationNode)
     def visit(self, node, tabs=0):
-        ans = '\t' * tabs + f'\\__AttrDeclarationNode: {node.id} : {node.type}'
+        ans = '\t' * tabs + f'\\__AttrDeclarationNode: {node.id} : {node.type} <- {node.expr}'
         return f'{ans}'
-    
-    @visitor.when(VarDeclarationNode)
-    def visit(self, node, tabs=0):
-        ans = '\t' * tabs + f'\\__VarDeclarationNode: let {node.id} : {node.type} = <expr>'
-        expr = self.visit(node.expr, tabs + 1)
-        return f'{ans}\n{expr}'
     
     @visitor.when(AssignNode)
     def visit(self, node, tabs=0):
@@ -36,12 +37,6 @@ class FormatVisitor(object):
         expr = self.visit(node.expr, tabs + 1)
         return f'{ans}\n{expr}'
     
-    @visitor.when(FuncDeclarationNode)
-    def visit(self, node, tabs=0):
-        params = ', '.join(':'.join(param) for param in node.params)
-        ans = '\t' * tabs + f'\\__FuncDeclarationNode: def {node.id}({params}) : {node.type} -> <body>'
-        body = '\n'.join(self.visit(child, tabs + 1) for child in node.body)
-        return f'{ans}\n{body}'
 
     @visitor.when(BinaryNode)
     def visit(self, node, tabs=0):

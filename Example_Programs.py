@@ -1,80 +1,36 @@
 program1 = '''
-    class A {
-        a : int ;
-        def suma ( a : int , b : int ) : int {
-            a + b ;
+class Main inherits IO {
+    main ( ) : AUTO_TYPE {
+        let x : AUTO_TYPE <- 3 + 2 in {
+            case x of
+            y : Int => out_string ( " Ok " ) ;
+            esac
         }
-        b : int ;
-    }
-
-    class B : A {
-        c : int ;
-        def f ( d : int , a : A ) : void {
-            let f : int = 8 ;
-            let c = new A ( ) . suma ( 5 , f ) ;
-            c ;
-        }
-    }
-    '''
+    } ;
+} ;
+'''
 
 program2 = '''
-    class A {
-        a : Z ;
-        def suma ( a : int , b : B ) : int {
-            a + b ;
-        }
-        b : int ;
-        c : C ;
-    }
-
-    class B : A {
-        c : A ;
-        def f ( d : int , a : A ) : void {
-            let f : int = 8 ;
-            let c = new A ( ) . suma ( 5 , f ) ;
-            c ;
-        }
-        z : int ;
-        z : A ;
-    }
-
-    class C : Z {
-    }
-
-    class D : A {
-        def suma ( a : int , d : B ) : int {
-            d ;
-        }
-    }
-
-    class E : A {
-        def suma ( a : A , b : B ) : int {
-            a ;
-        }
-    }
-
-    class F : B {
-        def f ( d : int , a : A ) : void {
-            a ;
-        }
-    }
-    '''
+class Point {
+    x : AUTO_TYPE ;
+    y : AUTO_TYPE ;
+    init ( n : Int , m : Int ) : SELF_TYPE {
+    {
+        x <- n ;
+        y <- m ;
+    } } ;
+} ;
+'''
 
 program3 = '''
-    class A {
-        a : int ;
-        def suma ( a : int , b : int ) : int {
-            a + b + new B ( ) ;
-        }
-        b : int ;
-    }
-
-    class B : A {
-        c : A ;
-        def f ( d : int , a : A ) : void {
-            let f : int = 8 ;
-            let c = new A ( ) . suma ( 5 , f ) ;
-            d ;        
-        }
-    }
-    '''
+f ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE {
+    if ( a == 1 ) then b else
+        g ( a + 1 , b / 2 )
+    fi
+}
+g ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE {
+    if ( b == 1 ) then a else
+        f ( a / 2 , b + 1 )
+    fi
+}
+'''

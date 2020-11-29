@@ -35,11 +35,11 @@ class AssignNode(ExpressionNode):
         self.expr = expr
 
 class CallNode(ExpressionNode):
-    def __init__(self, obj, idx, args, typex = None):
+    def __init__(self, obj, idx, args, ancestor = None):
         self.obj = obj
         self.id = idx
         self.args = args
-        self.type = typex
+        self.ancestor = ancestor
 
 class CondNode(ExpressionNode):
     def __init__(self, if_expr, then_expr, else_expr):

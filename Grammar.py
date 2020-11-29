@@ -11,8 +11,13 @@ class_list, def_class = G.NonTerminals('<class-list> <def-class>')
 feature_list, def_attr, def_func = G.NonTerminals('<feature-list> <def-attr> <def-func>')
 param_list, other_param, param, expr_list, let_var_list = G.NonTerminals('<param-list> <other-param> <param> <expr-list> <let-var-list>')
 branch_list, branch = G.NonTerminals('<branch-list> <branch>')
+<<<<<<< HEAD
 expr, comparer, arith, term, factor, atom = G.NonTerminals('<expr> <comparer> <arith> <term> <factor> <atom>')
 func_call, arg_list, other_arg  = G.NonTerminals('<func-call> <arg-list> <other-arg>')
+=======
+expr, arith, term, factor, compare, atom = G.NonTerminals('<expr> <arith> <term> <factor> <atom>')
+func_call, arg_list  = G.NonTerminals('<func-call> <arg-list>')
+>>>>>>> da7021ff98a89805b0ee475662092bf4f6189929
 
 
 # terminals
@@ -69,6 +74,10 @@ term %= term + div + factor, lambda h,s: DivNode(s[1], s[3])
 term %= factor, lambda h,s: s[1]
 
 factor %= atom, lambda h,s: s[1]
+
+compare %= compare + less + atom, lambda h,s: LessNode(s[1], s[3])
+compare %= compare + less_equal + atom, lambda h,s: LessEqualNode(s[1], s[3])
+compare %= compare + equal + atom, lambda h,s: EqualNode(s[1], s[3])
 
 atom %= num, lambda h,s: ConstantNumNode(s[1])
 atom %= idx, lambda h,s: VariableNode(s[1])

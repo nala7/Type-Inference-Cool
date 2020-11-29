@@ -18,7 +18,7 @@ func_call, arg_list  = G.NonTerminals('<func-call> <arg-list>')
 classx, let, defx, printx = G.Terminals('class let def print')
 inherits, ifx, thenx, elsex, fi, whilex, loop, pool = G.Terminals('inherits if then else fi while loop pool')
 let, inx, case, of, esac, isvoid = G.Terminals('let in case of esac isvoid')
-semi, colon, comma, dot, opar, cpar, ocur, ccur, quotation = G.Terminals('; : , . ( ) { } "')
+semi, colon, comma, dot, opar, cpar, ocur, ccur, quotation, tilde = G.Terminals('; : , . ( ) { } " ~')
 left_arrow, right_arrow, at = G.Terminals('<- => @')
 equal, plus, minus, star, div, less, less_equal = G.Terminals('= + - * / < <=')
 idx, num, strx, new, notx, truex, falsex = G.Terminals('id int str new not true false')
@@ -66,7 +66,7 @@ expr %= whilex + expr + loop + expr + pool, lambda h,s: LoopNode(s[2], s[4])
 block_expr_list %= expr + semi, lambda h,s: s[1]
 block_expr_list %= expr + semi + block_expr_list, lambda h,s: [s[1]] + s[3]
 
-expr %= ocur + block_expr_list + ccur, lambda h,s: s[2]
+expr %= ocur + block_expr_list + ccur, lambda h,s: BlockNode(s[2])
 
 let_var %= idx + colon + idx, lambda h,s: [s[1], s[3]]
 let_var %= idx + colon + idx + left_arrow + expr, lambda h,s: [s[1], s[3], s[5]]
@@ -84,10 +84,12 @@ expr %= isvoid + expr, lambda h,s: s[2]
 
 expr %= boolean, lambda h,s: s[1]
 
+boolean %= isvoid + expr, lambda h,s: IsVoidNode(s[2])
 boolean %= expr + less + expr, lambda h,s: LessNode(s[1], s[3])
 boolean %= expr + less_equal + expr, lambda h,s: LessEqualNode(s[1], s[3])
 boolean %= expr + equal + expr, lambda h,s: EqualNode(s[1], s[3])
 boolean %= notx + expr, lambda h,s: NotNode(s[2])
+boolean %= tilde + expr, lambda h,s: ComplementNode(s[2])
 
 expr %= arith, lambda h,s: s[1]
 

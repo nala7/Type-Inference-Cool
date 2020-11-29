@@ -29,12 +29,6 @@ class AttrDeclarationNode(DeclarationNode):
         self.type = typex
         self.expr = expr
 
-class VarDeclarationNode(ExpressionNode):
-    def __init__(self, idx, typex, expr):
-        self.id = idx
-        self.type = typex
-        self.expr = expr
-
 class AssignNode(ExpressionNode):
     def __init__(self, idx, expr):
         self.id = idx
@@ -80,6 +74,10 @@ class NotNode(ExpressionNode):
     def __init__(self, expr):
         self.expr = expr
 
+class ComplementNode(ExpressionNode):
+    def __init__(self, expr):
+        self.expr = expr
+
 class AtomicNode(ExpressionNode):
     def __init__(self, lex):
         self.lex = lex
@@ -98,8 +96,6 @@ class StringNode(AtomicNode):
 class BoolNode(AtomicNode):
     pass
 class InstantiateNode(AtomicNode):
-    pass
-class ComplementNode(AtomicNode):
     pass
 class PlusNode(BinaryNode):
     pass

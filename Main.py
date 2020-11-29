@@ -10,37 +10,37 @@ from SemanticChecker.Type_Checker import TypeChecker
 
 
 
-tokens = tokenize_text(program3)
-#pprint_tokens(tokens)
+tokens = tokenize_text(program1)
+pprint_tokens(tokens)
 
 parser = LR1Parser(G)
 parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
 #print('\n'.join(repr(x) for x in parse))
 #print('\n'.join(repr(x) for x in operations))
 
-ast = evaluate_reverse_parse(parse, operations, tokens)
+#ast = evaluate_reverse_parse(parse, operations, tokens)
 #print(print_ast.FormatVisitor().visit(ast))
 
-errors = []
-collector = TypeCollector(errors)
-collector.visit(ast)
-context = collector.context
-print('Errors:')
-for error in errors: print(error)
-print('Context:')
-print(context)
-
-if not errors:
-    builder = TypeBuilder(context, errors)
-    builder.visit(ast)
-    print('Errors:')
-    for error in errors: print(error)
-    print('Context:')
-    print(context)
-
-
-    if not errors:
-        checker = TypeChecker(context, errors)
-        scope = checker.visit(ast)
-        print('Errors:')
-        for error in errors: print(error)
+#errors = []
+#collector = TypeCollector(errors)
+#collector.visit(ast)
+#context = collector.context
+#print('Errors:')
+#for error in errors: print(error)
+#print('Context:')
+#print(context)
+#
+#if not errors:
+#    builder = TypeBuilder(context, errors)
+#    builder.visit(ast)
+#    print('Errors:')
+#    for error in errors: print(error)
+#    print('Context:')
+#    print(context)
+#
+#
+#    if not errors:
+#        checker = TypeChecker(context, errors)
+#        scope = checker.visit(ast)
+#        print('Errors:')
+#        for error in errors: print(error)

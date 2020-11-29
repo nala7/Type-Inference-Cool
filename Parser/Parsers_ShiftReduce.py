@@ -37,25 +37,41 @@ class ShiftReduceParser:
         operations = []
 
         while True:
+            #print('1')
             state = stack[-1]
+            #print('2')
             lookahead = w[cursor]
+            #print('3')
+            #print(lookahead)
             if self.verbose: print(stack, '<---||--->', w[cursor:])
                 
             #print(lookahead)
             # Your code here!!! (Detect error)
+            #print('4')
+            
+            # action, tag = self.action[state, lookahead]
+            # print(action, tag)
             if not (state, lookahead) in self.action:
-                #print("Falle pq no supe que accion realizar en el estado", state)
+                # print("Falle pq no supe que accion realizar en el estado", state)
+                # for t in self.G.terminals:
+                    # if (state, t.Name) in self.action:
+                        # print(t.Name, self.action[state, t.Name])
                 return None
+            #print('5')
                 
             action, tag = self.action[state, lookahead]
+            #print('6')
             # Your code here!!! (Shift case)
             if action == self.SHIFT:
-                operations.append('SHIFT')
+                # print(lookahead)
+                #operations.append('SHIFT')
                 stack.append(tag)
                 cursor += 1
+                #print('Shift done')
             # Your code here!!! (Reduce case)
             elif action == self.REDUCE:
-                operations.append('REDUCE')
+                # print(tag)
+                #operations.append('REDUCE')
                 length=len(tag.Right)
                 while(length>0):
                     stack.pop()
@@ -63,8 +79,10 @@ class ShiftReduceParser:
                 output.append(tag)
                 last=stack[-1]
                 stack.append(self.goto[last,tag.Left])
+                #print('Reduce done')
             # Your code here!!! (OK case)
             elif action==self.OK:
+                #print('casi q devuelvo la cadena')
                 if get_shift_reduce:
                     return output, operations
                 return output

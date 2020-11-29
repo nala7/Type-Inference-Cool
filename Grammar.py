@@ -9,15 +9,20 @@ G = Grammar()
 program = G.NonTerminal('<program>', startSymbol=True)
 class_list, def_class = G.NonTerminals('<class-list> <def-class>')
 feature_list, def_attr, def_func = G.NonTerminals('<feature-list> <def-attr> <def-func>')
-param_list, param, expr_list = G.NonTerminals('<param-list> <param> <expr-list>')
+param_list, param, expr_list, let_var_list = G.NonTerminals('<param-list> <param> <expr-list> <let-var-list>')
+branch_list, branch = G.NonTerminals('<branch-list> <branch>')
 expr, arith, term, factor, atom = G.NonTerminals('<expr> <arith> <term> <factor> <atom>')
 func_call, arg_list  = G.NonTerminals('<func-call> <arg-list>')
 
 
 # terminals
-classx, let, defx, printx = G.Terminals('class let def print')
-semi, colon, comma, dot, opar, cpar, ocur, ccur = G.Terminals('; : , . ( ) { }')
-equal, plus, minus, star, div = G.Terminals('= + - * /')
+classx, defx, printx, inherits = G.Terminals('class def print inherits')
+ifx, thenx, elsex, fi = G.Terminals('if then else fi')
+whilex, loopx, poolx = G.Terminals('while loop pool')
+letx, inx = G.Terminals('let in')
+casex, ofx, esacx = G.Terminals('case of esac')
+semi, colon, comma, dot, opar, cpar, ocur, ccur= G.Terminals('; : , . ( ) { }')
+equal, plus, minus, star, div, left_arrow, right_arrow = G.Terminals('= + - * / <- =>')
 idx, num, new = G.Terminals('id int new')
 
 
@@ -27,28 +32,40 @@ program %= class_list, lambda h,s: ProgramNode(s[1])
 class_list %= def_class, lambda h,s: [s[1]]
 class_list %= def_class + class_list, lambda h,s: [s[1]] + s[2]
 
-def_class %= classx + idx + ocur + feature_list + ccur, lambda h,s: ClassDeclarationNode(s[2], s[4])
-def_class %= classx + idx + colon + idx + ocur + feature_list + ccur, lambda h,s: ClassDeclarationNode(s[2], s[6], s[4])
+def_class %= classx + idx + ocur + feature_list + ccur + semi, lambda h,s: ClassDeclarationNode(s[2], s[4])
+def_class %= classx + idx + inherits + idx + ocur + feature_list + ccur + semi, lambda h,s: ClassDeclarationNode(s[2], s[6], s[4])
 
 feature_list %= def_attr + feature_list, lambda h,s: [s[1]] + s[2]
 feature_list %= def_func + feature_list, lambda h,s: [s[1]] + s[2]
 feature_list %= G.Epsilon, lambda h,s: []
 
 def_attr %= idx + colon + idx + semi, lambda h,s: AttrDeclarationNode(s[1], s[3])
+def_attr %= idx + colon + idx + left_arrow + expr + semi, lambda h,s: AttrDeclarationNode(s[1], s[3], s[5])
 
-def_func %= defx+ idx + opar + param_list + cpar + colon + idx + ocur + expr_list + ccur, lambda h,s: FuncDeclarationNode(s[2], s[4], s[7], s[9])
+def_func %= defx + idx + opar + param_list + cpar + colon + idx + ocur + expr + ccur + semi, lambda h,s: FuncDeclarationNode(s[2], s[4], s[7], s[9])
 
 param_list %= param, lambda h,s: [ s[1] ]
 param_list %= param + comma + param_list, lambda h,s: [ s[1] ] + s[3]
 
-param %= idx + colon + idx, lambda h,s: [s[1], s[3]]
+param %= idx + colon + idx, lambda h,s: (s[1], s[3])
+
+expr %= ifx + expr + thenx + expr + elsex + expr + fi, lambda h,s: ConditionalNode(s[2], s[4], s[6])
+expr %= whilex + expr + loopx + expr + poolx, lambda h,s: LoopNode(s[2], s[4])
+expr %= ocur + expr_list + ccur, lambda h,s: BlockNode(s[2])
+expr %= letx + let_var_list + inx + expr, lambda h,s: LetNode(s[2], s[4])
+expr %= casex + expr + ofx + branch_list + esacx, lambda h,s: CaseNode(s[2], s[4])
+expr %= arith, lambda h,s: s[1]
 
 expr_list %= expr + semi, lambda h,s: [s[1]]
 expr_list %= expr + semi + expr_list, lambda h,s: [s[1]] + s[3]
 
-expr %= let + idx + colon + idx + equal + expr, lambda h,s:VarDeclarationNode(s[2], s[4], s[6])
-expr %= let + idx + equal + expr, lambda h,s: AssignNode(s[2], s[4])
-expr %= arith, lambda h,s: s[1]
+let_var_list %= param , lambda h,s: [(s[1],None)]
+let_var_list %= param + left_arrow + expr, lambda h,s: [(s[1], s[3])]
+let_var_list %= param + comma + let_var_list, lambda h,s: [(s[1],None)] + s[3]
+let_var_list %= param + left_arrow + expr + comma + let_var_list, lambda h,s: [(s[1],s[3])] + s[5]
+
+branch_list %= param + right_arrow + expr + semi, lambda h,s: [(s[1], s[3])]
+branch_list %= param + right_arrow + expr + semi + branch_list, lambda h,s: [(s[1], s[3])] + s[5]
 
 arith %= arith + plus + term, lambda h,s: PlusNode(s[1], s[3])
 arith %= arith + minus + term, lambda h,s: MinusNode(s[1], s[3])
@@ -64,7 +81,7 @@ factor %= opar + expr + cpar, lambda h,s: s[2]
 atom %= num, lambda h,s: ConstantNumNode(s[1])
 atom %= idx, lambda h,s: VariableNode(s[1])
 atom %= func_call, lambda h,s: s[1]
-atom %= new + idx + opar + cpar, lambda h,s: InstantiateNode(s[2])
+atom %= new + idx, lambda h,s: InstantiateNode(s[2])
 
 func_call %= atom + dot + idx + opar + arg_list + cpar, lambda h,s: CallNode(s[1], s[3], s[5])
 

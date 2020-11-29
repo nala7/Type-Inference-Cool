@@ -1,4 +1,4 @@
-from AST import *
+from AST.AST_Hierarchy import *
 from cmp.pycompiler import Grammar
 
 # grammar

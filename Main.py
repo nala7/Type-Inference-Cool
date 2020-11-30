@@ -10,16 +10,19 @@ import AST.AST_Print as print_ast
 
 
 
-tokens = tokenize_text(program1)
+tokens = tokenize_text(method_definition)
 pprint_tokens(tokens)
 
 parser = LR1Parser(G)
 parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
-#print('\n'.join(repr(x) for x in parse))
-#print('\n'.join(repr(x) for x in operations))
+print('PARSE')
+print('\n'.join(repr(x) for x in parse))
+print('OPERATIONS')
+print('\n'.join(repr(x) for x in operations))
 
-#ast = evaluate_reverse_parse(parse, operations, tokens)
-#print(print_ast.FormatVisitor().visit(ast))
+ast = evaluate_reverse_parse(parse, operations, tokens)
+print(ast)
+print(print_ast.FormatVisitor().visit(ast))
 
 #errors = []
 #collector = TypeCollector(errors)

@@ -43,14 +43,21 @@ class TypeChecker:
             self.visit(feature, scope)
         
     @visitor.when(AttrDeclarationNode)
-    def visit(self, node, scope):
+    def visit(self, node:AttrDeclarationNode, scope):
         #print('attr declaration')
         var = self.find_var(node.id,scope)
+        attr_type = self.context.get_type(node.type)
         if var is not None:
             self.errors.append(ATTR_ALREADY_DEFINED % (node.id))
         else:
-            attr_type = self.context.get_type(node.type)
             scope.define_variable(node.id, attr_type)
+        
+        if node.val is not None: 
+            return_type = self.visit(node.val, scope) 
+        else: 
+            return_type = attr_type
+        if not attr_type.conforms_to(return_type):
+            self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, attr_type.name))
 
     @visitor.when(FuncDeclarationNode)
     def visit(self, node, scope):
@@ -70,31 +77,14 @@ class TypeChecker:
         for i in range(0, len(method.param_names)):
             child_scope.define_variable(method.param_names[i], method.param_types[i])
         
-        expr_type = None
-        for expr in node.body:
-            expr_type = self.visit(expr, child_scope)
+
+        expr_type = self.visit(node.body, child_scope)
         if self.current_method.return_type.name != VoidType().name and not self.current_method.return_type.conforms_to(expr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name ,self.current_method.return_type.name))
 
-        
-    @visitor.when(VarDeclarationNode)
+    @visitor.when(ConditionalNode)
     def visit(self, node, scope):
-        #print('var declaraion')
-        try:
-            var_type = self.context.get_type(node.type)
-        except SemanticError as error:
-            self.errors.append(error.text)
-            var_type = ErrorType()
         
-        if scope.is_local(node.id):
-            self.errors.append(LOCAL_ALREADY_DEFINED % (node.id,self.current_method.name))
-        else:
-            scope.define_variable(node.id, var_type)
-        expr_type = self.visit(node.expr, scope)
-        if not var_type.conforms_to(expr_type):
-            self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
-        
-        return var_type
             
     @visitor.when(AssignNode)
     def visit(self, node, scope):
@@ -114,6 +104,7 @@ class TypeChecker:
         return var_type
     
     
+
     @visitor.when(CallNode)
     def visit(self, node, scope):
         #print('call')

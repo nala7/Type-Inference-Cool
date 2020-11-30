@@ -157,6 +157,7 @@ def tokenizer(G, fixed_tokens):
                 tokens.append(token)
             tokens.append(Token('$', G.EOF))
 
+<<<<<<< HEAD
             return tokens
             # to_return_tokens = []
             # str_terminal = None
@@ -181,31 +182,38 @@ def tokenizer(G, fixed_tokens):
             #         to_return_tokens.append(tokens[i])
 
             # return to_return_tokens, errors
+=======
+            # return tokens
 
+            to_return_tokens = []
+            str_terminal = None
+            for terminal in G.terminals:
+                if terminal.Name == 'str':
+                    str_terminal = terminal
+            i = 0
+            while i < len(tokens):
+                if(tokens[i].lex == '"'):
+                    string = ''
+                    found_close = False
+                    i+=1
+                    while i < len(tokens):
+                        if tokens[i].lex == '"':
+                            found_close = True
+                            i += 1
+                            break
+                        if string == '': string += tokens[i].lex
+                        else: string += ' ' + tokens[i].lex
+                        i+=1
+                    if not found_close:
+                        errors.append('String not closed')
+                    to_return_tokens.append(Token(str, str_terminal))
+                else:
+                    to_return_tokens.append(tokens[i])
+                    i+=1
 
-            #to_return_tokens = []
-            #str_terminal = None
-            #for terminal in G.terminals:
-            #    if terminal.name == 'str':
-            #        str_terminal = terminal
-            #for i in range(0, len(tokens)):
-            #    if(tokens[i].lex == '"'):
-            #        str = ''
-            #        found_close = False
-            #        i+=1
-            #        while i < len(tokens):
-            #            if tokens[i].lex == '"':
-            #                found_close = True
-            #                break
-            #            str += ' ' + tokens[i]
-            #            i+=1
-            #        if not found_close:
-            #            errors.append('String not closed')
-            #        to_return_tokens.append(Token(str, str_terminal))
-            #    else:
-            #        to_return_tokens.append(tokens[i])
-#
-            #return to_return_tokens, errors
+            return to_return_tokens, errors
+>>>>>>> ALab
+
             
 
         if hasattr(func, '__call__'):

@@ -153,6 +153,27 @@ class IntType(Type):
     def __eq__(self, other):
         return other.name == self.name or isinstance(other, IntType)
 
+class StrType(Type):
+    def __init__(self):
+        Type.__init__(self, 'str')
+
+    def __eq__(self, other):
+        return other.name == self.name or isinstance(other, StrType)
+
+class SelfType(Type):
+    def __init__(self):
+        Type.__init__(self, 'self')
+
+    def __eq__(self, other):
+        return other.name == self.name or isinstance(other, SelfType)
+
+class AutoType(Type):
+    def __init__(self):
+        Type.__init__(self, 'auto')
+
+    def __eq__(self, other):
+        return other.name == self.name or isinstance(other, AutoType)
+
 class Context:
     def __init__(self):
         self.types = {}

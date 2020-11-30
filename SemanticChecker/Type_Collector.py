@@ -4,7 +4,8 @@ from AST.AST_Hierarchy import *
 from cmp.semantic import SemanticError
 from cmp.semantic import Attribute, Method, Type
 from cmp.semantic import VoidType, ErrorType
-from cmp.semantic import IntType, StrType, SelfType, AutoType
+from cmp.semantic import IntType, StrType, BoolType
+from cmp.semantic import SelfType, AutoType
 from cmp.semantic import Context
 
 class TypeCollector(object):

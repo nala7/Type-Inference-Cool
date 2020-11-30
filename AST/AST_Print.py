@@ -24,14 +24,14 @@ class FormatVisitor(object):
     def visit(self, node, tabs=0):
         params = ', '.join(':'.join(param) for param in node.params)
         ans = '\t' * tabs + f'\\__FuncDeclarationNode: def {node.id}({params}) : {node.type} -> <body>'
-        body = '\n'.join(self.visit(child, tabs + 1) for child in node.body)
+        body = self.visit(node.body, tabs + 1)
         return f'{ans}\n{body}'
     
     @visitor.when(AttrDeclarationNode)
     def visit(self, node, tabs=0):
-        val = self.visit(node.val)
-        ans = '\t' * tabs + f'\\__AttrDeclarationNode: {node.id} : {node.type} = {val}'
-        return f'{ans}'
+        ans = '\t' * tabs + f'\\__AttrDeclarationNode: {node.id} : {node.type}  -> <value>'
+        value = self.visit(node.val, tabs + 1)
+        return f'{ans}\n{value}'
 
     @visitor.when(ConditionalNode)
     def visit(self, node, tabs=0):
@@ -44,7 +44,7 @@ class FormatVisitor(object):
     @visitor.when(LoopNode)
     def visit(self, node, tabs=0):
         ans = '\t' * tabs + f'\\__LoopNode: while {node.condition} -> <body>'
-        body = self.visit(node.body)
+        body = self.visit(node.body, tabs + 1)
         return f'{ans}\n{body}'
 
     @visitor.when(BlockNode)
@@ -57,7 +57,7 @@ class FormatVisitor(object):
     @visitor.when(LetNode)
     def visit(self, node, tabs=0):
         params = ', '.join(self.visit(child) for child in node.var_list)
-        body = self.visit(node.body)
+        body = self.visit(node.body, tabs + 1)
         ans = '\t' * tabs + f'\\__LetNode: let {params} in {body}'
         return f'{ans}'
 

@@ -17,7 +17,6 @@ VARIABLE_NOT_DEFINED = 'Variable "%s" is not defined in "%s".'
 INVALID_OPERATION = 'Operation is not defined between "%s" and "%s".'
 METHOD_ARGS_UNMATCH = 'Method "%s" arguments do not match with definition.'
 
-
 class TypeChecker:
     def __init__(self, context, errors=[]):
         self.context = context
@@ -83,6 +82,9 @@ class TypeChecker:
         #pa mi las expresiones q son void retornan VoidType
         if self.current_method.return_type.name != VoidType().name and not self.current_method.return_type.conforms_to(expr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name ,self.current_method.return_type.name))
+        if self.current_method.return_type.name == VoidType().name and expr_type.name != VoidType().name:
+            self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, VoidType().name))
+
 
     @visitor.when(ConditionalNode)
     def visit(self, node, scope):

@@ -216,6 +216,13 @@ class Context:
     def __repr__(self):
         return str(self)
 
+    def find_first_common_ancestor(self, expr_type1, expr_type2):
+        while True:
+            if expr_type1.conforms_to(expr_type2):
+                return expr_type1
+            else:
+                return self.find_first_common_ancestor(expr_type1.parent, expr_type2)
+                
 class VariableInfo:
     def __init__(self, name, vtype):
         self.name = name

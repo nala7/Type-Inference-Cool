@@ -58,8 +58,7 @@ class TypeChecker:
         else: 
             return_type = attr_type
 
-        #lo cambie, me parece q es al reves el conforms
-        if not return_type.conforms_to(attr_type):
+        if not attr_type.conforms_to(return_type):
             self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, attr_type.name))
 
     @visitor.when(FuncDeclarationNode)
@@ -144,8 +143,7 @@ class TypeChecker:
             var_type = var.type
         
         expr_type = self.visit(node.expr, scope)
-        #al reves conforms???
-        if not expr_type.conforms_to(var_type):
+        if not var_type.conforms_to(expr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
         
         #retorna el type d la expr (manual)

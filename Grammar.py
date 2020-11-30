@@ -24,7 +24,7 @@ casex, ofx, esacx = G.Terminals('case of esac')
 semi, colon, comma, dot, opar, cpar, ocur, ccur, at= G.Terminals('; : , . ( ) { } @')
 equal, plus, minus, star, div, left_arrow, right_arrow, tilde = G.Terminals('= + - * / <- => ~')
 less, less_equal = G.Terminals('< <=')
-idx, num, new, str, notx, isvoid, truex, falsex = G.Terminals('id int new str not isvoid true false')
+idx, num, new, strx, notx, isvoid, truex, falsex = G.Terminals('id int new str not isvoid true false')
 
 
 # productions
@@ -43,10 +43,10 @@ feature_list %= G.Epsilon, lambda h,s: []
 def_attr %= idx + colon + idx + semi, lambda h,s: AttrDeclarationNode(s[1], s[3])
 def_attr %= idx + colon + idx + left_arrow + expr + semi, lambda h,s: AttrDeclarationNode(s[1], s[3], s[5])
 
-def_func %= defx + idx + opar + param_list + cpar + colon + idx + ocur + expr + ccur + semi, lambda h,s: FuncDeclarationNode(s[2], s[4], s[7], s[9])
+def_func %= idx + opar + param_list + cpar + colon + idx + ocur + expr + ccur + semi, lambda h,s: FuncDeclarationNode(s[1], s[3], s[6], s[8])
 
 param_list %= G.Epsilon, lambda h,s: []
-param_list %= param + other_param, lambda h,s: [ s[1] ] + s[3]
+param_list %= param + other_param, lambda h,s: [s[1]] + s[2]
 
 param %= idx + colon + idx, lambda h,s: (s[1], s[3])
 
@@ -105,7 +105,7 @@ obj %= idx, lambda h,s: s[1]
 obj %= opar + expr + cpar, lambda h,s: s[2]
 
 arg_list %= G.Epsilon, lambda h,s: []
-arg_list %= expr + other_arg, lambda h,s: [s[1]] + s[3]
+arg_list %= expr + other_arg, lambda h,s: [s[1]] + s[2]
 
 other_arg %= G.Epsilon, lambda h,s: []
 other_arg %= comma + expr + other_arg, lambda h,s: [s[2]] + s[3]

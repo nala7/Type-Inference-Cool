@@ -43,14 +43,21 @@ class TypeChecker:
             self.visit(feature, scope)
         
     @visitor.when(AttrDeclarationNode)
-    def visit(self, node, scope):
+    def visit(self, node:AttrDeclarationNode, scope):
         #print('attr declaration')
         var = self.find_var(node.id,scope)
+        attr_type = self.context.get_type(node.type)
         if var is not None:
             self.errors.append(ATTR_ALREADY_DEFINED % (node.id))
         else:
-            attr_type = self.context.get_type(node.type)
             scope.define_variable(node.id, attr_type)
+        
+        if node.val is not None: 
+            return_type = self.visit(node.val, scope) 
+        else: 
+            return_type = attr_type
+        if not attr_type.conforms_to(return_type):
+            self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, attr_type.name))
 
     @visitor.when(FuncDeclarationNode)
     def visit(self, node, scope):
@@ -70,9 +77,8 @@ class TypeChecker:
         for i in range(0, len(method.param_names)):
             child_scope.define_variable(method.param_names[i], method.param_types[i])
         
-        expr_type = None
-        for expr in node.body:
-            expr_type = self.visit(expr, child_scope)
+
+        expr_type = self.visit(node.body, child_scope)
         if self.current_method.return_type.name != VoidType().name and not self.current_method.return_type.conforms_to(expr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name ,self.current_method.return_type.name))
 

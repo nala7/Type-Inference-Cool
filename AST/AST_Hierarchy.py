@@ -66,10 +66,17 @@ class CallNode(ExpressionNode):
 class AtomicNode(ExpressionNode):
     def __init__(self, lex):
         self.lex = lex
+
 class BinaryNode(ExpressionNode):
     def __init__(self, left, right):
         self.left = left
         self.right = right
+
+class BooleanBinaryNode(BinaryNode):
+    pass
+
+class ArithBinaryNode(BinaryNode):
+    pass
 
 class ConstantNumNode(AtomicNode):
     pass
@@ -85,17 +92,17 @@ class TildeNode(AtomicNode):
     pass
 class BoolNode(AtomicNode):
     pass
-class PlusNode(BinaryNode):
+class PlusNode(ArithBinaryNode):
     pass
-class MinusNode(BinaryNode):
+class MinusNode(ArithBinaryNode):
     pass
-class StarNode(BinaryNode):
+class StarNode(ArithBinaryNode):
     pass
-class DivNode(BinaryNode):
+class DivNode(ArithBinaryNode):
     pass
-class LessNode(BinaryNode):
+class LessNode(BooleanBinaryNode):
     pass
-class LessEqualNode(BinaryNode):
+class LessEqualNode(BooleanBinaryNode):
     pass
-class EqualNode(BinaryNode):
+class EqualNode(BooleanBinaryNode):
     pass

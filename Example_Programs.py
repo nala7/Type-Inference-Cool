@@ -219,7 +219,6 @@ program3 = '''
             " Cuba es una musica vital. "
         } ;
         b : int ;
-<<<<<<< HEAD
     }
 
     class B : A {
@@ -231,7 +230,3 @@ program3 = '''
         }
     }
     '''
-=======
-    } ;
-    '''
->>>>>>> ALab

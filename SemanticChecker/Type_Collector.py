@@ -4,7 +4,7 @@ from AST.AST_Hierarchy import *
 from cmp.semantic import SemanticError
 from cmp.semantic import Attribute, Method, Type
 from cmp.semantic import VoidType, ErrorType
-from cmp.semantic import IntType, StrType, SelfType, AutoType
+from cmp.semantic import IntType, StrType, SelfType, AutoType, BoolType
 from cmp.semantic import Context
 
 class TypeCollector(object):
@@ -23,6 +23,7 @@ class TypeCollector(object):
         self.context.types['void'] = VoidType()
         self.context.types['int'] = IntType()
         self.context.types['str'] = StrType()
+        self.context.types['bool'] = BoolType()
         self.context.types['self'] = SelfType()
         self.context.types['auto'] = AutoType()
         for class_dec_node in node.declarations:

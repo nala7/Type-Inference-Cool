@@ -157,32 +157,6 @@ def tokenizer(G, fixed_tokens):
                 tokens.append(token)
             tokens.append(Token('$', G.EOF))
 
-<<<<<<< HEAD
-            return tokens
-            # to_return_tokens = []
-            # str_terminal = None
-            # for terminal in G.terminals:
-            #     if terminal.name == 'str':
-            #         str_terminal = terminal
-            # for i in range(0, len(tokens)):
-            #     if(tokens[i].lex == '"'):
-            #         str = ''
-            #         found_close = False
-            #         i+=1
-            #         while i < len(tokens):
-            #             if tokens[i].lex == '"':
-            #                 found_close = True
-            #                 break
-            #             str += ' ' + tokens[i]
-            #             i+=1
-            #         if not found_close:
-            #             errors.append('String not closed')
-            #         to_return_tokens.append(Token(str, str_terminal))
-            #     else:
-            #         to_return_tokens.append(tokens[i])
-
-            # return to_return_tokens, errors
-=======
             # return tokens
 
             to_return_tokens = []
@@ -212,9 +186,6 @@ def tokenizer(G, fixed_tokens):
                     i+=1
 
             return to_return_tokens, errors
->>>>>>> ALab
-
-            
 
         if hasattr(func, '__call__'):
             return tokenize_text
@@ -276,3 +247,13 @@ class DisjointNode:
 
     def __repr__(self):
         return str(self)
+
+def find_first_common_ancestor(then_expr_type, else_expr_type):
+    found = False
+    while not found:
+        if then_expr_type.parent.name == else_expr_type.parent.name:
+            found = True
+            return then_expr_type.parent.name
+        else:
+            return find_first_common_ancestor(then_expr_type.parent, else_expr_type.parent)
+            

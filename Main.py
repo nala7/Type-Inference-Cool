@@ -4,9 +4,9 @@ from Parser.Parser_LR1 import LR1Parser
 from Grammar import *
 from cmp.evaluation import evaluate_reverse_parse
 import AST.AST_Print as print_ast
-# from SemanticChecker.Type_Collector import TypeCollector
-# from SemanticChecker.Type_Builder import TypeBuilder
-# from SemanticChecker.Type_Checker import TypeChecker
+from SemanticChecker.Type_Collector import TypeCollector
+from SemanticChecker.Type_Builder import TypeBuilder
+from SemanticChecker.Type_Checker import TypeChecker
 
 
 

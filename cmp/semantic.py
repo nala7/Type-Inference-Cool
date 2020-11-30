@@ -39,10 +39,10 @@ class Type:
         self.name = name
         self.attributes = []
         self.methods = []
-        self.parent = None
+        self.parent = ObjType()
 
     def set_parent(self, parent):
-        if self.parent is not None:
+        if self.parent is not None or self.parent is not ObjType():
             raise SemanticError(f'Parent type is already set for {self.name}.')
         self.parent = parent
 
@@ -136,6 +136,7 @@ class ErrorType(Type):
 class ObjType(Type):
     def __init__(self):
         Type.__init__(self, '<object>')
+        self.parent = None
 
     def conforms_to(self, other):
         return True

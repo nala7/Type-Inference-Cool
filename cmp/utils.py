@@ -248,12 +248,3 @@ class DisjointNode:
     def __repr__(self):
         return str(self)
 
-def find_first_common_ancestor(then_expr_type, else_expr_type):
-    found = False
-    while not found:
-        if then_expr_type.parent.name == else_expr_type.parent.name:
-            found = True
-            return then_expr_type.parent.name
-        else:
-            return find_first_common_ancestor(then_expr_type.parent, else_expr_type.parent)
-            

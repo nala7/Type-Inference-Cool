@@ -82,6 +82,8 @@ class TypeChecker:
         if self.current_method.return_type.name != VoidType().name and not self.current_method.return_type.conforms_to(expr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name ,self.current_method.return_type.name))
 
+    @visitor.when(ConditionalNode)
+    def visit(self, node, scope):
         
             
     @visitor.when(AssignNode)
@@ -102,6 +104,7 @@ class TypeChecker:
         return var_type
     
     
+
     @visitor.when(CallNode)
     def visit(self, node, scope):
         #print('call')

@@ -70,9 +70,9 @@ term %= factor, lambda h,s: s[1]
 
 factor %= atom, lambda h,s: s[1]
 
-comparer %= comparer + less + atom, lambda h,s: LessNode(s[1], s[3])
-comparer %= comparer + less_equal + atom, lambda h,s: LessEqualNode(s[1], s[3])
-comparer %= comparer + equal + atom, lambda h,s: EqualNode(s[1], s[3])
+compare %= compare + less + atom, lambda h,s: LessNode(s[1], s[3])
+compare %= compare + less_equal + atom, lambda h,s: LessEqualNode(s[1], s[3])
+compare %= compare + equal + atom, lambda h,s: EqualNode(s[1], s[3])
 
 atom %= num, lambda h,s: ConstantNumNode(s[1])
 atom %= idx, lambda h,s: VariableNode(s[1])

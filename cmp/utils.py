@@ -158,6 +158,7 @@ def tokenizer(G, fixed_tokens):
             tokens.append(Token('$', G.EOF))
 
             return tokens
+
             # to_return_tokens = []
             # str_terminal = None
             # for terminal in G.terminals:

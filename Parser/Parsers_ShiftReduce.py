@@ -64,14 +64,14 @@ class ShiftReduceParser:
             # Your code here!!! (Shift case)
             if action == self.SHIFT:
                 # print(lookahead)
-                #operations.append('SHIFT')
+                operations.append('SHIFT')
                 stack.append(tag)
                 cursor += 1
                 #print('Shift done')
             # Your code here!!! (Reduce case)
             elif action == self.REDUCE:
                 # print(tag)
-                #operations.append('REDUCE')
+                operations.append('REDUCE')
                 length=len(tag.Right)
                 while(length>0):
                     stack.pop()

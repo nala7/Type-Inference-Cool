@@ -77,24 +77,6 @@ class TypeChecker:
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name ,self.current_method.return_type.name))
 
         
-    @visitor.when(VarDeclarationNode)
-    def visit(self, node, scope):
-        #print('var declaraion')
-        try:
-            var_type = self.context.get_type(node.type)
-        except SemanticError as error:
-            self.errors.append(error.text)
-            var_type = ErrorType()
-        
-        if scope.is_local(node.id):
-            self.errors.append(LOCAL_ALREADY_DEFINED % (node.id,self.current_method.name))
-        else:
-            scope.define_variable(node.id, var_type)
-        expr_type = self.visit(node.expr, scope)
-        if not var_type.conforms_to(expr_type):
-            self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
-        
-        return var_type
             
     @visitor.when(AssignNode)
     def visit(self, node, scope):

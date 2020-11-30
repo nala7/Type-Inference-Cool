@@ -10,16 +10,16 @@ from SemanticChecker.Type_Checker import TypeChecker
 
 
 
-tokens = tokenize_text(method_definition)
+tokens = tokenize_text(program1)
 pprint_tokens(tokens)
 
-parser = LR1Parser(G)
-parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
+# parser = LR1Parser(G)
+# parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
 #print('\n'.join(repr(x) for x in parse))
 #print('\n'.join(repr(x) for x in operations))
 
-#ast = evaluate_reverse_parse(parse, operations, tokens)
-#print(print_ast.FormatVisitor().visit(ast))
+# ast = evaluate_reverse_parse(parse, operations, tokens)
+# print(print_ast.FormatVisitor().visit(ast))
 
 #errors = []
 #collector = TypeCollector(errors)

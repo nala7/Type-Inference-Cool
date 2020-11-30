@@ -70,17 +70,105 @@ method_definition = '''
         } ;
     } ;
     '''
-
-let_program = '''
-    class A {
+using_boolean_op = '''
+    class A inherits K {
+        a : int <- 6 = 0 ;
+        a : K <- 8 + 9 < 9 ;
+        def f ( ) : A {
+            8
+        } ;
+        def k ( i : int , j : Z ) : int {
+            8 = 34
+        } ;
+    } ;
+    class B {
         a : int ;
-        def suma ( a : int , b : int ) : int {
-            a + 5 / 8 < 7 = true
+        def j ( m : I ) : A {
+            1
         } ;
     } ;
     '''
-
-
+large_compare_expr = '''
+    class A inherits K {
+        a : int <- 6 = 0 ;
+        a : K <- 8 + 9 < 9 ;
+        def f ( ) : A {
+            ( 3 + 56 ) + 84 < 200 = true
+        } ;
+        def k ( i : int , j : Z ) : int {
+            8 = 34
+        } ;
+    } ;
+    class B {
+        a : int ;
+        def j ( m : I ) : A {
+            true = false
+        } ;
+    } ;
+    '''
+let_program = '''
+    class A inherits K {
+        a : int <- 6 = 0 ;
+        a : K <- 8 + 9 < 9 ;
+        def f ( ) : A {
+            ( 3 + 56 ) + 84 < 200 = true
+        } ;
+        def k ( i : int , j : Z ) : int {
+            let x : H , y : int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
+        } ;
+    } ;
+    class B {
+        a : int ;
+        def j ( m : I ) : A {
+            ( let m : K in 7 + 7 ) < 8 = false
+        } ;
+    } ;
+    '''
+while_program = '''
+    class A inherits K {
+        a : int <- 6 = 0 ;
+        a : K <- 8 + 9 < 9 ;
+        def f ( ) : A {
+            ( 3 + 56 ) + 84 < 200 = true
+        } ;
+        def k ( i : int , j : Z ) : int {
+            let x : H , y : int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
+        } ;
+    } ;
+    class B {
+        a : int ;
+        def j ( m : I ) : A {
+            ( let m : K in 7 + 7 ) < 8 = false
+        } ;
+    } ;
+    class C {
+        def f ( ) : void {
+            while true loop 3 pool
+        } ;
+    } ;
+    '''
+func_call_program = '''
+    class A inherits K {
+        a : K <- 8 + 9 = 9 ;
+        def f ( ) : A {
+            a . f ( )
+        } ;
+        def k ( i : int , j : Z ) : int {
+            let x : H , y : int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
+        } ;
+    } ;
+    class B {
+        a : int ;
+        def j ( m : I ) : A {
+            ( let m : K in 7 + 7 ) = 8 = false
+        } ;
+    } ;
+    class C {
+        def f ( ) : void {
+            ( a . k ( 1 , 6 ) ) . f ( 7 )
+        } ;
+    } ;
+    '''
 program2 = '''
     class A {
         a : Z ;

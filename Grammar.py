@@ -43,7 +43,7 @@ feature_list %= G.Epsilon, lambda h,s: []
 def_attr %= idx + colon + idx + semi, lambda h,s: AttrDeclarationNode(s[1], s[3])
 def_attr %= idx + colon + idx + left_arrow + expr + semi, lambda h,s: AttrDeclarationNode(s[1], s[3], s[5])
 
-def_func %= defx + idx + opar + param_list + cpar + colon + idx + ocur + expr + ccur + semi, lambda h,s: FuncDeclarationNode(s[2], s[4], s[7], s[9])
+def_func %= idx + opar + param_list + cpar + colon + idx + ocur + expr + ccur + semi, lambda h,s: FuncDeclarationNode(s[1], s[3], s[6], s[8])
 
 param_list %= G.Epsilon, lambda h,s: []
 param_list %= param + other_param, lambda h,s: [ s[1] ] + s[2]

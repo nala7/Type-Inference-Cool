@@ -1,7 +1,7 @@
 program1 = '''
     class A {
         a : int ;
-        def suma ( a : int , b : int ) : int {
+        suma ( a : int , b : int ) : int {
             if { 4 ; 7 + 3 ; } then a . func ( 8 + 7 , a ) else a + b + b fi
         } ;
         b : int ;
@@ -9,12 +9,12 @@ program1 = '''
 
     class B inherits A {
         c : int <- ( 56 + 6 ) ;
-        def f ( d : int , a : A ) : void {
+        f ( d : int , a : A ) : void {
             while 4 + 4
             loop let a : F , b : A <- 4 + 6 in 5
             pool
         } ;
-        def k ( a : int ) : int {
+        k ( a : int ) : int {
             case new A
             of a : r => 5 + 8 ;
             esac

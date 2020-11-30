@@ -39,7 +39,7 @@ class Type:
         self.name = name
         self.attributes = []
         self.methods = []
-        self.parent = ObjType()
+        self.parent = None
 
     def set_parent(self, parent):
         if self.parent is not None or self.parent is not ObjType():
@@ -203,6 +203,7 @@ class Context:
         if name in self.types:
             raise SemanticError(f'Type with the same name ({name}) already in context.')
         typex = self.types[name] = Type(name)
+        typex.parent = ObjType()
         return typex
 
     def get_type(self, name:str):

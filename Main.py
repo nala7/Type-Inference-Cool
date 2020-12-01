@@ -11,41 +11,59 @@ from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
 from SemanticChecker.Type_Inferer import TypeInferer
 
+nti = st.text_area('Ingrese el programa', '')
 
 tokens, errors = tokenize_text(program0)
+
 pprint_tokens(tokens)
 
 parser = LR1Parser(G)
 parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
-# print('PARSE')
-# print('\n'.join(repr(x) for x in parse))
-# print('OPERATIONS')
-# print('\n'.join(repr(x) for x in operations))
+st.text("Parser")   
+#print('PARSE')
+# # print('\n'.join(repr(x) for x in parse))
+# # print('OPERATIONS')
+# # print('\n'.join(repr(x) for x in operations))
 
 ast = evaluate_reverse_parse(parse, operations, tokens)
-# print(print_ast.FormatVisitor().visit(ast))
+st.text(print_ast.FormatVisitor().visit(ast))
+# # print(print_ast.FormatVisitor().visit(ast))
 
 errors = []
 collector = TypeCollector(errors)
 collector.visit(ast)
 context = collector.context
-print('Errors:')
-for error in errors: print(error)
-print('Context:')
-print(context)
+st.text('Type Collector')
+st.text('Errors')
+st.text(errors)
+st.text('Context')
+st.text(context)
+# print('Errors:')
+# s = ''
+# for error in errors: s+= error
+# print('Context:')
+# print(context)
 
 if not errors:
    builder = TypeBuilder(context, errors)
    builder.visit(ast)
-   print('Errors:')
-   for error in errors: print(error)
-   print('Context:')
-   print(context)
+   # print('Errors:')
+   # for error in errors: print(error)
+   # print('Context:')
+   # print(context)
+   st.text('Type Builder')
+   st.text('Errors')
+   st.text(errors)
+   st.text('Context')
+   st.text(context)
 
 
    if not errors:
       checker = TypeChecker(context, errors)
       scope = checker.visit(ast)
+      st.text('Type Checker')
+      st.text('Errors')
+      st.text(errors)
       print('Errors:')
       for error in errors: print(error)
 
@@ -71,4 +89,13 @@ if not errors:
          print('attr')
          for at in attr_infered: print(at)
          print('metj=h')
-         for at in method_infered: print(at)
+         st.text('Type Inferer')
+         st.text('Metodos inferidos')
+         s = ''
+         for at in method_infered: s+= 'metodo '+ at[0] + ' en clase ' + at[1]
+         st.text(s)
+
+         st.text('Atributos inferidos')
+         s = ''
+         for at in attr_infered: s+= 'atributo '+ at[0] + ' en clase ' + at[1]
+         st.text(s)

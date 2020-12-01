@@ -29,17 +29,8 @@ program01 = '''
 '''
 program0 = '''
     class A { 
-        a : int ;
+        a : AUTO_TYPE <- 5 ;
     } ;
-    class B inherits A {
-        g ( a : int , c : A ) : A {
-            if not ( 7 + 9 < 2 ) then a = 5 else c fi
-        } ;
-        h ( l : int ) : void {
-            let let_name : int <- 5 + 2 , k : int <- 95 in ( k + 9 )
-        } ; 
-    } ;
-
 '''
 program1 = '''
     class A {

@@ -1,21 +1,30 @@
 import cmp.visitor as visitor
 from cmp.semantic import Scope, SelfType
 from cmp.semantic import SemanticError
-from cmp.semantic import Attribute, Method, Type
+from cmp.semantic import Attribute, Method, Type, AutoType
 from cmp.semantic import VoidType, ErrorType, IntType, BoolType, ObjType
 from cmp.semantic import Context
 from AST.AST_Hierarchy import *
 
 VAR_AUTOTYPE = 'Variable "%s" type not infered in "%s".'
 METH_AUTOTYPE = 'Method "%s" return type not infered in "%s"'
+WRONG_SIGNATURE = 'Method "%s" already defined in "%s" with a different signature.'
+SELF_IS_READONLY = 'Variable "self" is read-only.'
+LOCAL_ALREADY_DEFINED = 'Variable "%s" is already defined in method "%s".'
+ATTR_ALREADY_DEFINED = 'Attribute "%s" is already defined in ancestor class.'
+INCOMPATIBLE_TYPES = 'Cannot convert "%s" into "%s".'
+VARIABLE_NOT_DEFINED = 'Variable "%s" is not defined in "%s".'
+INVALID_OPERATION = 'Operation is not defined between "%s" and "%s".'
+METHOD_ARGS_UNMATCH = 'Method "%s" arguments do not match with definition.'
+
 
 class TypeInferer:
-    def __init__(self, context, errors=[]):
+    def __init__(self, context, errors=[], autotypes = []):
         self.context = context
         self.current_type = None
         self.current_method = None
         self.errors = errors
-        self.autotypes = []
+        self.autotypes = autotypes
     
     @visitor.on('node')
     def visit(self, node, scope):
@@ -73,13 +82,13 @@ class TypeInferer:
 
         if self.current_method.return_type.name != VoidType().name and not self.current_method.return_type.conforms_to(expr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name ,self.current_method.return_type.name))
-        # if self.current_method.return_type.name == VoidType().name and expr_type.name != VoidType().name:
-            # self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, VoidType().name))
 
     @visitor.when(ConditionalNode)
     def visit(self, node, scope):
         print('conditional')
         cond_type = self.visit(node.if_expr, scope)
+        if not cond_type.conforms_to(BoolType()):
+            self.errors.append(INCOMPATIBLE_TYPES % (cond_type.name, BoolType().name))
 
         then_expr_type = self.visit(node.then_expr, scope)
         else_expr_type = self.visit(node.else_expr, scope)
@@ -92,7 +101,9 @@ class TypeInferer:
     def visit(self, node, scope):
         print('loop')
         
-        self.visit(node.condition, scope)
+        cond_type = self.visit(node.condition, scope)
+        if not cond_type.conforms_to(BoolType()):
+            self.errors.append(INCOMPATIBLE_TYPES % (cond_type.name, BoolType().name))
         
         self.visit(node.body, scope)
 
@@ -113,24 +124,22 @@ class TypeInferer:
         child_scope = scope.create_child()
         for var, typex, expr in node.var_list:
             child_scope = child_scope.create_child()
-            try:
-                var_type = self.context.get_type(typex)
-            except SemanticError as error:
-                self.errors.append(error.text)
-                var_type = ErrorType()
+            var_type = self.context.get_type(typex)
 
             if expr is not None:
                 expr_type = self.visit(expr, child_scope)
+                if var_type.name == AutoType().name:
+                    var_type = expr_type
+                    if expr_type.name == AutoType().name:
+                        self.autotypes.append(VAR_AUTOTYPE%(var, self.current_type.name))             
             else:
                 expr_type = var_type
 
-            #Check autotype
             if not var_type.conforms_to(expr_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (var_type.name, expr_type.name))
 
             child_scope.define_variable(var, var_type)
 
-        print(node.body)
         return self.visit(node.body, child_scope)
 
     @visitor.when(CaseNode)
@@ -141,20 +150,20 @@ class TypeInferer:
         return_type = None
         child_scope = scope.create_child()
         for var, typex, expr in node.branch_list:
-            try:
-                var_type = self.context.get_type(typex)
-            except SemanticError as error:
-                self.errors.append(error.text)
-                var_type = ErrorType()
-            
-            if return_type is None:
-                return_type = var_type
-
+            var_type = self.context.get_type(typex)
             
             child_scope = child_scope.create_child()
             expr_type = self.visit(expr, child_scope)
             if not var_type.conforms_to(expr_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (var_type.name, expr_type.name))
+                
+            if var_type.name == AutoType().name:
+                var_type = expr_type
+                if expr_type.name == AutoType().name:
+                    self.autotypes.append(VAR_AUTOTYPE%(var, self.current_type.name))    
+
+            if return_type is None:
+                return_type = var_type          
 
             return_type = self.context.find_first_common_ancestor(var_type, return_type)
 
@@ -165,15 +174,16 @@ class TypeInferer:
     def visit(self, node, scope):
         print('assign')        
         var = self.find_var(node.id, scope)
-        if var is None:    
-            self.errors.append(VARIABLE_NOT_DEFINED % (node.id, self.current_method.name))
-            var_type = ErrorType()
-        else:
-            var_type = var.type
         
         expr_type = self.visit(node.expr, scope)
-        if not var_type.conforms_to(expr_type):
-            self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
+        
+        if var.type.name == AutoType().name:
+            var.type = expr_type
+            if expr_type.name == AutoType().name:
+                self.autotypes.append(VAR_AUTOTYPE%(var.name, self.current_type.name))    
+
+        if not var.type.conforms_to(expr_type):
+            self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var.type.name))
         
         return expr_type
 
@@ -182,10 +192,12 @@ class TypeInferer:
         print('call')
         if node.ancestor_type is None:
             #if obj is id
-            if node.obj == 'SELF_TYPE':
+            if node.obj == 'self':
                 obj_type = self.current_type
             else:
                 obj_type = self.visit(node.obj, scope)
+                if obj_type.name == AutoType().name:
+                    self.errors.append('Method '+id+' not callable')
         else:
             # print('ancestor exists')
             obj_type = Context.get_type(node.ancestor_type)
@@ -198,13 +210,16 @@ class TypeInferer:
             self.errors.append(error.text)
             return ErrorType()
 
-        if not len(method.param_names) == len(node.args):
-            self.errors.append(METHOD_ARGS_UNMATCH % (method.name))
-        else:
-            for i in range(0, len(node.args)):
-                arg_type = self.visit(node.args[i], scope)
-                if not method.param_types[i].conforms_to(arg_type):
-                    self.errors.append(INCOMPATIBLE_TYPES % (arg_type.name, method.param_types[i].name))
+        for i in range(0, len(node.args)):
+            arg_type = self.visit(node.args[i], scope)
+            param_type = method.param_types[i]
+            if param_type.name == AutoType().name:
+                method.param_types[i] = arg_type
+                if arg_type.name == AutoType().name:
+                    self.autotypes.append(VAR_AUTOTYPE%(method.param_name[i], method.name)) 
+
+            if not method.param_types[i].conforms_to(arg_type):
+                self.errors.append(INCOMPATIBLE_TYPES % (arg_type.name, method.param_types[i].name))
         return method.return_type
             
     @visitor.when(ArithBinaryNode)
@@ -213,9 +228,7 @@ class TypeInferer:
         left_type = self.visit(node.left, scope)
         right_type = self.visit(node.right, scope)
         int_type = IntType()
-        print('left',left_type)
-        print('right',right_type)
-        if not left_type.name == int_type.name or not right_type.name == int_type.name:
+        if not left_type.conforms_to(int_type) or not right_type.conforms_to(int_type):
             self.errors.append(INVALID_OPERATION % (left_type.name, right_type.name))
         return int_type
         
@@ -225,7 +238,7 @@ class TypeInferer:
         left_type = self.visit(node.left, scope)
         right_type = self.visit(node.right, scope)
         int_type = IntType()
-        if not left_type.name == int_type.name or not right_type.name == int_type.name:
+        if not left_type.conforms_to(int_type) or not right_type.conforms_to(int_type):
             self.errors.append(INVALID_OPERATION % (left_type.name, right_type.name))
         return BoolType()
 
@@ -244,61 +257,37 @@ class TypeInferer:
         print('variable')
         
         var = self.find_var(node.lex, scope)
-        if var is None:
-            self.errors.append(VARIABLE_NOT_DEFINED%(node.lex,self.current_method.name))
-            return ErrorType()
-        else:
-            var_type = var.type
-            return var_type
+        var_type = var.type
+        return var_type
 
     @visitor.when(InstantiateNode)
     def visit(self, node, scope):
         print('instantiate')
-        try:
-            instance_type = self.context.get_type(node.lex)
-        except SemanticError as error:
-            self.errors.append(error.text)
-            instance_type = ErrorType()
+        instance_type = self.context.get_type(node.lex)
+
         return instance_type
     
     @visitor.when(NotNode)
     def visit(self, node, scope):
         print('not node')
         expr_type = self.visit(node.expr, scope)
-        if (expr_type.name != BoolType().name):
+        if not expr_type.conforms_to(BoolType()):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, BoolType().name))
         return BoolType()
 
     @visitor.when(IsVoidNode)
     def visit(self, node, scope):
         print('is void')
-        expr_type = self.visit(node.expr, scope)
-        if (expr_type.name != VoidType().name):
-            self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, VoidType().name))
+        self.visit(node.expr, scope)
         return BoolType()
 
     @visitor.when(TildeNode)
     def visit(self, node, scope):
         print('tilde')
         expr_type = self.visit(node.expr, scope)
-        if (expr_type.name != IntType().name):
+        if expr_type.conforms_to(IntType()):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, IntType().name))
-        
         return IntType()
-
-    @visitor.when(VariableNode)
-    def visit(self, node, scope):
-        print('variable')
-        
-        var = self.find_var(node.lex, scope)
-        if var is None:
-            self.errors.append(VARIABLE_NOT_DEFINED%(node.lex,self.current_method.name))
-            return ErrorType()
-        else:
-            var_type = var.type
-            return var_type
-
-
 
     def find_var(self, vname, scope):
         s = scope

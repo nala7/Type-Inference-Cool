@@ -103,7 +103,7 @@ class TypeChecker:
     def visit(self, node, scope):
         print('loop')
         cond_type = self.visit(node.condition, scope)
-        if not cond_type == BoolType():
+        if not cond_type.conforms_to(BoolType()):
             self.errors.append(INCOMPATIBLE_TYPES % (cond_type.name, BoolType().name))
         
         self.visit(node.body, scope)
@@ -194,10 +194,12 @@ class TypeChecker:
         print('call')
         if node.ancestor_type is None:
             #if obj is id
-            if node.obj == 'SELF_TYPE':
+            if node.obj == 'self':
                 obj_type = self.current_type
             else:
                 obj_type = self.visit(node.obj, scope)
+                if obj_type.name == AutoType().name:
+                    self.errors.append('Method '+id+' not callable')
         else:
             # print('ancestor exists')
             obj_type = Context.get_type(node.ancestor_type)
@@ -297,19 +299,6 @@ class TypeChecker:
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, IntType().name))
         
         return IntType()
-
-    @visitor.when(VariableNode)
-    def visit(self, node, scope):
-        print('variable')
-        
-        var = self.find_var(node.lex, scope)
-        if var is None:
-            self.errors.append(VARIABLE_NOT_DEFINED%(node.lex,self.current_method.name))
-            return ErrorType()
-        else:
-            var_type = var.type
-            return var_type
-
 
 
     def find_var(self, vname, scope):

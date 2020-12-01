@@ -24,8 +24,8 @@ class TypeCollector(object):
         self.context.types['int'] = IntType()
         self.context.types['str'] = StrType()
         self.context.types['bool'] = BoolType()
-        self.context.types['self'] = SelfType()
-        self.context.types['auto'] = AutoType()
+        self.context.types['SELF_TYPE'] = SelfType()
+        self.context.types['AUTO_TYPE'] = AutoType()
         for class_dec_node in node.declarations:
             self.visit(class_dec_node)
         

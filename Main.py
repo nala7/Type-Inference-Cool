@@ -7,7 +7,7 @@ import AST.AST_Print as print_ast
 from SemanticChecker.Type_Collector import TypeCollector
 from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
-
+from SemanticChecker.Type_Inferer import TypeInferer
 
 
 tokens, errors = tokenize_text(program0)
@@ -46,3 +46,12 @@ if not errors:
       scope = checker.visit(ast)
       print('Errors:')
       for error in errors: print(error)
+
+      if not errors:
+         auto = []
+         checker = TypeInferer(context, errors, auto)
+         scope = checker.visit(ast)
+         print('Errors:')
+         for error in errors: print(error)
+         print('Inferers:')
+         for error in errors: print(auto)

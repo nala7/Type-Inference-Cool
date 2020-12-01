@@ -42,7 +42,7 @@ class Type:
         self.parent = None
 
     def set_parent(self, parent):
-        if self.parent is not None or self.parent is not ObjType():
+        if self.parent is not None and self.parent.name != ObjType().name:
             raise SemanticError(f'Parent type is already set for {self.name}.')
         self.parent = parent
 
@@ -123,6 +123,7 @@ class Type:
 class ErrorType(Type):
     def __init__(self):
         Type.__init__(self, '<error>')
+        self.parent = ObjType()
 
     def conforms_to(self, other):
         return True
@@ -150,6 +151,7 @@ class ObjType(Type):
 class VoidType(Type):
     def __init__(self):
         Type.__init__(self, '<void>')
+        self.parent = ObjType()
 
     def conforms_to(self, other):
         raise Exception('Invalid type: void type.')
@@ -163,6 +165,7 @@ class VoidType(Type):
 class IntType(Type):
     def __init__(self):
         Type.__init__(self, 'int')
+        self.parent = ObjType()
 
     def __eq__(self, other):
         return other.name == self.name or isinstance(other, IntType)
@@ -170,6 +173,7 @@ class IntType(Type):
 class StrType(Type):
     def __init__(self):
         Type.__init__(self, 'str')
+        self.parent = ObjType()
 
     def __eq__(self, other):
         return other.name == self.name or isinstance(other, StrType)
@@ -177,6 +181,7 @@ class StrType(Type):
 class BoolType(Type):
     def __init__(self):
         Type.__init__(self, 'bool')
+        self.parent = ObjType()
 
     def __eq__(self, other):
         return other.name == self.name or isinstance(other, BoolType)
@@ -184,6 +189,7 @@ class BoolType(Type):
 class SelfType(Type):
     def __init__(self):
         Type.__init__(self, 'self')
+        self.parent = ObjType()
 
     def __eq__(self, other):
         return other.name == self.name or isinstance(other, SelfType)
@@ -191,6 +197,10 @@ class SelfType(Type):
 class AutoType(Type):
     def __init__(self):
         Type.__init__(self, 'auto')
+        self.parent = ObjType() 
+    
+    def conforms_to(self, other):
+        return True
 
     def __eq__(self, other):
         return other.name == self.name or isinstance(other, AutoType)

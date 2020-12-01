@@ -1,6 +1,49 @@
-program1 = '''
+program01 = '''
     class A {
         a : int ;
+        suma ( a : int , b : int ) : int {
+            if { 4 ; 7 + 3 ; } then a . func ( 8 + 7 , a ) else a + b + b fi
+        } ;
+        b : auto ;
+    } ;
+    class B inherits A {
+        c : int <- ( 56 + 6 ) ;
+        f ( d : int , a : A ) : void {
+            while 4 + 4
+            loop let a : F , b : A <- 4 + 6 in 5
+            pool
+        } ;
+        k ( a : int ) : int {
+            case new A
+            of a : r => 5 + 8 ;
+            esac
+        } ;
+        g ( a : A , c : A ) : A {
+            if not 7 + 9 < 2 then a = 5 else c = 3 fi
+        } ;
+        h ( l : int ) : void {
+            let let_name : int <- 5 + 2 , k : int <- 95 in k + 9
+        } ; 
+    } ;
+
+'''
+program0 = '''
+    class A { 
+        a : int ;
+    } ;
+    class B inherits A {
+        g ( a : int , c : A ) : A {
+            if not ( 7 + 9 < 2 ) then a = 5 else c fi
+        } ;
+        h ( l : int ) : void {
+            let let_name : int <- 5 + 2 , k : int <- 95 in ( k + 9 )
+        } ; 
+    } ;
+
+'''
+program1 = '''
+    class A {
+        a : B ;
         suma ( a : int , b : int ) : int {
             if { 4 ; 7 + 3 ; } then a . func ( 8 + 7 , a ) else a + b + b fi
         } ;
@@ -9,7 +52,7 @@ program1 = '''
 
     class B inherits A {
         c : int <- ( 56 + 6 ) ;
-        f ( d : int , a : A ) : void {
+        f ( d : int , a : A ) : self {
             while 4 + 4
             loop let a : F , b : A <- 4 + 6 in 5
             pool

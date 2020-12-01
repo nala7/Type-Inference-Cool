@@ -61,6 +61,7 @@ class TypeBuilder:
             except SemanticError as error:
                 self.errors.append(error.text)
                 typex = ErrorType()
+
             param_types.append(typex)
 
         try:

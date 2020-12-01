@@ -6,23 +6,17 @@ from cmp.semantic import VoidType, ErrorType, IntType, BoolType, ObjType
 from cmp.semantic import Context
 from AST.AST_Hierarchy import *
 
+VAR_AUTOTYPE = 'Variable "%s" type not infered in "%s".'
+METH_AUTOTYPE = 'Method "%s" return type not infered in "%s"'
 
-WRONG_SIGNATURE = 'Method "%s" already defined in "%s" with a different signature.'
-SELF_IS_READONLY = 'Variable "self" is read-only.'
-LOCAL_ALREADY_DEFINED = 'Variable "%s" is already defined in method "%s".'
-ATTR_ALREADY_DEFINED = 'Attribute "%s" is already defined in ancestor class.'
-INCOMPATIBLE_TYPES = 'Cannot convert "%s" into "%s".'
-VARIABLE_NOT_DEFINED = 'Variable "%s" is not defined in "%s".'
-INVALID_OPERATION = 'Operation is not defined between "%s" and "%s".'
-METHOD_ARGS_UNMATCH = 'Method "%s" arguments do not match with definition.'
-
-class TypeChecker:
+class TypeInferer:
     def __init__(self, context, errors=[]):
         self.context = context
         self.current_type = None
         self.current_method = None
         self.errors = errors
-
+        self.autotypes = []
+    
     @visitor.on('node')
     def visit(self, node, scope):
         pass
@@ -40,24 +34,23 @@ class TypeChecker:
         self.current_type = self.context.get_type(node.id)
         for feature in node.features:
             self.visit(feature, scope)
+
         
     @visitor.when(AttrDeclarationNode)
     def visit(self, node:AttrDeclarationNode, scope):
         print('attr declaration')
-        var = self.find_var(node.id,scope)
         attr_type = self.context.get_type(node.type)
-        if var is not None:
-            self.errors.append(ATTR_ALREADY_DEFINED % (node.id))
-        else:
-            scope.define_variable(node.id, attr_type)
-        
         if node.val is not None: 
             return_type = self.visit(node.val, scope) 
+            if attr_type.name == AutoType().name:
+                attr_type = return_type
         else: 
             return_type = attr_type
-
-        if not attr_type.conforms_to(return_type):
-            self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, attr_type.name))
+        
+        var = scope.define_variable(node.id, attr_type)
+        
+        if return_type.name == AutoType().name:
+            self.autotypes.append(VAR_AUTOTYPE % (var.name, self.current_type.name))
 
         return attr_type
 
@@ -67,19 +60,17 @@ class TypeChecker:
         method = self.current_type.get_method(node.id)
         self.current_method = method
         
-        if self.current_type.parent is not None:
-            try:
-                ancestor_method = self.current_type.parent.get_method(node.id)
-                if not method == ancestor_method:
-                    self.errors.append(WRONG_SIGNATURE % (node.id, 'ancestor type'))
-            except SemanticError:
-                ancestor_method = None
-        
         child_scope = scope.create_child()
         for i in range(0, len(method.param_names)):
             child_scope.define_variable(method.param_names[i], method.param_types[i])
         
         expr_type = self.visit(node.body, child_scope)
+        if method.return_type.name == AutoType().name:
+            method.return_type = expr_type
+            if expr_type.name == AutoType().name:
+                self.autotypes.append(METH_AUTOTYPE % (method.name, self.current_type.name))
+        
+
         if self.current_method.return_type.name != VoidType().name and not self.current_method.return_type.conforms_to(expr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name ,self.current_method.return_type.name))
         # if self.current_method.return_type.name == VoidType().name and expr_type.name != VoidType().name:
@@ -89,8 +80,6 @@ class TypeChecker:
     def visit(self, node, scope):
         print('conditional')
         cond_type = self.visit(node.if_expr, scope)
-        if not cond_type.conforms_to(BoolType()):
-            self.errors.append(INCOMPATIBLE_TYPES % (cond_type.name, BoolType().name))
 
         then_expr_type = self.visit(node.then_expr, scope)
         else_expr_type = self.visit(node.else_expr, scope)
@@ -102,9 +91,8 @@ class TypeChecker:
     @visitor.when(LoopNode)
     def visit(self, node, scope):
         print('loop')
-        cond_type = self.visit(node.condition, scope)
-        if not cond_type == BoolType():
-            self.errors.append(INCOMPATIBLE_TYPES % (cond_type.name, BoolType().name))
+        
+        self.visit(node.condition, scope)
         
         self.visit(node.body, scope)
 

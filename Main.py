@@ -10,7 +10,7 @@ from SemanticChecker.Type_Checker import TypeChecker
 
 
 
-tokens, errors = tokenize_text(program1)
+tokens, errors = tokenize_text(program0)
 pprint_tokens(tokens)
 
 parser = LR1Parser(G)
@@ -40,9 +40,9 @@ if not errors:
    print('Context:')
    print(context)
 
-#
-#    if not errors:
-#        checker = TypeChecker(context, errors)
-#        scope = checker.visit(ast)
-#        print('Errors:')
-#        for error in errors: print(error)
+
+   if not errors:
+      checker = TypeChecker(context, errors)
+      scope = checker.visit(ast)
+      print('Errors:')
+      for error in errors: print(error)

@@ -54,12 +54,13 @@ class TypeInferer:
             attr_type = self.inferedAttr[(node.id, self.current_type.name)]
         except:
             attr_type = self.context.get_type(node.type)
-        
+        print('@@@@@@@attr type', attr_type.name)
         if node.val is not None: 
             return_type = self.visit(node.val, scope) 
             if attr_type.name == AutoType().name:
                 attr_type = return_type
                 if return_type.name == AutoType().name:
+                    print('##########################')
                     self.autotypes.append(VAR_AUTOTYPE % (node.id, self.current_type.name))
                 else:
                     self.inferedAttr[(node.id,self.current_type.name)] = attr_type

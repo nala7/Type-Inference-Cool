@@ -1,9 +1,11 @@
+import AST.AST_Print as print_ast
+import streamlit as st 
+
 from Example_Programs import *
 from Tokenizer import *
 from Parser.Parser_LR1 import LR1Parser
 from Grammar import *
 from cmp.evaluation import evaluate_reverse_parse
-import AST.AST_Print as print_ast
 from SemanticChecker.Type_Collector import TypeCollector
 from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
@@ -48,10 +50,25 @@ if not errors:
       for error in errors: print(error)
 
       if not errors:
-         auto = []
-         checker = TypeInferer(context, errors, auto)
-         scope = checker.visit(ast)
+         var_with_autotype = []
+         attr_infered = {}
+         method_infered = {}
+
+         while True:
+            initial_len = len(var_with_autotype)
+            checker = TypeInferer(context, errors, var_with_autotype,attr_infered, method_infered)
+            scope = checker.visit(ast)
+            current_len = len(var_with_autotype)
+
+            if initial_len == current_len:
+               break
+
          print('Errors:')
          for error in errors: print(error)
-         print('Inferers:')
-         for error in errors: print(auto)
+         print('not Inferers:')
+         for error in errors: print(error)
+
+         print('attr')
+         for at in attr_infered: print(at)
+         print('metj=h')
+         for at in method_infered: print(at)

@@ -196,7 +196,7 @@ class SelfType(Type):
 
 class AutoType(Type):
     def __init__(self):
-        Type.__init__(self, 'auto')
+        Type.__init__(self, 'AUTO_TYPE')
         self.parent = ObjType() 
     
     def conforms_to(self, other):

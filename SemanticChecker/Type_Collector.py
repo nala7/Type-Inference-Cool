@@ -19,8 +19,8 @@ class TypeCollector(object):
     @visitor.when(ProgramNode)
     def visit(self, node):
         self.context = Context()
-        self.context.types['error'] = ErrorType()
-        self.context.types['void'] = VoidType()
+        self.context.types['<error>'] = ErrorType()
+        self.context.types['<void>'] = VoidType()
         self.context.types['int'] = IntType()
         self.context.types['str'] = StrType()
         self.context.types['bool'] = BoolType()

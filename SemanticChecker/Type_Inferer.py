@@ -19,12 +19,14 @@ METHOD_ARGS_UNMATCH = 'Method "%s" arguments do not match with definition.'
 
 
 class TypeInferer:
-    def __init__(self, context, errors=[], autotypes = []):
+    def __init__(self, context, errors=[], autotypes = [], inferedAttr = {}, inferedMeth = {}):
         self.context = context
         self.current_type = None
         self.current_method = None
         self.errors = errors
         self.autotypes = autotypes
+        self.inferedAttr = inferedAttr
+        self.inferedMeth = inferedMeth
     
     @visitor.on('node')
     def visit(self, node, scope):
@@ -48,18 +50,21 @@ class TypeInferer:
     @visitor.when(AttrDeclarationNode)
     def visit(self, node:AttrDeclarationNode, scope):
         print('attr declaration')
-        attr_type = self.context.get_type(node.type)
+        try:
+            attr_type = self.inferedAttr[(node.id, self.current_type.name)]
+        except:
+            attr_type = self.context.get_type(node.type)
+        
         if node.val is not None: 
             return_type = self.visit(node.val, scope) 
             if attr_type.name == AutoType().name:
                 attr_type = return_type
+                if return_type.name == AutoType().name:
+                    self.autotypes.append(VAR_AUTOTYPE % (node.id, self.current_type.name))
+                else:
+                    self.inferedAttr[(node.id,self.current_type.name)] = attr_type
         else: 
-            return_type = attr_type
-        
-        var = scope.define_variable(node.id, attr_type)
-        
-        if return_type.name == AutoType().name:
-            self.autotypes.append(VAR_AUTOTYPE % (var.name, self.current_type.name))
+            return_type = attr_type        
 
         return attr_type
 
@@ -68,6 +73,10 @@ class TypeInferer:
         print('function declaration')
         method = self.current_type.get_method(node.id)
         self.current_method = method
+        try:
+            method.return_type = self.inferedMeth[(method.name, self.current_type)]
+        except:
+            pass
         
         child_scope = scope.create_child()
         for i in range(0, len(method.param_names)):
@@ -78,9 +87,11 @@ class TypeInferer:
             method.return_type = expr_type
             if expr_type.name == AutoType().name:
                 self.autotypes.append(METH_AUTOTYPE % (method.name, self.current_type.name))
+            else:
+                self.inferedMeth[(method.name, self.current_type.name)] = expr_type.name
         
 
-        if self.current_method.return_type.name != VoidType().name and not self.current_method.return_type.conforms_to(expr_type):
+        if self.current_method.return_type.name != VoidType().name and not expr_type.conforms_to(self.current_method.return_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name ,self.current_method.return_type.name))
 
     @visitor.when(ConditionalNode)
@@ -135,7 +146,7 @@ class TypeInferer:
             else:
                 expr_type = var_type
 
-            if not var_type.conforms_to(expr_type):
+            if not expr_type.conforms_to(var_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (var_type.name, expr_type.name))
 
             child_scope.define_variable(var, var_type)
@@ -154,7 +165,7 @@ class TypeInferer:
             
             child_scope = child_scope.create_child()
             expr_type = self.visit(expr, child_scope)
-            if not var_type.conforms_to(expr_type):
+            if not expr_type.conforms_to(var_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (var_type.name, expr_type.name))
                 
             if var_type.name == AutoType().name:
@@ -182,7 +193,7 @@ class TypeInferer:
             if expr_type.name == AutoType().name:
                 self.autotypes.append(VAR_AUTOTYPE%(var.name, self.current_type.name))    
 
-        if not var.type.conforms_to(expr_type):
+        if not expr_type.conforms_to(var.type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var.type.name))
         
         return expr_type
@@ -218,7 +229,7 @@ class TypeInferer:
                 if arg_type.name == AutoType().name:
                     self.autotypes.append(VAR_AUTOTYPE%(method.param_name[i], method.name)) 
 
-            if not method.param_types[i].conforms_to(arg_type):
+            if not arg_type.conforms_to(method.param_types[i]):
                 self.errors.append(INCOMPATIBLE_TYPES % (arg_type.name, method.param_types[i].name))
         return method.return_type
             

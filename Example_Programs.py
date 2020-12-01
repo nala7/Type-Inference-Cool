@@ -30,6 +30,9 @@ program01 = '''
 program0 = '''
     class A { 
         a : AUTO_TYPE <- 5 ;
+        f ( x : int ) : AUTO_TYPE {
+            let x : AUTO_TYPE in 3
+        } ;
     } ;
 '''
 program1 = '''

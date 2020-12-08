@@ -143,7 +143,6 @@ class UnknownToken(Token):
 def tokenizer(G, fixed_tokens):
     def decorate(func):
         def tokenize_text(text):
-            errors = []
             tokens = []
             for lex in text.split():
                 try:
@@ -179,13 +178,13 @@ def tokenizer(G, fixed_tokens):
                         else: string += ' ' + tokens[i].lex
                         i+=1
                     if not found_close:
-                        errors.append('String not closed')
+                        raise Exception('String not closed')
                     to_return_tokens.append(Token(str, str_terminal))
                 else:
                     to_return_tokens.append(tokens[i])
                     i+=1
 
-            return to_return_tokens, errors
+            return to_return_tokens
 
         if hasattr(func, '__call__'):
             return tokenize_text

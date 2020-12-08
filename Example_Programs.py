@@ -4,7 +4,7 @@ program01 = '''
         suma ( a : int , b : int ) : int {
             if { 4 ; 7 + 3 ; } then a . func ( 8 + 7 , a ) else a + b + b fi
         } ;
-        b : auto ;
+        b : AUTO_TYPE <- 6 ;
     } ;
     class B inherits A {
         c : int <- ( 56 + 6 ) ;
@@ -29,7 +29,7 @@ program01 = '''
 '''
 program0 = '''
     class A { 
-        a : AUTO_TYPE <- 76;
+        a : AUTO_TYPE <- 76 ;
         g : AUTO_TYPE ;
         f ( x : int ) : AUTO_TYPE {
             let x : AUTO_TYPE in 3

@@ -75,6 +75,7 @@ atom %= idx, lambda h,s: VariableNode(s[1])
 atom %= truex, lambda h,s: BoolNode(s[1])
 atom %= falsex, lambda h,s: BoolNode(s[1])
 atom %= opar + expr + cpar, lambda h,s: s[2]
+atom %= idx + left_arrow + atom, lambda h,s: AssignNode(s[1], s[3])
 atom %= new + idx, lambda h,s: InstantiateNode(s[2])
 atom %= ifx + expr + thenx + expr + elsex + expr + fi, lambda h,s: ConditionalNode(s[2], s[4], s[6])
 atom %= whilex + expr + loopx + expr + poolx, lambda h,s: LoopNode(s[2], s[4])

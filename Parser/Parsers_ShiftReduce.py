@@ -11,13 +11,14 @@ class ShiftReduceParser:
     REDUCE = 'REDUCE'
     OK = 'OK'
     
-    def __init__(self, G, verbose=False):
+    def __init__(self, G, verbose=False, build_parsing_table=True):
         self.G = G
         self.verbose = verbose
         self.action = {}
         self.goto = {}
         self.conflict = False
-        self._build_parsing_table()
+        if build_parsing_table:
+            self._build_parsing_table()
     
     def _build_parsing_table(self):
         raise NotImplementedError()

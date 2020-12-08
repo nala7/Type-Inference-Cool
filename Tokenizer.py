@@ -18,11 +18,18 @@ def pprint_tokens(tokens):
     pending = []
     for token in tokens:
         pending.append(token)
-        if token.token_type in { ocur, ccur, semi }:
-            if token.token_type == ccur:
-                indent -= 1
+        if token.token_type in { semi, ocur }:
             print('    '*indent + ' '.join(str(t.token_type) for t in pending))
             pending.clear()
             if token.token_type == ocur:
                 indent += 1
+        if token.token_type in { ccur }:
+            pending.pop()
+            if len(pending) > 0:
+                print('    '*indent + ' '.join(str(t.token_type) for t in pending))
+                pending.clear()
+            if token.token_type == ccur:
+                indent -= 1
+            print('    '*indent + ' '.join(str(ccur)))
+
     print(' '.join([str(t.token_type) for t in pending]))

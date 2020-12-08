@@ -13,6 +13,7 @@ program01 = '''
             loop let a : F , b : A <- 4 + 6 in 5
             pool
         } ;
+        prop : SELF_TYPE ;
         k ( a : int ) : int {
             case new A
             of a : r => 5 + 8 ;
@@ -25,7 +26,6 @@ program01 = '''
             let let_name : int <- 5 + 2 , k : int <- 95 in k + 9
         } ; 
     } ;
-
 '''
 program0 = '''
     class A { 

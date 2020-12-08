@@ -1,7 +1,7 @@
 import cmp.nbpackage
 import cmp.visitor as visitor
 from AST.AST_Hierarchy import *
-from cmp.semantic import SemanticError
+from cmp.semantic import ObjType, SemanticError
 from cmp.semantic import Attribute, Method, Type
 from cmp.semantic import VoidType, ErrorType
 from cmp.semantic import IntType, StrType, SelfType, AutoType, BoolType
@@ -20,7 +20,8 @@ class TypeCollector(object):
     def visit(self, node):
         self.context = Context()
         self.context.types['<error>'] = ErrorType()
-        self.context.types['<void>'] = VoidType()
+        self.context.types['<object>'] = ObjType()
+        self.context.types['void'] = VoidType()
         self.context.types['int'] = IntType()
         self.context.types['str'] = StrType()
         self.context.types['bool'] = BoolType()

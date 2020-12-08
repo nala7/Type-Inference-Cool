@@ -139,18 +139,12 @@ class ObjType(Type):
         Type.__init__(self, '<object>')
         self.parent = None
 
-    def conforms_to(self, other):
-        return True
-
-    def bypass(self):
-        return True
-
     def __eq__(self, other):
         return isinstance(other, ObjType)
 
 class VoidType(Type):
     def __init__(self):
-        Type.__init__(self, '<void>')
+        Type.__init__(self, 'void')
         self.parent = ObjType()
 
     def conforms_to(self, other):
@@ -188,7 +182,7 @@ class BoolType(Type):
 
 class SelfType(Type):
     def __init__(self):
-        Type.__init__(self, 'self')
+        Type.__init__(self, 'SELF_TYPE')
         self.parent = ObjType()
 
     def __eq__(self, other):
@@ -199,7 +193,7 @@ class AutoType(Type):
         Type.__init__(self, 'AUTO_TYPE')
         self.parent = ObjType() 
     
-    def conforms_to(self, other):
+    def bypass(self):
         return True
 
     def __eq__(self, other):

@@ -136,18 +136,19 @@ class ErrorType(Type):
 
 class ObjType(Type):
     def __init__(self):
-        Type.__init__(self, '<object>')
+        Type.__init__(self, 'Object')
         self.parent = None
-
+        
     def __eq__(self, other):
         return isinstance(other, ObjType)
     
     def bypass(self):
         return True
+    
 
 class VoidType(Type):
     def __init__(self):
-        Type.__init__(self, 'void')
+        Type.__init__(self, 'Void')
         self.parent = ObjType()
 
     def conforms_to(self, other):
@@ -161,7 +162,7 @@ class VoidType(Type):
 
 class IntType(Type):
     def __init__(self):
-        Type.__init__(self, 'int')
+        Type.__init__(self, 'Int')
         self.parent = ObjType()
 
     def __eq__(self, other):
@@ -169,7 +170,7 @@ class IntType(Type):
 
 class StrType(Type):
     def __init__(self):
-        Type.__init__(self, 'str')
+        Type.__init__(self, 'String')
         self.parent = ObjType()
 
     def __eq__(self, other):
@@ -177,7 +178,7 @@ class StrType(Type):
 
 class BoolType(Type):
     def __init__(self):
-        Type.__init__(self, 'bool')
+        Type.__init__(self, 'Bool')
         self.parent = ObjType()
 
     def __eq__(self, other):
@@ -213,7 +214,6 @@ class Context:
         if name in self.types:
             raise SemanticError(f'Type with the same name ({name}) already in context.')
         typex = self.types[name] = Type(name)
-        typex.parent = ObjType()
         return typex
 
     def get_type(self, name:str):

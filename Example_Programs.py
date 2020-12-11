@@ -62,8 +62,13 @@ program03 = '''
     class B {
         b : AUTO_TYPE ;
     } ;
+    class C inherits A {
+        func ( a : int , b : Object ) : Object {
+            b . abort ( )
+        } ;
+    } ;
     class Main {
-        main1 ( ) : void {
+        main1 ( ) : Void {
             new A = new B
         } ;
         main2 ( ) : void {
@@ -90,11 +95,14 @@ program04 = '''
     '''
 program05 = '''
     class Main {
+        f ( a : int ) : int {
+            7 + 8
+        } ;
         main1 ( ) : void {
             new SELF_TYPE
         } ;
         main2 ( ) : void {
-            8 + 7
+            self . f ( 7 )
         } ;
     } ;
     '''

@@ -48,7 +48,7 @@ class TypeChecker:
         for feature in node.features:
             self.visit(feature, scope)
         
-    @visitor.when(AttrDeclarationNode)#
+    @visitor.when(AttrDeclarationNode)#@
     def visit(self, node:AttrDeclarationNode, scope:Scope):
         # print('attr declaration')
         var = scope.my_find_var(node.id)
@@ -64,16 +64,12 @@ class TypeChecker:
             return_type = attr_type
 
         if attr_type == SelfType():
-            to_conform = self.current_type
-        else:
-            to_conform = attr_type
+            attr_type = self.current_type
 
-        if not return_type.conforms_to(to_conform):
-            self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, to_conform.name))
+        if not return_type.conforms_to(attr_type):
+            self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, attr_type.name))
 
-        return attr_type
-
-    @visitor.when(FuncDeclarationNode)#
+    @visitor.when(FuncDeclarationNode)#@
     def visit(self, node, scope):
         # print('function declaration')
         method = self.current_type.get_method(node.id)
@@ -100,7 +96,7 @@ class TypeChecker:
         if not expr_type.conforms_to(to_conform):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, to_conform.name))
 
-    @visitor.when(ConditionalNode)#
+    @visitor.when(ConditionalNode)#@
     def visit(self, node, scope):
         # print('conditional')
         cond_type = self.visit(node.if_expr, scope)
@@ -114,7 +110,7 @@ class TypeChecker:
 
         return common_ancestor_type
             
-    @visitor.when(LoopNode)#
+    @visitor.when(LoopNode)#@
     def visit(self, node, scope):
         # print('loop')
         cond_type = self.visit(node.condition, scope)
@@ -125,7 +121,7 @@ class TypeChecker:
 
         return ObjType()
     
-    @visitor.when(BlockNode)#
+    @visitor.when(BlockNode)#@
     def visit(self, node : BlockNode, scope):
         # print('block')
         child_scope = scope.create_child(self.scope_id)
@@ -136,7 +132,7 @@ class TypeChecker:
 
         return return_type
 
-    @visitor.when(LetNode)#
+    @visitor.when(LetNode)#@
     def visit(self, node, scope):
         # print('let')
         child_scope = scope
@@ -155,17 +151,15 @@ class TypeChecker:
                 expr_type = var_type
 
             if var_type == SelfType():
-                to_conform = self.current_type
-            else:
-                to_conform = var_type
-            if not expr_type.conforms_to(to_conform):
-                self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, to_conform.name))
+                var_type = self.current_type
+            if not expr_type.conforms_to(var_type):
+                self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
 
             child_scope.define_variable(var, var_type)
 
         return self.visit(node.body, child_scope)
 
-    @visitor.when(CaseNode)#
+    @visitor.when(CaseNode)#@
     def visit(self, node, scope):
         # print('case')
         self.visit(node.expr, scope)
@@ -188,6 +182,7 @@ class TypeChecker:
             
             child_scope = scope.create_child(self.scope_id)
             self.scope_id += 1
+            child_scope.define_variable(var, var_type)
             expr_type = self.visit(expr, child_scope)
             if not expr_type.conforms_to(var_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
@@ -196,10 +191,9 @@ class TypeChecker:
                 return_type = var_type
             return_type = self.context.find_first_common_ancestor(var_type, return_type)
 
-            child_scope.define_variable(var, var_type)
         return return_type
 
-    @visitor.when(AssignNode)
+    @visitor.when(AssignNode)#@
     def visit(self, node, scope:Scope):
         # print('assign')        
         var = scope.my_find_var(node.id)
@@ -215,12 +209,12 @@ class TypeChecker:
         
         return expr_type
 
-    @visitor.when(CallNode)#
+    @visitor.when(CallNode)#@
     def visit(self, node, scope):
         # print('call')
         obj_type = self.visit(node.obj, scope)
         t0 = obj_type
-        if t0 == SelfType:
+        if t0 == SelfType():
             t0 = self.current_type
         # if obj_type.name == AutoType().name:
         #     self.errors.append('Method '+id+' not callable')
@@ -249,7 +243,7 @@ class TypeChecker:
             return obj_type
         return method.return_type
             
-    @visitor.when(ArithBinaryNode)#
+    @visitor.when(ArithBinaryNode)#@
     def visit(self, node, scope):
         # print('arith binary')
         left_type = self.visit(node.left, scope)
@@ -259,7 +253,7 @@ class TypeChecker:
             self.errors.append(INVALID_OPERATION % (left_type.name, right_type.name))
         return int_type
         
-    @visitor.when(BooleanBinaryNode)#
+    @visitor.when(BooleanBinaryNode)#@
     def visit(self, node, scope):
         # print('boolean binary')
         left_type = self.visit(node.left, scope)
@@ -296,7 +290,7 @@ class TypeChecker:
             var_type = var.type
             return var_type
 
-    @visitor.when(InstantiateNode)#
+    @visitor.when(InstantiateNode)#@
     def visit(self, node, scope):
         # print('instantiate')
         try:
@@ -304,9 +298,12 @@ class TypeChecker:
         except SemanticError as error:
             self.errors.append(error.text)
             instance_type = ErrorType()
+
+        if instance_type == SelfType():
+            instance_type = self.current_type
         return instance_type
     
-    @visitor.when(NotNode)#
+    @visitor.when(NotNode)#@
     def visit(self, node, scope):
         # print('not node')
         expr_type = self.visit(node.expr, scope)
@@ -314,17 +311,16 @@ class TypeChecker:
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, BoolType().name))
         return BoolType()
 
-    @visitor.when(IsVoidNode)#
+    @visitor.when(IsVoidNode)#@
     def visit(self, node, scope):
         # print('is void')
         self.visit(node.expr, scope)
         return BoolType()
 
-    @visitor.when(TildeNode)#
+    @visitor.when(TildeNode)#@
     def visit(self, node, scope):
         # print('tilde')
         expr_type = self.visit(node.expr, scope)
         if not expr_type.conforms_to(IntType()):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, IntType().name))
-        
         return IntType()

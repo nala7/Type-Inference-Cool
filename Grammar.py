@@ -24,7 +24,7 @@ casex, ofx, esacx = G.Terminals('case of esac')
 semi, colon, comma, dot, opar, cpar, ocur, ccur, at= G.Terminals('; : , . ( ) { } @')
 equal, plus, minus, star, div, left_arrow, right_arrow, tilde = G.Terminals('= + - * / <- => ~')
 less, less_equal = G.Terminals('< <=')
-idx, num, new, strx, notx, isvoid, truex, falsex = G.Terminals('id int new str not isvoid true false')
+idx, num, new, strx, notx, isvoid, truex, falsex = G.Terminals('id Int new String not isvoid true false')
 
 
 # productions

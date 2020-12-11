@@ -145,7 +145,6 @@ class ObjType(Type):
     def bypass(self):
         return True
     
-
 class VoidType(Type):
     def __init__(self):
         Type.__init__(self, 'Void')

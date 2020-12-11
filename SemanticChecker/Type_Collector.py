@@ -26,8 +26,8 @@ class TypeCollector(object):
 
         str_type = StrType()
         str_type.define_method('length', [], [], int_type)
-        str_type.define_method('concat', ['s'], ['String'], str_type)
-        str_type.define_method('substr', ['i','l'], ['Int','Int'], str_type)
+        str_type.define_method('concat', ['s'], [str_type], str_type)
+        str_type.define_method('substr', ['i','l'], [int_type, int_type], str_type)
         
         obj_type = ObjType()
         obj_type.define_method('abort', [], [], obj_type)
@@ -35,8 +35,8 @@ class TypeCollector(object):
         obj_type.define_method('copy', [], [], SelfType())
 
         io_type = self.context.create_type('IO')
-        io_type.define_method('out_string', ['x'], ['String'], SelfType())
-        io_type.define_method('out_int', ['x'], ['Int'], SelfType())
+        io_type.define_method('out_string', ['x'], [str_type], SelfType())
+        io_type.define_method('out_int', ['x'], [int_type], SelfType())
         io_type.define_method('in_string', [], [], str_type)
         io_type.define_method('in_int', [], [], int_type)
         io_type.set_parent(obj_type)

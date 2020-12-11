@@ -67,7 +67,7 @@ def run_pipeline(G, text):
        print('\t', error)
    print(']')
 
-run_pipeline(G,program03)
+run_pipeline(G,JanPoul)
 
 # # nti = st.text_area('Ingrese el programa', '')
 

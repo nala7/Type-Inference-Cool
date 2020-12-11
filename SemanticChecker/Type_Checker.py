@@ -58,13 +58,13 @@ class TypeChecker:
         else:
             scope.define_variable(node.id, attr_type)
         
+        if isinstance(attr_type, SelfType):
+            attr_type = self.current_type
+
         if node.val is not None: 
             return_type = self.visit(node.val, scope) 
         else: 
             return_type = attr_type
-
-        if attr_type == SelfType():
-            attr_type = self.current_type
 
         if not return_type.conforms_to(attr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, attr_type.name))
@@ -89,10 +89,17 @@ class TypeChecker:
             child_scope.define_variable(method.param_names[i], method.param_types[i])
         
         expr_type = self.visit(node.body, child_scope)
-        if method.return_type == SelfType():
+        # print('@@@@@@@@')
+        # print(f'type: {self.current_type.name}')
+        # print(f'method: {self.current_method.name}')
+        # print(f'return type: {method.return_type}')
+        if isinstance(method.return_type, SelfType):
+            # print('is self type')
             to_conform = self.current_type
         else:
+            # print('other type')
             to_conform = method.return_type
+        # print('!!!!!!!!')
         if not expr_type.conforms_to(to_conform):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, to_conform.name))
 
@@ -150,7 +157,7 @@ class TypeChecker:
             else:
                 expr_type = var_type
 
-            if var_type == SelfType():
+            if isinstance(var_type, SelfType):
                 var_type = self.current_type
             if not expr_type.conforms_to(var_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
@@ -184,12 +191,10 @@ class TypeChecker:
             self.scope_id += 1
             child_scope.define_variable(var, var_type)
             expr_type = self.visit(expr, child_scope)
-            if not expr_type.conforms_to(var_type):
-                self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
-
+            
             if return_type is None:
-                return_type = var_type
-            return_type = self.context.find_first_common_ancestor(var_type, return_type)
+                return_type = expr_type
+            return_type = self.context.find_first_common_ancestor(expr_type, return_type)
 
         return return_type
 
@@ -214,7 +219,7 @@ class TypeChecker:
         # print('call')
         obj_type = self.visit(node.obj, scope)
         t0 = obj_type
-        if t0 == SelfType():
+        if isinstance(t0, SelfType):
             t0 = self.current_type
         # if obj_type.name == AutoType().name:
         #     self.errors.append('Method '+id+' not callable')
@@ -239,7 +244,7 @@ class TypeChecker:
                 if not arg_type.conforms_to(method.param_types[i]):
                     self.errors.append(INCOMPATIBLE_TYPES % (arg_type.name, method.param_types[i].name))
         
-        if method.return_type == SelfType():
+        if isinstance(method.return_type, SelfType):
             return obj_type
         return method.return_type
             
@@ -260,7 +265,7 @@ class TypeChecker:
         right_type = self.visit(node.right, scope)
 
         if isinstance(node, EqualNode):
-            if (left_type.name in {'int', 'str', 'bool'} or right_type.name in {'int', 'str', 'bool'}) and left_type != right_type:
+            if (left_type.name in {'Int', 'String', 'Bool'} or right_type.name in {'Int', 'String', 'Bool'}) and left_type != right_type:
                 self.errors.append(INVALID_OPERATION % (left_type.name, right_type.name))
             return BoolType()
 
@@ -299,7 +304,7 @@ class TypeChecker:
             self.errors.append(error.text)
             instance_type = ErrorType()
 
-        if instance_type == SelfType():
+        if isinstance(instance_type, SelfType):
             instance_type = self.current_type
         return instance_type
     

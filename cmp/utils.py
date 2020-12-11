@@ -161,7 +161,7 @@ def tokenizer(G, fixed_tokens):
             to_return_tokens = []
             str_terminal = None
             for terminal in G.terminals:
-                if terminal.Name == 'str':
+                if terminal.Name == 'String':
                     str_terminal = terminal
             i = 0
             while i < len(tokens):

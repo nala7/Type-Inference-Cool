@@ -63,7 +63,7 @@ program03 = '''
         b : AUTO_TYPE ;
     } ;
     class C inherits A {
-        func ( a : int , b : Object ) : Object {
+        func ( a : Int , b : Object ) : Object {
             b . abort ( )
         } ;
     } ;
@@ -71,10 +71,10 @@ program03 = '''
         main1 ( ) : Void {
             new A = new B
         } ;
-        main2 ( ) : void {
+        main2 ( ) : Aoid {
             5 = new A
         } ;
-        main3 ( ) : void {
+        main3 ( ) : Void {
             8 = 1
         } ;
     } ;
@@ -103,6 +103,17 @@ program05 = '''
         } ;
         main2 ( ) : void {
             self . f ( 7 )
+        } ;
+    } ;
+    '''
+
+JanPoul = '''
+    class Main inherits IO {
+        main ( ) : AUTO_TYPE {
+            let x : AUTO_TYPE <- 3 in
+                case x of
+                    y : Int => out_int ( 2 ) ;
+                esac
         } ;
     } ;
     '''

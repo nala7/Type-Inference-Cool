@@ -141,6 +141,9 @@ class ObjType(Type):
 
     def __eq__(self, other):
         return isinstance(other, ObjType)
+    
+    def bypass(self):
+        return True
 
 class VoidType(Type):
     def __init__(self):
@@ -195,6 +198,9 @@ class AutoType(Type):
     
     def bypass(self):
         return True
+    
+    def conforms_to(self, other):
+        return True
 
     def __eq__(self, other):
         return other.name == self.name or isinstance(other, AutoType)
@@ -225,6 +231,8 @@ class Context:
     def find_first_common_ancestor(self, expr_type1, expr_type2):
         while True:
             if expr_type1.conforms_to(expr_type2):
+                return expr_type2
+            elif expr_type2.conforms_to(expr_type1):
                 return expr_type1
             else:
                 return self.find_first_common_ancestor(expr_type1.parent, expr_type2)
@@ -235,17 +243,18 @@ class VariableInfo:
         self.type = vtype
 
 class Scope:
-    def __init__(self, parent=None):
+    def __init__(self, id, parent=None):
         self.locals = []
         self.parent = parent
         self.children = []
         self.index = 0 if parent is None else len(parent)
+        self.id = id
 
     def __len__(self):
         return len(self.locals)
 
-    def create_child(self):
-        child = Scope(self)
+    def create_child(self, id):
+        child = Scope(id, self)
         self.children.append(child)
         return child
 
@@ -266,3 +275,12 @@ class Scope:
 
     def is_local(self, vname):
         return any(True for x in self.locals if x.name == vname)
+
+    def my_find_var(self, vname):
+        s = self
+        while s is not None:
+            for local in s.locals:
+                if local.name == vname:
+                    return local
+            s = s.parent
+        return None

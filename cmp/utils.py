@@ -179,7 +179,7 @@ def tokenizer(G, fixed_tokens):
                         i+=1
                     if not found_close:
                         raise Exception('String not closed')
-                    to_return_tokens.append(Token(str, str_terminal))
+                    to_return_tokens.append(Token(string, str_terminal))
                 else:
                     to_return_tokens.append(tokens[i])
                     i+=1

@@ -1,3 +1,4 @@
+from cmp.semantic import Scope
 import AST.AST_Print as print_ast
 import streamlit as st 
 import pickle
@@ -7,6 +8,7 @@ from Tokenizer import *
 from Parser.Parser_LR1 import LR1Parser
 from Grammar import *
 from cmp.evaluation import evaluate_reverse_parse
+from SemanticChecker.Scope_Print import Scope_Print
 from SemanticChecker.Type_Collector import TypeCollector
 from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
@@ -56,13 +58,16 @@ def run_pipeline(G, text):
    print(context)
    print('=============== CHECKING TYPES ================')
    checker = TypeChecker(context, errors)
+   print('Scope:')
    scope = checker.visit(ast)
+   scope_tree = Scope_Print().visit(scope)
+   print(scope_tree)
    print('Errors: [')
    for error in errors:
        print('\t', error)
    print(']')
 
-run_pipeline(G,program01)
+run_pipeline(G,program05)
 
 # # nti = st.text_area('Ingrese el programa', '')
 

@@ -99,7 +99,7 @@ branch_list %= idx + colon + idx + right_arrow + expr + semi, lambda h,s: [(s[1]
 branch_list %= idx + colon + idx + right_arrow + expr + semi + branch_list, lambda h,s: [(s[1], s[3], s[5])] + s[7]
 
 func_call %= obj + dot + idx + opar + arg_list + cpar, lambda h,s: CallNode(s[1],s[3],s[5])
-func_call %= idx + opar + arg_list + cpar, lambda h,s: CallNode('self', s[1], s[3])
+func_call %= idx + opar + arg_list + cpar, lambda h,s: CallNode(VariableNode('self'), s[1], s[3])
 func_call %= obj + at + idx + dot + idx + opar + arg_list + cpar, lambda h,s: CallNode(s[1], s[5], s[7], s[3])
 
 obj %= idx, lambda h,s: VariableNode(s[1])

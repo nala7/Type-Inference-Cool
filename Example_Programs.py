@@ -23,10 +23,82 @@ program01 = '''
             if not 7 + 9 < 2 then a = 5 else c = 3 fi
         } ;
         h ( l : int ) : void {
-            let let_name : int <- 5 + 2 , k : int <- 95 in k + 9
+            let let_name : int <- 5 + 2 , k : int <- 95 , m : AUTO_TYPE <- 5 in m + 9
         } ; 
     } ;
-'''
+    '''
+program02 = '''
+    class A {
+        f ( a : int ) : int {
+            a
+        } ;
+    } ;
+    class B inherits A {
+        f ( a : int ) : int {
+            a + 1
+        } ;
+    } ;
+    class C inherits B {
+        f ( a : int ) : int {
+            a + 2
+        } ;
+    } ;
+    class Z {
+        attr : int ;
+    } ;
+    class Main {
+        main1 ( ) : int {
+            let c : C <- new C in ( c @ A . f ( 8 ) )
+        } ;
+        main2 ( ) : int {
+            let d : B <- new B in d @ Z . f ( 7 )
+        } ;
+    } ;
+    '''
+program03 = '''
+    class A {
+        a : SELF_TYPE ;
+    } ;
+    class B {
+        b : AUTO_TYPE ;
+    } ;
+    class Main {
+        main1 ( ) : void {
+            new A = new B
+        } ;
+        main2 ( ) : void {
+            5 = new A
+        } ;
+        main3 ( ) : void {
+            8 = 1
+        } ;
+    } ;
+    '''
+program04 = '''
+    class A {
+        a : A ;
+    } ;
+    class Main {
+        main1 ( ) : void {
+            case new A of 
+                a : int => 5 ;
+                b : str => 8 ;
+                c : int => 7 ;
+            esac
+        } ;
+    } ;
+    '''
+program05 = '''
+    class Main {
+        main1 ( ) : void {
+            new SELF_TYPE
+        } ;
+        main2 ( ) : void {
+            8 + 7
+        } ;
+    } ;
+    '''
+
 program0 = '''
     class A { 
         a : AUTO_TYPE <- 76 ;

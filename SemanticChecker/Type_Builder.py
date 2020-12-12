@@ -63,7 +63,7 @@ class TypeBuilder:
     def visit(self, node):
         param_names = []    
         param_types = []
-        i = 0
+
         for param in node.params:
             param_names.append(param[0])
             try:
@@ -71,10 +71,8 @@ class TypeBuilder:
             except SemanticError as error:
                 self.errors.append(error.text)
                 typex = ErrorType()
-                node.params[i][1] = ErrorType().name
 
             param_types.append(typex)
-            i += 1
 
         try:
             typex = self.context.get_type(node.type)

@@ -2,7 +2,7 @@ import cmp.visitor as visitor
 from AST.AST_Hierarchy import *
 from cmp.semantic import SemanticError
 from cmp.semantic import Attribute, Method, Type
-from cmp.semantic import VoidType, ErrorType
+from cmp.semantic import VoidType, ErrorType, ObjType
 from cmp.semantic import Context
 
 class TypeBuilder:
@@ -34,10 +34,6 @@ class TypeBuilder:
                             break
                         current = self.context.get_type(current.parent)
 
-
-
-
-
                 except SemanticError as error:
                     self.errors.append(error.text)
                     typex = ErrorType()
@@ -67,6 +63,7 @@ class TypeBuilder:
     def visit(self, node):
         param_names = []    
         param_types = []
+        i = 0
         for param in node.params:
             param_names.append(param[0])
             try:
@@ -74,9 +71,10 @@ class TypeBuilder:
             except SemanticError as error:
                 self.errors.append(error.text)
                 typex = ErrorType()
-                node.param[1] = ErrorType().name
+                node.params[i][1] = ErrorType().name
 
             param_types.append(typex)
+            i += 1
 
         try:
             typex = self.context.get_type(node.type)

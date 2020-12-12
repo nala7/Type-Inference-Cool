@@ -27,6 +27,17 @@ class TypeBuilder:
             if node.parent is not None:
                 try:
                     typex = self.context.get_type(node.parent)
+                    current = typex
+                    while True:
+                        if current.name == node.parent or current.name == ObjType().name:
+                            self.errors.append(f'cyclic inheritince with {node.id} and {node.parent}')
+                            break
+                        current = self.context.get_type(current.parent)
+
+
+
+
+
                 except SemanticError as error:
                     self.errors.append(error.text)
                     typex = ErrorType()

@@ -72,6 +72,7 @@ factor %= atom, lambda h,s: s[1]
 
 atom %= num, lambda h,s: ConstantNumNode(s[1])
 atom %= idx, lambda h,s: VariableNode(s[1])
+atom %= strx, lambda h,s: StringNode(s[1])
 atom %= truex, lambda h,s: BoolNode(s[1])
 atom %= falsex, lambda h,s: BoolNode(s[1])
 atom %= opar + expr + cpar, lambda h,s: s[2]

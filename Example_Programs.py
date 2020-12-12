@@ -389,15 +389,9 @@ text = '''
 '''
 
 text1 = '''
-class A { } ;
-class B inherits A { } ;
-class C inherits B { } ;
-
-class Main inherits IO {
-	main ( ) : IO { out_string ( " Hello World! " ) } ;
-	test: Int <- let x: Int <- 1 * 2 / 3 - 4 + new A.type_name().concat(new B.type_name().concat(new C.type_name())).length()
-				in x <- x + new A.type_name().concat(new B.type_name().concat(new C.type_name()));
-};
+    class A {
+        a : String <- " Halleluya pa todas aqu " ;
+    } ;
 '''
 
 text2 = '''
@@ -423,14 +417,22 @@ class C inherits B {
     } ;
 } ;
 class D inherits B { 
-	ident ( v : String ) : IO { new IO . out_string ( v ) } ;
-	f ( v : Int , w : Int ) : Int { v / w } ;
-	g ( v : Int ) : Int { v + v + v } ;
+	ident ( v : String ) : IO {
+        ( new IO ) . out_string ( v )
+    } ;
+	f ( v : Int , w : Int ) : Int {
+        v / w
+    } ;
+	g ( v : Int ) : Int {
+        v + v + v
+    } ;
 
-	back ( s : String ) : B { {
-		out_string ( s ) ;
-		self ; 
-	} } ;
+	back ( s : String ) : B { 
+        {
+		    out_string ( s ) ;
+		    self ;          
+	    } 
+    } ;
 } ;
 
 '''

@@ -163,11 +163,13 @@ def tokenizer(G, fixed_tokens):
             str_terminal = None
             for terminal in G.terminals:
                 if terminal.Name == 'String':
+                    # print('Found terminal: ', terminal)
                     str_terminal = terminal
             i = 0
             while i < len(tokens):
+                # print(tokens[i])
                 if(tokens[i].lex == '"'):
-                    string = ''
+                    str_value = ''
                     found_close = False
                     i+=1
                     while i < len(tokens):
@@ -175,16 +177,21 @@ def tokenizer(G, fixed_tokens):
                             found_close = True
                             i += 1
                             break
-                        if string == '': string += tokens[i].lex
-                        else: string += ' ' + tokens[i].lex
+                        if str_value == '':
+                            str_value += tokens[i].lex
+                        else:
+                            str_value += ' ' + tokens[i].lex
+                        # print(str_value)
                         i+=1
                     if not found_close:
                         raise Exception('String not closed')
-                    to_return_tokens.append(Token(string, str_terminal))
+                    # print('====> ', str_value)
+                    to_return_tokens.append(Token(str_value, str_terminal))
                 else:
                     to_return_tokens.append(tokens[i])
                     i+=1
 
+            # print(to_return_tokens)
             return to_return_tokens
 
         if hasattr(func, '__call__'):

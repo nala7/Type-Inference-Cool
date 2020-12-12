@@ -56,16 +56,17 @@ class TypeChecker:
         if var is not None:
             self.errors.append(ATTR_ALREADY_DEFINED % (node.id))
         else:
-            scope.define_variable(node.id, attr_type)
-        
-        if isinstance(attr_type, SelfType):
-            attr_type = self.current_type
+            scope.define_variable(node.id, attr_type)     
 
         if node.val is not None: 
             return_type = self.visit(node.val, scope) 
         else: 
             return_type = attr_type
 
+        if isinstance(attr_type, SelfType):
+            attr_type = self.current_type
+        if isinstance(return_type, SelfType):
+            return_type = self.current_type
         if not return_type.conforms_to(attr_type):
             self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, attr_type.name))
 
@@ -93,6 +94,8 @@ class TypeChecker:
         # print(f'type: {self.current_type.name}')
         # print(f'method: {self.current_method.name}')
         # print(f'return type: {method.return_type}')
+        if isinstance(expr_type, SelfType):
+            expr_type = self.current_type
         if isinstance(method.return_type, SelfType):
             # print('is self type')
             to_conform = self.current_type
@@ -159,6 +162,8 @@ class TypeChecker:
 
             if isinstance(var_type, SelfType):
                 var_type = self.current_type
+            if isinstance(expr_type, SelfType):
+                expr_type = self.current_type
             if not expr_type.conforms_to(var_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
 
@@ -277,12 +282,17 @@ class TypeChecker:
     @visitor.when(ConstantNumNode)#
     def visit(self, node, scope):
         # print('constant')
-        return IntType()
+        return self.context.get_type('Int')
+
+    @visitor.when(StringNode)#
+    def visit(self, node, scope):
+        # print('constant')
+        return self.context.get_type('String')
 
     @visitor.when(BoolNode)#
     def visit(self, node, scope):
         # print('bool')
-        return BoolType()
+        return self.context.get_type('Bool')
 
     @visitor.when(VariableNode)
     def visit(self, node, scope:Scope):

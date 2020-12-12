@@ -92,6 +92,8 @@ class ArithBinaryNode(BinaryNode):
 
 class ConstantNumNode(AtomicNode):
     pass
+class StringNode(AtomicNode):
+    pass
 class VariableNode(AtomicNode):
     pass
 class BoolNode(AtomicNode):

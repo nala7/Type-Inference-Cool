@@ -360,3 +360,77 @@ program3 = '''
         }
     }
     '''
+
+
+text = '''
+    class A {
+        a : Z ;
+        suma ( a : Int , b : B ) : Int {
+            a + b
+        } ;
+        b : Int <- 9 ;
+        c : C ;
+    } ;
+
+    class B inherits A {
+        c : A ;
+        f ( d : Int , a : A ) : Void {
+            {
+                let f : Int <- 8 in f + 3 * d ;
+                c <- suma ( 5 , f ) ;
+            }
+        } ;
+        z : Int ;
+    } ;
+
+    class C inherits Z {
+        b : A ;
+    } ;
+'''
+
+text1 = '''
+class A { } ;
+class B inherits A { } ;
+class C inherits B { } ;
+
+class Main inherits IO {
+	main ( ) : IO { out_string ( " Hello World! " ) } ;
+	test: Int <- let x: Int <- 1 * 2 / 3 - 4 + new A.type_name().concat(new B.type_name().concat(new C.type_name())).length()
+				in x <- x + new A.type_name().concat(new B.type_name().concat(new C.type_name()));
+};
+'''
+
+text2 = '''
+class A inherits IO {
+	f ( x : Int , y : Int ) : Int {
+        x + y
+    } ;
+	g ( x : Int ) : Int {
+        x + x
+    } ;
+} ;
+class B inherits A {
+	f ( a : Int , b : Int ) : Int {
+        a - b
+    } ;
+} ;
+class C inherits B {
+	ident ( m : Int ) : Int {
+        m
+    } ;
+	f ( m : Int , n : Int ) : Int {
+        m * n
+    } ;
+} ;
+class D inherits B { 
+	ident ( v : String ) : IO { new IO . out_string ( v ) } ;
+	f ( v : Int , w : Int ) : Int { v / w } ;
+	g ( v : Int ) : Int { v + v + v } ;
+
+	back ( s : String ) : B { {
+		out_string ( s ) ;
+		self ; 
+	} } ;
+} ;
+
+'''

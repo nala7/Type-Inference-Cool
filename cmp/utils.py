@@ -148,6 +148,7 @@ def tokenizer(G, fixed_tokens):
                 try:
                     token = fixed_tokens[lex]
                 except KeyError:
+                    
                     token = UnknownToken(lex)
                     try:
                         token = func(token)

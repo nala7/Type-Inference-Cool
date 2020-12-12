@@ -30,6 +30,7 @@ class TypeBuilder:
                 except SemanticError as error:
                     self.errors.append(error.text)
                     typex = ErrorType()
+                    node.parent = ErrorType().name
                 self.current_type.set_parent(typex)
         except SemanticError as error:
             self.errors.append(error.text)
@@ -44,6 +45,7 @@ class TypeBuilder:
         except SemanticError as error:
             self.errors.append(error.text)
             typex = ErrorType()
+            node.type = ErrorType().name
             
         try:
             self.current_type.define_attribute(node.id, typex)
@@ -61,6 +63,7 @@ class TypeBuilder:
             except SemanticError as error:
                 self.errors.append(error.text)
                 typex = ErrorType()
+                node.param[1] = ErrorType().name
 
             param_types.append(typex)
 

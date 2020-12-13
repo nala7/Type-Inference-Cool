@@ -501,6 +501,35 @@ class Main inherits IO {
 text10 = '''
     class A {
         a : AUTO_TYPE ;
-        b : AUTO_TYPE <- { a ; } + 7
-    }
+        b : AUTO_TYPE <- { a ; } + 7 ;
+    } ;
     '''
+
+text11 = '''
+class Ackermann {
+    ackermann ( m : AUTO_TYPE , n : AUTO_TYPE ) : AUTO_TYPE {
+        if m = 0 then n + 1 else
+            if n = 0 then ackermann ( m - 1 , 1 ) else
+                ackermann ( m - 1 , ackermann ( m , n - 1 ) )
+            fi
+        fi
+    } ;
+} ;
+'''
+text12 = '''
+class A {
+    f ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE {
+        a
+    } ;
+} ;
+'''
+
+text13 = '''
+class A {
+    a : AUTO_TYPE ;
+    b : AUTO_TYPE ;
+    f ( ) : Int {
+        a + b 
+    } ;
+} ;
+'''

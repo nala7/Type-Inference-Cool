@@ -145,7 +145,9 @@ class TypeChecker:
                 param_type = self.infered_types[(method.name, self.current_type.name, i)]
             except:
                 if isinstance(method.param_types[i], AutoType):
-                    self.auto_types.append((method.param_names[i],scope.id))
+                    print('param is autotype')
+                    self.auto_types.append((method.param_names[i], child_scope.id))
+                    print(self.auto_types)
                     self.auto_types.append((method.name, self.current_type.name, i))
                 param_type = method.param_types[i]
             child_scope.define_variable(method.param_names[i],param_type)
@@ -153,6 +155,8 @@ class TypeChecker:
         try:
             return_type = self.infered_types[(method.name, self.current_type.name)]
         except:
+            if isinstance(method.return_type, AutoType):
+                self.auto_types.append((method.name, self.current_type.name))
             return_type = method.return_type
         
         if isinstance(return_type, AutoType): 
@@ -162,7 +166,7 @@ class TypeChecker:
 
         for i in range(len(method.param_names)):
             try:
-                type = self.infered_types[(method.param_names[i],scope.id)]
+                type = self.infered_types[(method.param_names[i], child_scope.id)]
                 self.auto_types.remove((method.name, self.current_type.name, i))
                 self.infered_types[(method.name, self.current_type.name, i)] = type
             except:
@@ -357,10 +361,15 @@ class TypeChecker:
         # print('boolean binary')
 
         if isinstance(node, EqualNode):
+            # if isinstance(node.left., AutoType):
+
             left_type = self.visit(node.left, scope)
             right_type = self.visit(node.right, scope)
             if (left_type.name in {'Int', 'String', 'Bool'} or right_type.name in {'Int', 'String', 'Bool'}) and left_type != right_type:
                 self.errors.append(INVALID_OPERATION % (left_type.name, right_type.name))
+
+
+
             return BoolType()
         
         int_type = self.context.get_type(IntType().name)
@@ -396,7 +405,7 @@ class TypeChecker:
         else:
             try:
                 var_type = self.infered_types[(node.lex, scope_id)]
-            except:
+            except KeyError:
                 var_type = var.type
                 if (set_type is not None) and isinstance(var_type, AutoType):
                     self.auto_types.remove((var.name, scope_id))

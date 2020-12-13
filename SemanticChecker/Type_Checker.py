@@ -33,7 +33,7 @@ class TypeChecker:
         pass
 
     @visitor.when(ProgramNode)
-    def visit(self, node, scope=None):
+    def visit(self, node, scope=None, set_type = None):
         scope = Scope(self.scope_id)
         self.scope_id += 1
         for declaration in node.declarations:
@@ -43,7 +43,7 @@ class TypeChecker:
         return scope, self.infered_types, self.auto_types
 
     @visitor.when(ClassDeclarationNode)
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('class declaration')
         scope.define_variable('self', SelfType())
         self.current_type = self.context.get_type(node.id)
@@ -51,7 +51,7 @@ class TypeChecker:
             self.visit(feature, scope)
         
     @visitor.when(AttrDeclarationNode)#@
-    def visit(self, node:AttrDeclarationNode, scope:Scope):
+    def visit(self, node:AttrDeclarationNode, scope:Scope, set_type = None):
         # print('attr declaration')
         var, _ = scope.my_find_var(node.id)
         attr_type = self.context.get_type(node.type)
@@ -86,7 +86,7 @@ class TypeChecker:
             self.errors.append(INCOMPATIBLE_TYPES % (return_type.name, attr_type.name))
 
     @visitor.when(FuncDeclarationNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('function declaration')
         method = self.current_type.get_method(node.id)
         self.current_method = method
@@ -122,7 +122,7 @@ class TypeChecker:
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, to_conform.name))
 
     @visitor.when(ConditionalNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('conditional')
         cond_type = self.visit(node.if_expr, scope)
         if not cond_type.conforms_to(BoolType()):
@@ -136,7 +136,7 @@ class TypeChecker:
         return common_ancestor_type
             
     @visitor.when(LoopNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('loop')
         cond_type = self.visit(node.condition, scope)
         if not cond_type.conforms_to(BoolType()):
@@ -147,7 +147,7 @@ class TypeChecker:
         return ObjType()
     
     @visitor.when(BlockNode)#@
-    def visit(self, node : BlockNode, scope):
+    def visit(self, node : BlockNode, scope, set_type = None):
         # print('block')
         child_scope = scope.create_child(self.scope_id)
         self.scope_id += 1
@@ -158,7 +158,7 @@ class TypeChecker:
         return return_type
 
     @visitor.when(LetNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('let')
         child_scope = scope
         for var, typex, expr in node.var_list:
@@ -187,7 +187,7 @@ class TypeChecker:
         return self.visit(node.body, child_scope)
 
     @visitor.when(CaseNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('case')
         self.visit(node.expr, scope)
 
@@ -219,7 +219,7 @@ class TypeChecker:
         return return_type
 
     @visitor.when(AssignNode)#@
-    def visit(self, node, scope:Scope):
+    def visit(self, node, scope:Scope, set_type = None):
         # print('assign')        
         var, scope_id = scope.my_find_var(node.id)
         if var is None:    
@@ -235,7 +235,7 @@ class TypeChecker:
         return expr_type
 
     @visitor.when(CallNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('call')
         obj_type = self.visit(node.obj, scope)
         t0 = obj_type
@@ -269,17 +269,17 @@ class TypeChecker:
         return method.return_type
             
     @visitor.when(ArithBinaryNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('arith binary')
-        left_type = self.visit(node.left, scope)
-        right_type = self.visit(node.right, scope)
-        int_type = IntType()
+        int_type = self.context.get_type(IntType().name)
+        left_type = self.visit(node.left, scope, int_type)
+        right_type = self.visit(node.right, scope, int_type)
         if not left_type.conforms_to(int_type) or not right_type.conforms_to(int_type):
             self.errors.append(INVALID_OPERATION % (left_type.name, right_type.name))
         return int_type
         
     @visitor.when(BooleanBinaryNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('boolean binary')
         left_type = self.visit(node.left, scope)
         right_type = self.visit(node.right, scope)
@@ -295,22 +295,22 @@ class TypeChecker:
         return BoolType()
 
     @visitor.when(ConstantNumNode)#
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('constant')
         return self.context.get_type('Int')
 
     @visitor.when(StringNode)#
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('constant')
         return self.context.get_type('String')
 
     @visitor.when(BoolNode)#
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('bool')
         return self.context.get_type('Bool')
 
     @visitor.when(VariableNode)
-    def visit(self, node, scope:Scope):
+    def visit(self, node, scope:Scope, set_type = None):
         # print('variable')
         var, scope_id = scope.my_find_var(node.lex)
         if var is None:
@@ -321,10 +321,14 @@ class TypeChecker:
                 var_type = self.infered_types[(node.lex, scope_id)]
             except:
                 var_type = var.type
+                if (set_type is not None) and isinstance(var_type, AutoType):
+                    self.auto_types.remove((var.name, scope_id))
+                    self.infered_types[(var.name, scope_id)] = set_type
+                    var_type = set_type
             return var_type
 
     @visitor.when(InstantiateNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('instantiate')
         try:
             instance_type = self.context.get_type(node.lex)
@@ -337,7 +341,7 @@ class TypeChecker:
         return instance_type
     
     @visitor.when(NotNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('not node')
         expr_type = self.visit(node.expr, scope)
         if not expr_type.conforms_to(BoolType()):
@@ -345,13 +349,13 @@ class TypeChecker:
         return BoolType()
 
     @visitor.when(IsVoidNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('is void')
         self.visit(node.expr, scope)
         return BoolType()
 
     @visitor.when(TildeNode)#@
-    def visit(self, node, scope):
+    def visit(self, node, scope, set_type = None):
         # print('tilde')
         expr_type = self.visit(node.expr, scope)
         if not expr_type.conforms_to(IntType()):

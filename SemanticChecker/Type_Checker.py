@@ -25,6 +25,8 @@ class TypeChecker:
         self.current_method = None
         self.errors = errors
         self.scope_id = 0
+        self.auto_types = []
+        self.infered_types = {}
 
     @visitor.on('node')
     def visit(self, node, scope):
@@ -38,7 +40,7 @@ class TypeChecker:
             child_scope = scope.create_child(self.scope_id)
             self.scope_id += 1
             self.visit(declaration, child_scope)
-        return scope
+        return scope, self.infered_types, self.auto_types
 
     @visitor.when(ClassDeclarationNode)
     def visit(self, node, scope):
@@ -51,15 +53,28 @@ class TypeChecker:
     @visitor.when(AttrDeclarationNode)#@
     def visit(self, node:AttrDeclarationNode, scope:Scope):
         # print('attr declaration')
-        var = scope.my_find_var(node.id)
+        var, _ = scope.my_find_var(node.id)
         attr_type = self.context.get_type(node.type)
         if var is not None:
             self.errors.append(ATTR_ALREADY_DEFINED % (node.id))
         else:
             scope.define_variable(node.id, attr_type)     
 
+        if isinstance(attr_type, AutoType):
+            try:
+                var_type = self.infered_types[(node.id, scope.id)]
+                var, _ = scope.my_find_var(node.id)
+                var.type = var_type
+                attr_type = var_type
+            except:
+                self.auto_types.append((node.id, scope.id))
+
         if node.val is not None: 
             return_type = self.visit(node.val, scope) 
+            if isinstance(attr_type, AutoType) and not isinstance(return_type, AutoType):
+                self.auto_types.remove((node.id,scope.id))
+                self.infered_types[(node.id, scope.id)] = return_type
+                attr_type = return_type
         else: 
             return_type = attr_type
 
@@ -189,7 +204,7 @@ class TypeChecker:
             
             if var_type != ErrorType():
                 if var_type.name in types_used:
-                    self.errors.append(f'In method {self.current_method.name}, type {self.current_type.name} more than one branch variables have type {var_type.name}')
+                    self.errors.append(f'In method {self.current_method.name}, type {self.current_type.name} more than one branch variable has type {var_type.name}')
                 types_used.add(var_type.name)
             
             child_scope = scope.create_child(self.scope_id)
@@ -206,7 +221,7 @@ class TypeChecker:
     @visitor.when(AssignNode)#@
     def visit(self, node, scope:Scope):
         # print('assign')        
-        var = scope.my_find_var(node.id)
+        var, scope_id = scope.my_find_var(node.id)
         if var is None:    
             self.errors.append(VARIABLE_NOT_DEFINED % (node.id, self.current_method.name))
             var_type = ErrorType()
@@ -297,12 +312,15 @@ class TypeChecker:
     @visitor.when(VariableNode)
     def visit(self, node, scope:Scope):
         # print('variable')
-        var = scope.my_find_var(node.lex)
+        var, scope_id = scope.my_find_var(node.lex)
         if var is None:
             self.errors.append(VARIABLE_NOT_DEFINED%(node.lex,self.current_method.name))
             return ErrorType()
         else:
-            var_type = var.type
+            try:
+                var_type = self.infered_types[(node.lex, scope_id)]
+            except:
+                var_type = var.type
             return var_type
 
     @visitor.when(InstantiateNode)#@

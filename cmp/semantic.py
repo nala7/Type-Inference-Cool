@@ -280,6 +280,6 @@ class Scope:
         while s is not None:
             for local in s.locals:
                 if local.name == vname:
-                    return local
+                    return local, s.id
             s = s.parent
-        return None
+        return None, None

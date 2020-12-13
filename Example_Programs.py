@@ -453,6 +453,7 @@ class Main inherits IO {
 
 text7 = '''
     class A {
+        a : AUTO_TYPE <- 7 + 6 ;
         f ( ) : Void {
             ( ( new A ) . type_name ( ) ) . length ( ) + 8
         } ;

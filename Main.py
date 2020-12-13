@@ -59,15 +59,18 @@ def run_pipeline(G, text):
    print('=============== CHECKING TYPES ================')
    checker = TypeChecker(context, errors)
    print('Scope:')
-   scope = checker.visit(ast)
+   scope, infered_types, auto_types = checker.visit(ast)
    scope_tree = Scope_Print().visit(scope)
    print(scope_tree)
    print('Errors: [')
    for error in errors:
        print('\t', error)
    print(']')
+   print('Auto Types\n', auto_types)
+   print('Infered Types\n', infered_types)
 
-run_pipeline(G, program03)
+
+run_pipeline(G, text7)
 
 # # nti = st.text_area('Ingrese el programa', '')
 

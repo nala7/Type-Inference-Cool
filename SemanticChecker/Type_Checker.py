@@ -362,13 +362,11 @@ class TypeChecker:
 
         if isinstance(node, EqualNode):
             # if isinstance(node.left., AutoType):
-
             left_type = self.visit(node.left, scope)
             right_type = self.visit(node.right, scope)
             if (left_type.name in {'Int', 'String', 'Bool'} or right_type.name in {'Int', 'String', 'Bool'}) and left_type != right_type:
-                self.errors.append(INVALID_OPERATION % (left_type.name, right_type.name))
-
-
+                if not isinstance(left_type,AutoType) and not isinstance(right_type,AutoType):
+                    self.errors.append(INVALID_OPERATION % (left_type.name, right_type.name))
 
             return BoolType()
         

@@ -295,9 +295,21 @@ class TypeChecker:
             self.errors.append(VARIABLE_NOT_DEFINED % (node.id, self.current_method.name))
             var_type = ErrorType()
         else:
-            var_type = var.type
+            try:
+                var_type = self.infered_types[(var.name, scope_id)]
+            except:
+                var_type = var.type
         
-        expr_type = self.visit(node.expr, scope, set_type)
+        if not isinstance(var_type, AutoType):
+            expr_type = self.visit(node.expr, scope, var_type)
+        else:
+            expr_type = self.visit(node.expr, scope, set_type)
+
+        if isinstance(var_type, AutoType) and not isinstance(expr_type, AutoType):
+            self.auto_types.remove((var.id, scope_id))
+            self.infered_types[(var.id, scope_id)] = expr_type
+            var_type = expr_type
+
         if not expr_type.conforms_to(var_type):
             self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
         

@@ -19,14 +19,14 @@ INVALID_OPERATION = 'Operation is not defined between "%s" and "%s".'
 METHOD_ARGS_UNMATCH = 'Method "%s" arguments do not match with definition.'
 
 class TypeChecker:
-    def __init__(self, context, errors=[]):
+    def __init__(self, context, errors=[], infered_types = {}):
         self.context = context
         self.current_type = None
         self.current_method = None
         self.errors = errors
         self.scope_id = 0
         self.auto_types = []
-        self.infered_types = {}
+        self.infered_types = infered_types
 
     @visitor.on('node')
     def visit(self, node, scope):

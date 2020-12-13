@@ -525,11 +525,22 @@ class A {
 '''
 
 text13 = '''
-class A {
-    a : AUTO_TYPE ;
-    b : AUTO_TYPE ;
-    f ( ) : Int {
-        a + b 
+    class A {
+        a : AUTO_TYPE ;
+        f ( ) : AUTO_TYPE {
+            a
+        } ;
     } ;
-} ;
-'''
+    class B inherits A {
+        b : AUTO_TYPE ;
+        f ( ) : AUTO_TYPE {
+            b
+        } ;
+    } ;
+    class C inherits B {
+        c : AUTO_TYPE ;
+        f ( ) : AUTO_TYPE {
+            c + 4
+        } ;
+    } ;
+    '''

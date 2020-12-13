@@ -145,9 +145,9 @@ class TypeChecker:
                 param_type = self.infered_types[(method.name, self.current_type.name, i)]
             except:
                 if isinstance(method.param_types[i], AutoType):
-                    print('param is autotype')
+                    # print('param is autotype')
                     self.auto_types.append((method.param_names[i], child_scope.id))
-                    print(self.auto_types)
+                    # print(self.auto_types)
                     self.auto_types.append((method.name, self.current_type.name, i))
                 param_type = method.param_types[i]
             child_scope.define_variable(method.param_names[i],param_type)

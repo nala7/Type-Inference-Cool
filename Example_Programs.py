@@ -497,3 +497,10 @@ class Main inherits IO {
 	test : B <- ( ( new D ) . back ( " Hello " ) ) . back ( " World! " ) ;
 } ;
 '''
+
+text10 = '''
+    class A {
+        a : AUTO_TYPE ;
+        b : AUTO_TYPE <- { a ; } + 7
+    }
+    '''

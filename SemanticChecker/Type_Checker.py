@@ -163,6 +163,7 @@ class TypeChecker:
             expr_type = self.visit(node.body, child_scope)
         else:
             expr_type = self.visit(node.body, child_scope, return_type)
+            # expr_type = self.visit(node.body, child_scope)
 
         for i in range(len(method.param_names)):
             try:
@@ -238,6 +239,12 @@ class TypeChecker:
             except SemanticError as error:
                 self.errors.append(error.text)
                 var_type = ErrorType()
+            try:
+                var_type = self.infered_types[(var,child_scope.id)]
+            except:
+                pass
+            if isinstance(var_type, AutoType):
+                self.auto_types.append((var,child_scope.id))
 
             if expr is not None:
                 expr_type = self.visit(expr, child_scope)
@@ -248,6 +255,9 @@ class TypeChecker:
                 var_type = self.current_type
             if isinstance(expr_type, SelfType):
                 expr_type = self.current_type
+            if isinstance(var_type, AutoType) and not isinstance(expr_type, AutoType):
+                self.auto_types.remove((var,child_scope.id))
+                self.infered_types[(var,child_scope.id)] = expr_type
             if not expr_type.conforms_to(var_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
 
@@ -322,6 +332,8 @@ class TypeChecker:
         t0 = obj_type
         if isinstance(t0, SelfType):
             t0 = self.current_type
+        if isinstance(t0, AutoType):
+            return AutoType()
         # if obj_type.name == AutoType().name:
         #     self.errors.append('Method '+id+' not callable')
         
@@ -342,7 +354,14 @@ class TypeChecker:
         else:
             for i in range(0, len(node.args)):
                 arg_type = self.visit(node.args[i], scope)
-                if not arg_type.conforms_to(method.param_types[i]):
+                try:
+                    method_param_type = self.infered_types[(node.id, t0.name, i)]
+                except:
+                    method_param_type = method.param_types[i]
+                if isinstance(method_param_type, AutoType) and not isinstance(arg_type, AutoType):
+                    self.auto_types.remove((node.id, t0.name, i))
+                    self.infered_types[(node.id, t0.name, i)] = arg_type
+                if not arg_type.conforms_to(method_param_type):
                     self.errors.append(INCOMPATIBLE_TYPES % (arg_type.name, method.param_types[i].name))
         
         try:

@@ -853,3 +853,18 @@ class Main {
     } ;
 } ;
 '''
+
+text17 = '''
+    class Point {
+        succ ( n : AUTO_TYPE ) : AUTO_TYPE { n + 1 } ;
+        translate ( n : AUTO_TYPE , m : AUTO_TYPE ) : SELF_TYPE { self } ;
+    } ;
+    class Main {
+        step ( p : AUTO_TYPE ) : AUTO_TYPE { p . translate ( 1 , 1 ) } ;
+        main ( ) : Object {
+            let p : AUTO_TYPE <- new Point in {
+                step ( p ) ;
+            }
+        } ;
+    } ;
+    '''

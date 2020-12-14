@@ -27,6 +27,7 @@ class TypeChecker:
         self.scope_id = 0
         self.auto_types = []
         self.infered_types = infered_types
+        self.type_scope = {}
 
     @visitor.on('node')
     def visit(self, node, scope):
@@ -47,6 +48,13 @@ class TypeChecker:
         # print('class declaration')
         scope.define_variable('self', SelfType())
         self.current_type = self.context.get_type(node.id)
+        self.type_scope[self.current_type.name] = scope
+        if not isinstance(self.current_type.parent, ObjType):
+            scope.parent.children.remove(scope)
+            try:
+                scope.parent = self.type_scope[self.current_type.parent.name]
+            except:
+                self.errors.append(f'{self.current_type.parent.name} class not declered before inheritence.')
         for feature in node.features:
             self.visit(feature, scope)
         

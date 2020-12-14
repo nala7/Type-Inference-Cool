@@ -343,6 +343,8 @@ class TypeChecker:
             expr_type = self.visit(node.expr, scope, set_type)
 
         if isinstance(var_type, AutoType) and not isinstance(expr_type, AutoType):
+            print((var.name, scope_id))
+            print(expr_type)
             try:
                 self.auto_types.remove((var.name, scope_id))
             except ValueError:

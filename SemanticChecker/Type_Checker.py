@@ -50,9 +50,11 @@ class TypeChecker:
         self.current_type = self.context.get_type(node.id)
         self.type_scope[self.current_type.name] = scope
         if not isinstance(self.current_type.parent, ObjType):
-            scope.parent.children.remove(scope)
             try:
-                scope.parent = self.type_scope[self.current_type.parent.name]
+                parent_scope = self.type_scope[self.current_type.parent.name]
+                scope.parent.children.remove(scope)
+                scope.parent = parent_scope
+                parent_scope.children.append(scope)
             except:
                 self.errors.append(f'{self.current_type.parent.name} class not declered before inheritence.')
         for feature in node.features:

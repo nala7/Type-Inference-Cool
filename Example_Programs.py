@@ -1032,3 +1032,37 @@ class A {
     } } ;
 } ;
 '''
+
+cyclic_inheretence = '''
+class B inherits B { } ;
+class A inherits B { } ;
+'''
+
+cyclic_inheretence1 = '''
+class C inherits B { } ;
+class A inherits B { } ;
+class B inherits A { } ;
+class C { } ;
+class D inherits E { } ;
+class E inherits F { } ;
+class F inherits D { } ;
+class G inherits F { } ;
+'''
+
+inference = '''
+class B {
+k : AUTO_TYPE ;
+} ;
+
+class A inherits B {
+b : AUTO_TYPE ;
+a : AUTO_TYPE ;
+c : String ;
+f ( ) : Int { {
+    b + a ;
+    k <- b ;
+} } ;
+
+foo ( k : AUTO_TYPE ) : AUTO_TYPE { k <- a } ;
+} ;
+'''

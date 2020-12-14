@@ -172,7 +172,10 @@ class TypeChecker:
                 self.infered_types[(method.name, self.current_type.name, i)] = type
             except:
                 continue
-
+        try:
+            return_type = self.infered_types[(method.name, self.current_type.name)]
+        except:
+            pass
         
         if isinstance(expr_type, SelfType):
             expr_type = self.current_type

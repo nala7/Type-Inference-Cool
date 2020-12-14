@@ -1,6 +1,27 @@
-# Type-Inference-Cool
+# Proyecto II: Type Inferer
 
-La inferencia de tipos en nuestro proyecto se desarrolla a la par del chequeo de tipos. A cada declaracion de clase se le asocia un scope, y dicho scope tendra referencia al scope de la clase padre en caso de que exista herencia. Por ello es necesario que la definicion de la clase de la que se hereda esté anterior a la definicion de la clase actual. 
+### Nadia González Fernández
+### José Alejandro Labourdette-Lartigue Soto
+
+- - - - - - - - - - - - - - - - - - - - - - - - -
+
+Nuestro proyecto se encuentra en github y se puede acceder con el siguiente
+link: https://github.com/nala7/Type-Inference-Cool . La rama en la que se
+ecuentra la versión final es ALabBranch2.
+
+Para dar solución al problema nuestro proyecto se ejecuta en cuarto fases:
+- Tokenizer
+- TypeCollector
+- TypeBuilder
+- TypeChecker
+
+En el typeCollector se hace un primer recorrido por el AST recolectando todos los tipos. Acá también se añaden los tipos predefinidos por el lenguaje COOL.
+
+En el TypeBuilder se analizan los parámetros, valores de retorno, y otras refencias a tipos. En esta fase se definen todos los atributos y las funciones y se hace el an'alisis sint'actico de la entrada
+
+En el typeChecker se hace el an'alisis sem'antico. En esta fase se recoleccionan y construyen los tipos. Tambi'en se hace la inferencia de tipos.
+
+La inferencia de tipos en nuestro proyecto se desarrolla a la par del chequeo de tipos. A cada declaracion de clase se le asocia un scope, y dicho scope tendrá referencia al scope de la clase padre en caso de que exista herencia. Por ello es necesario que la definicion de la clase de la que se hereda esté anterior a la definicion de la clase actual. 
 
 Para inferir los tipos tenemos dos estructuras de datos, una lista y un diccionario:
 1. auto_types : lista de las variables, metodos y argumentos cuyo tipo fue detectado como AutoType y no han sido inferidas aún.
@@ -48,7 +69,7 @@ Una idea similar a la vista en el ejemplo 2 es aplicada en los ArithBinaryNode y
 ```
 *** Ejemplo 4 ***
 class A {
-    succ ( n : AUTO_TYPE ) : AUTO_TYPE {
+    succ ( n : AUTO_TYPE ) : AUTO_TYPE {AUTO_TYPE
         n + 1
     } ;
 } ;
@@ -64,7 +85,7 @@ class A {
     } ;
 } ;
 ```
-Ahora empieza a utilizarse el llamado a funciones. Note que el tipo de retorno de **f** se puede inferir por estar en una multiplicación y el tipo de **n** es inferido dado que la llamada a la **f** se realiza con un argumento de tipo **Int**
+Ahora empieza a utilizarse el llamado a funciones. Note que el tipo de retorno de **f** se puede inferir por estar en una multiplicación y el tipo de **n** es inferido dado que la llamada a **f** se realiza con un argumento de tipo **Int**
 
 Pero recorrer una sola vez el AST en el TypeChecker no es suficiente en algunos casos. Veamos:
 ```
@@ -81,5 +102,90 @@ class A {
         }
     } ;
 ```
-En una primera pasada inferiríamos el tipo de **c** y el retorno de **f**, pero no mas que eso. Es por ello que realizamos varios recorridos por el AST, pero... ¿cuántos?. Se seguirán realizando recorridos por el AST mientras se modifique la cantidad de elementos que hay en la lista **auto_types**. Es de iterés mantener el registro de todos los tipos inferidos durante un recorrido, para utilizar esa información en el próximo. Es por eso que el diccionario de tipos inferidos se pasa de un recorrido al siguiente.
+En una primera pasada inferiríamos el tipo de **c** y el retorno de **f**, pero no mas que eso. Es por ello que realizamos varios recorridos por el AST, pero... ¿cuántos?. Se seguirán realizando recorridos por el AST mientras disminuya la cantidad de elementos que hay en la lista **auto_types** de una visita a la otra. Es de iterés mantener el registro de todos los tipos inferidos durante un recorrido, para utilizar esa información en el próximo. Es por eso que el diccionario de tipos inferidos se pasa de un recorrido al siguiente.
+```
+*** Ejemplo 7 ***
+class A {
+    ackermann(m : AUTO_TYPE, n: AUTO_TYPE) : AUTO_TYPE {
+        if m = 0 then n + 1 else
+            if n = 0 then ackermann ( m - 1 , 1 ) else
+                ackermann ( m - 1 , ackermann ( m , n - 1 ) )
+            fi
+        fi
+    } ;
+} ;
+```
+Para este caso se infiere **n** en el cuerpo del **then** luego, dado que la expresión del **else** son llamados a la propia funcion que termina en AUTOTYPE (note que dentro se infiere m también como AUTO_TYPE) se intenta establecer el tipo de la condicional como el tipo del then_expr. Luego se infiere el retorno de ackerman como entero.
 
+Especial atención toma la redefinición de métodos de clases ancestras. Veamos el siguiente ejemplo:
+```
+class A {
+    f ( a0 : AUTO_TYPE , a1 : AUTO_TYPE ) : AUTO_TYPE {
+        a0
+    } ;
+} ;
+class B inherits A {
+    f ( b0 : AUTO_TYPE , b1 : AUTO_TYPE ) : AUTO_TYPE {
+        {
+            b0 + 7 ;
+            b1 ;
+        } 
+    } ;
+} ;
+class C inherits B {
+    f ( c0 : AUTO_TYPE , c1 : AUTO_TYPE ) : AUTO_TYPE {
+        c1 + 1
+    } ;
+} ;
+```
+La regla que tenemos para la redefinición de funciones es mantener los tipos para cada una de ellas, tanto los tipos de los argumentos como el tipo de retorno. Entonces la inferencia de un argumento o del tipo de retorno tiene que verse reflejada en el resto de las definiciones, tanto en clases ancestras como en descendientes. En el proceso de comparacion de la redefinición de una funcion con la última función ancestra, hay q encargarse tambien de inferir los tipos que sean inferibles en el momento. Luego de unos cuantos recorridos por el AST veremos que hemos logrado inferir todo, tal y como se espera y que no existe ningún error
+```
+OUTPUT:
+
+Errors
+[]
+Auto Types
+[]
+Infered Types
+{ ('b0', 4): type Int : Object {}
+, ('f', 'B', 0): type Int : Object {}
+, ('f', 'C', 0): type Int : Object {}
+, ('c1', 7): type Int : Object {}
+, ('f', 'C', 1): type Int : Object {}
+, ('f', 'C'): type Int : Object {}
+, ('f', 'A', 0): type Int : Object {}
+, ('f', 'B'): type Int : Object {}
+, ('f', 'A'): type Int : Object {}
+, ('b1', 4): type Int : Object {}
+, ('f', 'B', 1): type Int : Object {}
+, ('f', 'A', 1): type Int : Object {}
+}
+```
+Intentemos el siguiente ejemplo entonces:
+```
+class A {
+    f ( a : AUTO_TYPE ) : Object {
+        a + 6
+    } ;
+} ;
+class B inherits A {
+    f ( b : AUTO_TYPE ) : Object {
+        b <- " Esto es un String "
+    } ;
+} ;
+```
+En un recorrido por el TypeBuilder no se debería detectar error alguno, pero una vez inferidos los tipos de los parámetros es claro que algun error debe mostrarse. Cuando se está visitando la declaración de la función f en B esta tendrá como tipo del argumento **Int**, que fue inferido en **A**. Al intentar realizar la asignación entonces estaremos intentando guardar un string en un entero
+```
+OUTPUT:
+
+Errors: [
+    Cannot convert "String" into "Int".
+]
+Auto Types
+ []
+Infered Types
+ {('a', 2): type Int : Object {}
+, ('f', 'A', 0): type Int : Object {}
+, ('f', 'B', 0): type Int : Object {}
+}
+```

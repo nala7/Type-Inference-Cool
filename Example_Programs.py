@@ -855,16 +855,110 @@ class Main {
 '''
 
 text17 = '''
-    class Point {
-        succ ( n : AUTO_TYPE ) : AUTO_TYPE { n + 1 } ;
-        translate ( n : AUTO_TYPE , m : AUTO_TYPE ) : SELF_TYPE { self } ;
+class A {
+    f ( ) : AUTO_TYPE {
+        9 
     } ;
-    class Main {
-        step ( p : AUTO_TYPE ) : AUTO_TYPE { p . translate ( 1 , 1 ) } ;
-        main ( ) : Object {
-            let p : AUTO_TYPE <- new Point in {
-                step ( p ) ;
-            }
-        } ;
+} ;
+
+class B : A {
+    f ( ) : AUTO_TYPE {
+        5 < 6
     } ;
-    '''
+} ;
+'''
+text18 = '''
+class A {
+    f ( a : AUTO_TYPE ) Int {
+        if ( a = 7 ) then "str" else ( 0 = 0 ) fi
+    } ;
+} ;
+'''
+
+prog08 = """
+class Main inherits IO {
+
+    main ( ) : Object {
+        let id : AUTO_TYPE , name : AUTO_TYPE , email : AUTO_TYPE in {
+            out_string ( " Introduzca su id : " ) ;
+            id <- self . in_int ( ) ;
+            out_string ( " Introduzca su nombre: " ) ;
+            name <- self . in_string ( ) ;
+            out_string ( " Introduzca su email: " ) ;
+            email <- self . in_string ( ) ;
+            let user : AUTO_TYPE <- ( new User ) . init ( id , name , email ) in
+                out_string ( " Created user: " . concat ( user . get_name ( ) ) . concat ( " \n " ) ) ;
+        }
+    } ;
+} ;
+
+class User {
+    id : AUTO_TYPE ;
+    name : AUTO_TYPE ;
+    email : AUTO_TYPE ;
+
+    init ( id_ : AUTO_TYPE , name_ : AUTO_TYPE , email_ : AUTO_TYPE ) : AUTO_TYPE { {
+        id <- id_ ;
+        name <- name_ ;
+        email <- email_ ;
+        self ;
+    } } ;
+
+    get_name ( ) : AUTO_TYPE {
+        name
+    } ;
+} ;
+"""
+
+proy_example = '''
+class Main inherits IO {
+    main ( ) : AUTO_TYPE {
+        let z : AUTO_TYPE <- 3 + 2 in {
+            case z of
+                w : Int => out_string ( " Ok " ) ;
+            esac ;
+        }
+    } ;
+} ;
+
+class Point {
+    x : AUTO_TYPE ;
+    y : AUTO_TYPE ;
+    init ( n : Int , m : Int ) : SELF_TYPE { {
+        x <- n ;
+        y <- m ; 
+    } } ;
+} ;
+
+
+class Point {
+    x : AUTO_TYPE ;
+    y : AUTO_TYPE ;
+    succ ( n : Int ) : AUTO_TYPE { n + 1 } ;
+} ;
+
+
+class Point {
+    x : AUTO_TYPE ;
+    y : AUTO_TYPE ;
+    succ ( n : AUTO_TYPE ) : AUTO_TYPE { n + 1 } ;
+} ;
+
+'''
+
+proy_example2 = '''
+class Point {
+    succ ( n : AUTO_TYPE ) : AUTO_TYPE { n + 1 } ;
+    translate ( n : AUTO_TYPE , m : AUTO_TYPE ) : SELF_TYPE { self } ;
+} ;
+
+class Main {
+    step ( p : AUTO_TYPE ) : AUTO_TYPE { p . translate ( 1 , 1 ) } ;
+
+    main ( ) : Object {
+        let p : AUTO_TYPE <- new Point in {
+            step ( p ) ; 
+        }
+    } ;
+} ;
+'''

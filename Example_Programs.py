@@ -971,3 +971,64 @@ class A {
 } ;
 
 '''
+
+proy_example4 = '''
+class A {
+    ackermann ( m : AUTO_TYPE , n : AUTO_TYPE ) : AUTO_TYPE {
+        if ( m = 0 ) then n + 1 else
+            if ( n = 0 ) then ackermann ( m - 1 , 1 ) else
+                ackermann ( m - 1 , ackermann ( m , n - 1 ) )
+            fi
+        fi
+    } ;
+} ;
+'''
+
+proy_example5 = '''
+class A {
+    f ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE {
+        if ( a = 1 ) then b else
+            g ( a + 1 , b / 2 )
+        fi
+    } ;
+    g ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE {
+        if ( b = 1 ) then a else
+            f ( a / 2 , b + 1 )
+        fi
+    } ;
+} ;
+'''
+
+proy_example6 = '''
+class A {
+    b : AUTO_TYPE ;
+    a : AUTO_TYPE ;
+
+    f ( ) : Int { {
+        let x : String , x : AUTO_TYPE <- a + b in x ;
+    } } ;
+} ;
+
+'''
+
+proy_example7 = '''
+class A {
+    b : AUTO_TYPE ;
+    a : AUTO_TYPE ;
+
+    f ( ) : Int { {
+        let x : AUTO_TYPE <- " str " , x : AUTO_TYPE <- a + b , self : AUTO_TYPE , x : AUTO_TYPE <- let c : AUTO_TYPE in a in x ;
+    } } ;
+} ;
+'''
+
+proy_example8 = '''
+class A {
+    b : AUTO_TYPE ;
+    a : AUTO_TYPE ;
+
+    f ( ) : AUTO_TYPE { {
+        let x : String , x : AUTO_TYPE <- a + b , self : AUTO_TYPE , x : AUTO_TYPE <- let c : AUTO_TYPE in a in x ;
+    } } ;
+} ;
+'''

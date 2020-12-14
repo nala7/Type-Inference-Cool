@@ -72,7 +72,10 @@ class TypeChecker:
         if node.val is not None: 
             return_type = self.visit(node.val, scope)
             if isinstance(attr_type, AutoType) and not isinstance(return_type, AutoType) and (node.id, scope.id) in self.auto_types:
-                self.auto_types.remove((node.id, scope.id))
+                try:
+                    self.auto_types.remove((node.id, scope.id))
+                except ValueError:
+                    pass
                 self.infered_types[(node.id, scope.id)] = return_type
                 attr_type = return_type
         else: 
@@ -104,10 +107,16 @@ class TypeChecker:
                 except:
                     current_return_type = method.return_type
                 if isinstance(old_return_type, AutoType) and not isinstance(current_return_type, AutoType):
-                    self.auto_types.remove((ancestor_method.name, ancestor_type.name))
+                    try:
+                        self.auto_types.remove((ancestor_method.name, ancestor_type.name))
+                    except ValueError:
+                        pass
                     self.infered_types[(ancestor_method.name, ancestor_type.name)] = current_return_type
                 if isinstance(current_return_type, AutoType) and not isinstance(old_return_type, AutoType):
-                    self.auto_types.remove((method.name, self.current_type.name))
+                    try:
+                        self.auto_types.remove((method.name, self.current_type.name))
+                    except ValueError:
+                        pass
                     self.infered_types[(method.name, self.current_type.name)] = old_return_type
 
                 if old_return_type.name != current_return_type.name:
@@ -125,10 +134,16 @@ class TypeChecker:
                         except:
                             current_param_type = method.param_types[i]
                         if isinstance(old_param_type, AutoType) and not isinstance(current_param_type, AutoType):
-                            self.auto_types.remove((ancestor_method.name, ancestor_type.name, i))
+                            try:
+                                self.auto_types.remove((ancestor_method.name, ancestor_type.name, i))
+                            except ValueError:
+                                pass
                             self.infered_types[(ancestor_method.name, ancestor_type.name, i)] = current_param_type
                         if isinstance(current_param_type, AutoType) and not isinstance(old_param_type, AutoType):
-                            self.auto_types.remove((method.name, self.current_type.name, i))
+                            try:
+                                self.auto_types.remove((method.name, self.current_type.name, i))
+                            except ValueError:
+                                pass
                             self.infered_types[(method.name, self.current_type.name, i)] = old_param_type
 
                         if old_param_type.name != current_param_type.name:
@@ -168,7 +183,10 @@ class TypeChecker:
         for i in range(len(method.param_names)):
             try:
                 type = self.infered_types[(method.param_names[i], child_scope.id)]
-                self.auto_types.remove((method.name, self.current_type.name, i))
+                try:
+                    self.auto_types.remove((method.name, self.current_type.name, i))
+                except ValueError:
+                    pass
                 self.infered_types[(method.name, self.current_type.name, i)] = type
             except:
                 continue
@@ -183,7 +201,10 @@ class TypeChecker:
             to_conform = self.current_type
         else:
             if isinstance(return_type, AutoType) and not isinstance(expr_type, AutoType):
-                self.auto_types.remove((method.name, self.current_type.name))
+                try:
+                    self.auto_types.remove((method.name, self.current_type.name))
+                except ValueError:
+                    pass
                 self.infered_types[(method.name, self.current_type.name)] = expr_type
                 return_type = expr_type
             to_conform = return_type
@@ -259,7 +280,10 @@ class TypeChecker:
             if isinstance(expr_type, SelfType):
                 expr_type = self.current_type
             if isinstance(var_type, AutoType) and not isinstance(expr_type, AutoType):
-                self.auto_types.remove((var,child_scope.id))
+                try:
+                    self.auto_types.remove((var,child_scope.id))
+                except ValueError:
+                    pass
                 self.infered_types[(var,child_scope.id)] = expr_type
             if not expr_type.conforms_to(var_type):
                 self.errors.append(INCOMPATIBLE_TYPES % (expr_type.name, var_type.name))
@@ -319,7 +343,10 @@ class TypeChecker:
             expr_type = self.visit(node.expr, scope, set_type)
 
         if isinstance(var_type, AutoType) and not isinstance(expr_type, AutoType):
-            self.auto_types.remove((var.name, scope_id))
+            try:
+                self.auto_types.remove((var.name, scope_id))
+            except ValueError:
+                pass
             self.infered_types[(var.name, scope_id)] = expr_type
             var_type = expr_type
 
@@ -362,7 +389,15 @@ class TypeChecker:
                 except:
                     method_param_type = method.param_types[i]
                 if isinstance(method_param_type, AutoType) and not isinstance(arg_type, AutoType):
-                    self.auto_types.remove((node.id, t0.name, i))
+                    print(self.auto_types)
+                    print(self.infered_types)
+                    print(self.current_type)
+                    print(self.current_method)
+                    print((node.id, t0.name, i))
+                    try:
+                        self.auto_types.remove((node.id, t0.name, i))
+                    except ValueError:
+                        pass
                     self.infered_types[(node.id, t0.name, i)] = arg_type
                 if not arg_type.conforms_to(method_param_type):
                     self.errors.append(INCOMPATIBLE_TYPES % (arg_type.name, method.param_types[i].name))
@@ -375,7 +410,10 @@ class TypeChecker:
         if isinstance(return_type, SelfType):
             return obj_type
         if isinstance(return_type, AutoType) and set_type is not None:
-            self.auto_types.remove((node.id, t0.name))
+            try:
+                self.auto_types.remove((node.id, t0.name))
+            except ValueError:
+                pass
             self.infered_types[(node.id, t0.name)] = set_type
             return_type = set_type
         return return_type
@@ -440,7 +478,10 @@ class TypeChecker:
             except KeyError:
                 var_type = var.type
                 if (set_type is not None) and isinstance(var_type, AutoType):
-                    self.auto_types.remove((var.name, scope_id))
+                    try:
+                        self.auto_types.remove((var.name, scope_id))
+                    except ValueError:
+                        pass
                     self.infered_types[(var.name, scope_id)] = set_type
                     var_type = set_type
             return var_type

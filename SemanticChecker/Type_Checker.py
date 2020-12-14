@@ -49,7 +49,7 @@ class TypeChecker:
         scope.define_variable('self', SelfType())
         self.current_type = self.context.get_type(node.id)
         self.type_scope[self.current_type.name] = scope
-        if not isinstance(self.current_type.parent, ObjType):
+        if self.current_type.parent.name not in {ObjType().name, IntType().name, BoolType().name, StrType().name, 'IO'}:
             try:
                 parent_scope = self.type_scope[self.current_type.parent.name]
                 scope.parent.children.remove(scope)
@@ -353,8 +353,8 @@ class TypeChecker:
             expr_type = self.visit(node.expr, scope, set_type)
 
         if isinstance(var_type, AutoType) and not isinstance(expr_type, AutoType):
-            print((var.name, scope_id))
-            print(expr_type)
+            # print((var.name, scope_id))
+            # print(expr_type)
             try:
                 self.auto_types.remove((var.name, scope_id))
             except ValueError:
@@ -401,11 +401,11 @@ class TypeChecker:
                 except:
                     method_param_type = method.param_types[i]
                 if isinstance(method_param_type, AutoType) and not isinstance(arg_type, AutoType):
-                    print(self.auto_types)
-                    print(self.infered_types)
-                    print(self.current_type)
-                    print(self.current_method)
-                    print((node.id, t0.name, i))
+                    # print(self.auto_types)
+                    # print(self.infered_types)
+                    # print(self.current_type)
+                    # print(self.current_method)
+                    # print((node.id, t0.name, i))
                     try:
                         self.auto_types.remove((node.id, t0.name, i))
                     except ValueError:

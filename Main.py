@@ -80,7 +80,7 @@ def run_pipeline(G, text):
    print('Infered Types\n', infered_types)
 
 
-run_pipeline(G, inference)
+run_pipeline(G, gdispatch)
 
 # # nti = st.text_area('Ingrese el programa', '')
 

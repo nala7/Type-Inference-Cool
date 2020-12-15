@@ -51,7 +51,7 @@ def run_pipeline(G, text):
    builder = TypeBuilder(context, errors)
    builder.visit(ast)
    print('Errors: [')
-   for error in errors:
+   for error in errors:AUTO_TYPE
       print('\t', error)
    print(']')
    print('Context:')
@@ -80,9 +80,19 @@ def run_pipeline(G, text):
    print('Infered Types\n', infered_types)
 
 
-run_pipeline(G, ejemplo9)
 
-# # nti = st.text_area('Ingrese el programa', '')
+
+program = st.text_area('Ingrese el programa', '', 80)
+checkbox = st.checkbox('Correr programa')
+
+if checkbox:
+   st.text(program)
+   # print('AAA')
+   run_pipeline(G, program)
+   
+
+
+
 
 # tokens, errors = tokenize_text(program01)
 # pprint_tokens(tokens)

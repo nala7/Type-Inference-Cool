@@ -1382,8 +1382,77 @@ class A {
 '''
 ejemplo4 = '''
 class A {
-    succ ( n : AUTO_TYPE ) : AUTO_TYPE { AUTO_TYPE
+    succ ( n : AUTO_TYPE ) : AUTO_TYPE {
         n + 1
+    } ;
+} ;
+'''
+
+ejemplo5 = '''
+class A {
+    f ( n : AUTO_TYPE ) : AUTO_TYPE {
+        if 4 < 0 then 1 else 7 * f ( 1 ) fi
+    } ;
+} ;
+'''
+
+ejemplo6 = '''
+class A {
+    a : AUTO_TYPE ;
+    b : AUTO_TYPE ;
+    c : AUTO_TYPE ;
+    f ( ) : AUTO_TYPE {
+        {
+            a <- b ;
+            b <- c ;
+            c <- 4 ;
+        }
+    } ;
+} ;
+'''
+
+ejemplo7 = '''
+class A {
+    ackermann ( m : AUTO_TYPE , n : AUTO_TYPE ) : AUTO_TYPE {
+        if m = 0 then n + 1 else
+            if n = 0 then ackermann ( m - 1 , 1 ) else
+                ackermann ( m - 1 , ackermann ( m , n - 1 ) )
+            fi
+        fi
+    } ;
+} ;
+'''
+
+ejemplo8 = '''
+class A {
+    f ( a0 : AUTO_TYPE , a1 : AUTO_TYPE ) : AUTO_TYPE {
+        a0
+    } ;
+} ;
+class B inherits A {
+    f ( b0 : AUTO_TYPE , b1 : AUTO_TYPE ) : AUTO_TYPE {
+        {
+            b0 + 7 ;
+            b1 ;
+        } 
+    } ;
+} ;
+class C inherits B {
+    f ( c0 : AUTO_TYPE , c1 : AUTO_TYPE ) : AUTO_TYPE {
+        c1 + 1
+    } ;
+} ;
+'''
+
+ejemplo9 = '''
+class A {
+    f ( a : AUTO_TYPE ) : Object {
+        a + 6
+    } ;
+} ;
+class B inherits A {
+    f ( b : AUTO_TYPE ) : Object {
+        b <- " Esto es un String "
     } ;
 } ;
 '''

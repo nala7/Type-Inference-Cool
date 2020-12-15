@@ -24,22 +24,22 @@ class LR1Parser(psr.ShiftReduceParser):
                 # - Feel free to use `self._register(...)`)
                 if item.IsReduceItem:
                     if item.production.Left == G.startSymbol:
-                        key = (idx,G.EOF)
+                        key = (idx,G.EOF.Name)
                         value = (self.OK,None)
                         self.conflict |= self._register(self.action,key,value)
                     else:
                         for lookahead in item.lookaheads:
-                            key = (idx,lookahead)
+                            key = (idx,lookahead.Name)
                             value = (self.REDUCE,item.production)
                             self.conflict |= self._register(self.action,key,value)
                 else:
                     if item.NextSymbol.IsTerminal:
-                        key = (idx,item.NextSymbol)
-                        value = (self.SHIFT,node[item.NextSymbol.Name][0].idx)
+                        key = (idx,item.NextSymbol.Name)
+                        value = (self.SHIFT,node.transitions[item.NextSymbol.Name][0].idx)
                         self.conflict |= self._register(self.action,key,value)
                     else:
-                        key = (idx,item.NextSymbol)
-                        value = node[item.NextSymbol.Name][0].idx
+                        key = (idx,item.NextSymbol.Name)
+                        value = node.transitions[item.NextSymbol.Name][0].idx
                         self.conflict |= self._register(self.goto,key,value)
         
     @staticmethod

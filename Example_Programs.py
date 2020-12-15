@@ -1446,8 +1446,11 @@ class C inherits B {
 
 ejemplo9 = '''
 class A {
-    f ( a : AUTO_TYPE ) : Object {
-        a + 6
+    f ( a : AUTO_TYPE ) : AUTO_TYPE {
+        {
+            a + 6 ;
+            self ;
+        }
     } ;
 } ;
 class B inherits A {

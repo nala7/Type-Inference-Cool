@@ -52,7 +52,7 @@ class ShiftReduceParser:
             
             # action, tag = self.action[state, lookahead]
             # print(action, tag)
-            if not (state, lookahead) in self.action:
+            if not (state, lookahead.Name) in self.action:
                 # print("Falle pq no supe que accion realizar en el estado", state)
                 # for t in self.G.terminals:
                     # if (state, t.Name) in self.action:
@@ -60,7 +60,7 @@ class ShiftReduceParser:
                 return None
             #print('5')
                 
-            action, tag = self.action[state, lookahead]
+            action, tag = self.action[state, lookahead.Name]
             #print('6')
             # Your code here!!! (Shift case)
             if action == self.SHIFT:
@@ -79,7 +79,7 @@ class ShiftReduceParser:
                     length-=1
                 output.append(tag)
                 last=stack[-1]
-                stack.append(self.goto[last,tag.Left])
+                stack.append(self.goto[last,tag.Left.Name])
                 #print('Reduce done')
             # Your code here!!! (OK case)
             elif action==self.OK:

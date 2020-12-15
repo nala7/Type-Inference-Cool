@@ -51,7 +51,7 @@ def run_pipeline(G, text):
    builder = TypeBuilder(context, errors)
    builder.visit(ast)
    print('Errors: [')
-   for error in errors:AUTO_TYPE
+   for error in errors:
       print('\t', error)
    print(']')
    print('Context:')
@@ -82,7 +82,7 @@ def run_pipeline(G, text):
 
 
 
-program = st.text_area('Ingrese el programa', '', 80)
+program = st.text_area('Ingrese el programa', '', 500)
 checkbox = st.checkbox('Correr programa')
 
 if checkbox:

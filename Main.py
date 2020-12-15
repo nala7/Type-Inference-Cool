@@ -18,25 +18,13 @@ from SemanticChecker.Type_Inferer import TypeInferer
 
 def run_pipeline(G, text):
    print('=================== TEXT ======================')
-   # print(text)
    print('================== TOKENS =====================')
    tokens = tokenize_text(text)
-   # pprint_tokens(tokens)
    print('=================== PARSE =====================')
-   # parser = LR1Parser(G)
    parser = Serializer.load(os.getcwd() + '/parser')
-   # with open('action.p','wb') as fp:
-   #    pickle.dump(parser.action, fp, protocol = pickle.HIGHEST_PROTOCOL)
-   # with open('goto.p', 'wb') as fp:
-   #    pickle.dump(parser.goto, fp, protocol = pickle.HIGHEST_PROTOCOL)
-   # parser = LR1Parser(G, False, False)
-   # with open('action.p','rb') as fp:
-   #    parser.action = pickle.load(fp)
-   # with open('goto.p', 'rb') as fp:
-   #    parser.goto = pickle.load(fp)
+
    parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
 
-   # print('\n'.join(repr(x) for x in parse))
    print('==================== AST ======================')
    ast = evaluate_reverse_parse(parse, operations, tokens)
    formatter = print_ast.FormatVisitor()
@@ -81,17 +69,6 @@ def run_pipeline(G, text):
    print(']')
    print('Auto Types\n', auto_types)
    print('Infered Types\n', infered_types)
-
-
-
-
-# program = st.text_area('Ingrese el programa', '', 500)
-# checkbox = st.checkbox('Correr programa')
-
-# if checkbox:
-#    st.text(program)
-#    # print('AAA')
-#    run_pipeline(G, program)
    
 run_pipeline(G, ejemplo9)
 

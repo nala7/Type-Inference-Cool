@@ -27,7 +27,18 @@ class TypeChecker:
         self.scope_id = 0
         self.auto_types = []
         self.infered_types = infered_types
+        print(len(infered_types))
+
         self.type_scope = {}
+
+    def FirstCall(self, context):
+        self.context = context
+        self.current_type = None
+        self.current_method = None
+        self.errors = []
+        self.scope_id = 0
+        self.auto_types = []
+        self.infered_types = {}
 
     @visitor.on('node')
     def visit(self, node, scope):
@@ -41,7 +52,13 @@ class TypeChecker:
             child_scope = scope.create_child(self.scope_id)
             self.scope_id += 1
             self.visit(declaration, child_scope)
-        return scope, self.infered_types, self.auto_types
+
+        scope_, infered_types_, auto_types_ = scope, self.infered_types, self.auto_types
+        del scope
+        del self.infered_types
+        del self.auto_types
+    
+        return scope_, infered_types_, auto_types_
 
     @visitor.when(ClassDeclarationNode)
     def visit(self, node, scope, set_type = None):

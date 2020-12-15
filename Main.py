@@ -22,6 +22,7 @@ import AST.AST_Print as print_ast
 import streamlit as st 
 import pickle
 import os
+import gc
 
 from Example_Programs import *
 from Tokenizer import *
@@ -34,55 +35,45 @@ from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
 from SemanticChecker.Type_Inferer import TypeInferer
 from Serializer import Serializer
-
-st.sidebar.header("About")
-st.sidebar.subheader("Segundo Proyecto de Compilacion: Cool Type Inferer")
-st.sidebar.text("Nadia González Fernández")
-st.sidebar.text("Jose Alejandro Labourdette-Lartigue Soto")
-st.sidebar.text("Grupo: C-312")
+from flask import Flask,render_template,request,redirect
 
 
 """ # Cool Intrepreter """
-
-data = st.text_area("Enter code", "", 500)
-run_analysis = st.button("Run", "")
+#run_analysis = st.button("Run", "")
 
 def run_pipeline(G, text):
-   st.write('=================== TEXT ======================')
-   st.write(text)
-   st.write('================== TOKENS =====================')
+   print(text)
    tokens = tokenize_text(text)
-   st.write('=================== PARSE =====================')
    parser = Serializer.load(os.getcwd() + '/parser')
 
    parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
 
-   st.write('==================== AST ======================')
+   ret_text = ''
+   ret_text += '==================== AST ====================== \n'
    ast = evaluate_reverse_parse(parse, operations, tokens)
    formatter = print_ast.FormatVisitor()
    tree = formatter.visit(ast)
-   st.write(tree)
-   st.write('============== COLLECTING TYPES ===============')
+   ret_text += str(tree) + '\n'
+   ret_text += '============== COLLECTING TYPES ==============='  + '\n'
    errors = []
    collector = TypeCollector(errors)
    collector.visit(ast)
    context = collector.context
-   st.write('Errors:', errors)
-   st.write('Context:')
-   st.write(context)
-   st.write('=============== BUILDING TYPES ================')
+   ret_text += 'Errors:' + str(errors)  + '\n'
+   ret_text += 'Context:'  + '\n'
+   ret_text += str(context)  + '\n'
+   ret_text += '=============== BUILDING TYPES ================' + '\n'
    builder = TypeBuilder(context, errors)
    builder.visit(ast)
-   st.write('Errors: [')
-   for error in errors:
-      print('\t', error)
-   st.write(']')
-   st.write('Context:')
-   st.write(context)
-   st.write('=============== CHECKING TYPES ================')
+   ret_text += 'Errors:' + str(errors) + '\n'
+   ret_text += 'Context:' + '\n'
+   ret_text += str(context) + '\n'
+   ret_text += '=============== CHECKING TYPES ================'  + '\n'
    old_errors = errors.copy()
    checker = TypeChecker(context, old_errors)
+   checker.FirstCall(context)
    scope, infered_types, auto_types = checker.visit(ast)
+   print('\n\t'.join(f'{key}: {infered_types[key]}' for key in infered_types))
    while True:
       old_errors = errors.copy()
       old_len = len(auto_types)
@@ -91,20 +82,20 @@ def run_pipeline(G, text):
       if len(auto_types) == old_len:
          errors = old_errors
          break
+   del checker
 
-   st.write('Scope:')
+   ret_text += 'Scope:' + '\n'
    scope_tree = Scope_Print().visit(scope)
-   st.write(scope_tree)
-   st.write('Errors: [')
-   for error in errors:
-       st.write('\t', error)
-   st.write(']')
-   st.write('Auto Types\n', auto_types)
-   for key in infered_types:
-      st.write('{\n\t' + '\n\t'.join(f'{key}: {infered_types[key]}' for key in infered_types))
+   ret_text += str(scope_tree) + '\n'
+   ret_text += 'Errors:' + str(errors) + '\n'
+   ret_text += 'Auto Types\n' + str(auto_types) + '\n'
+   ret_text += 'Infered Types' + '\n'
+   ret_text += '\n\t'.join(f'{key}: {infered_types[key]}' for key in infered_types) + '\n'
 
+   return ret_text
+   
    # st.write('Infered Types\n', infered_types)
 
-if (run_analysis):
-   run_pipeline(G, data)
+#if (run_analysis):
+
 

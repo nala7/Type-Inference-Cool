@@ -1356,3 +1356,34 @@ class Main inherits IO {
 	main ( ) : IO { out_string ( " Hello World! " ) } ;
 } ;
 '''
+
+ejemplo1 = '''
+class A {
+    f ( a : AUTO_TYPE ) : AUTO_TYPE {
+        a + 4
+    } ;
+} ;
+'''
+
+ejemplo2 = '''
+class A {
+    f ( a : AUTO_TYPE ) : Int {
+        a
+    } ;
+} ;
+'''
+
+ejemplo3 = '''
+class A { 
+    f ( a : Int ) : AUTO_TYPE {
+        a + 7 
+    } ;
+} ;
+'''
+ejemplo4 = '''
+class A {
+    succ ( n : AUTO_TYPE ) : AUTO_TYPE { AUTO_TYPE
+        n + 1
+    } ;
+} ;
+'''

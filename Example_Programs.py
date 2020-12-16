@@ -20,7 +20,7 @@ program01 = '''
             esac
         } ;
         g ( a : A , c : A ) : A {
-            if not 7 + 9 < 2 then a = 5 else c = 3 fi
+            if not ( 7 + 9 < 2 ) then a = 5 else c = 3 fi
         } ;
         h ( l : Int ) : Void {
             let let_name : Int <- 5 + 2 , k : Int <- 95 , m : AUTO_TYPE <- 5 in m + 9

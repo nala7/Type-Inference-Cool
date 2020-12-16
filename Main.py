@@ -35,14 +35,11 @@ from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
 from SemanticChecker.Type_Inferer import TypeInferer
 from Serializer import Serializer
-from flask import Flask,render_template,request,redirect
 
 
 """ # Cool Intrepreter """
-#run_analysis = st.button("Run", "")
 
 def run_pipeline(G, text):
-   print(text)
    tokens = tokenize_text(text)
    parser = Serializer.load(os.getcwd() + '/parser')
 
@@ -54,26 +51,25 @@ def run_pipeline(G, text):
    formatter = print_ast.FormatVisitor()
    tree = formatter.visit(ast)
    ret_text += str(tree) + '\n'
-   ret_text += '============== COLLECTING TYPES ==============='  + '\n'
+   # ret_text += '============== COLLECTING TYPES ==============='  + '\n'
    errors = []
    collector = TypeCollector(errors)
    collector.visit(ast)
    context = collector.context
-   ret_text += 'Errors:' + str(errors)  + '\n'
-   ret_text += 'Context:'  + '\n'
-   ret_text += str(context)  + '\n'
+   # ret_text += 'Errors:' + str(errors)  + '\n'
+   # ret_text += 'Context:'  + '\n'
+   # ret_text += str(context)  + '\n'
    ret_text += '=============== BUILDING TYPES ================' + '\n'
    builder = TypeBuilder(context, errors)
    builder.visit(ast)
-   ret_text += 'Errors:' + str(errors) + '\n'
+   # ret_text += 'Errors:' + str(errors) + '\n'
    ret_text += 'Context:' + '\n'
    ret_text += str(context) + '\n'
    ret_text += '=============== CHECKING TYPES ================'  + '\n'
    old_errors = errors.copy()
    checker = TypeChecker(context, old_errors)
-   checker.FirstCall(context)
+   checker.FirstCall(context, old_errors)
    scope, infered_types, auto_types = checker.visit(ast)
-   print('\n\t'.join(f'{key}: {infered_types[key]}' for key in infered_types))
    while True:
       old_errors = errors.copy()
       old_len = len(auto_types)
@@ -87,10 +83,12 @@ def run_pipeline(G, text):
    ret_text += 'Scope:' + '\n'
    scope_tree = Scope_Print().visit(scope)
    ret_text += str(scope_tree) + '\n'
-   ret_text += 'Errors:' + str(errors) + '\n'
-   ret_text += 'Auto Types\n' + str(auto_types) + '\n'
-   ret_text += 'Infered Types' + '\n'
-   ret_text += '\n\t'.join(f'{key}: {infered_types[key]}' for key in infered_types) + '\n'
+   str_errors = '\n\t'.join(error for error in errors)
+   ret_text += 'Errors:\n\t' + str_errors + '\n'
+   str_auto_types = '\n\t'.join(str(at) for at in auto_types)
+   ret_text += 'Auto Types:\n\t' + str_auto_types + '\n'
+   ret_text += 'Infered Types:' + '\n\t'
+   ret_text += '\n\t'.join(f'{key}: {infered_types[key].name}' for key in infered_types) + '\n'
 
    return ret_text
 

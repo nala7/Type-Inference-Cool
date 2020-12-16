@@ -31,7 +31,7 @@ class TypeBuilder:
                     current = typex
                     while True:
                         if current.name == node.id:
-                            self.errors.append(f'cyclic inheritince with {node.id} and {node.parent}')
+                            self.errors.append(f'Cyclic inheritince between classes "{node.id}" and "{node.parent}".')
                             typex = self.context.get_type(ObjType().name)
                             break
                         if current.name == ObjType().name:

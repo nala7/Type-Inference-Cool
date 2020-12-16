@@ -8,7 +8,6 @@ class FormatVisitor(object):
     
     @visitor.when(ProgramNode)
     def visit(self, node, tabs=0):
-        print('prog node')
         ans = '\t' * tabs + f'\\__ProgramNode [<class> ... <class>]'
         statements = '\n'.join(self.visit(child, tabs + 1) for child in node.declarations)
         return f'{ans}\n{statements}'

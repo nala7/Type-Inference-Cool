@@ -115,7 +115,7 @@ Infered Types {
 }
 ```
 
-La variable **n** es inferida a **Int** pq fue visitada desde el nodo binario y luego **succ** es inferido a **Int** porque es el tipo de retorno de la expresión.
+La variable **n** es inferida a **Int** porque fue visitada desde el nodo binario y luego **succ** es inferido a **Int** porque es el tipo de retorno de la expresión.
 
 Analizemos ahora el siguiente ejemplo:
  ## Ejemplo 5

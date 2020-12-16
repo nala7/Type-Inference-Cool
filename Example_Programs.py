@@ -540,7 +540,7 @@ class B inherits A {
 """
 text18 = """
 class A {
-    f ( a : AUTO_TYPE ) Int {
+    f ( a : AUTO_TYPE ) : Int {
         if ( a = 7 ) then " str " else ( 0 = 0 ) fi
     } ;
 } ;
@@ -802,7 +802,6 @@ main ( ) : SELF_TYPE {
 
 g08 = """
 class Main inherits IO {
-
     main ( ) : Object {
         let id : AUTO_TYPE , name : AUTO_TYPE , email : AUTO_TYPE in {
             out_string ( " Introduzca su id:  " ) ;
@@ -812,7 +811,7 @@ class Main inherits IO {
             out_string ( " Introduzca su email:  " ) ;
             email <- self . in_string ( ) ;
             let user : AUTO_TYPE <- ( new User ) . init ( id , name , email ) in
-                out_string ( ( ( " Created user: " ) . concat ( user . get_name ( ) ) ) . concat ( " \n " ) ) ;
+                out_string ( ( " Created user: " ) . concat ( user . get_name ( ) ) . concat ( " \n " ) ) ;
         }
     } ;
 } ;
@@ -877,11 +876,11 @@ class Vector2 {
     x : AUTO_TYPE ;
     y : AUTO_TYPE ;
 
-    init ( x_ : AUTO_TYPE , y_ : AUTO_TYPE ) : AUTO_TYPE { 
+    init ( x_ : AUTO_TYPE , y_ : AUTO_TYPE ) : Int { 
         {
-            x <- x_;
-            y <- y_;
-            self;
+            x <- x_ ;
+            y <- y_ ;
+            self ;
         }
     } ;
 
@@ -893,22 +892,26 @@ class Vector2 {
         y
     } ;
 
-    add ( v : Vector2 ) : AUTO_TYPE {
+    add ( v : Vector2 ) : AUTO_TYPE 
+    {
         ( new Vector2 ) . init ( x + v . get_x ( ) , y + v . get_y ( ) )
     } ;
 
-    print_vector ( ) : AUTO_TYPE {
-        let io : IO <- new IO in {
+    print_vector ( ) : AUTO_TYPE 
+    {
+        let io : IO <- new IO in 
+        {
             io . out_string ( " ( " ) ;
             io . out_int ( get_x ( ) ) ;
             io . out_string ( " ;  " ) ;
             io . out_int ( get_y ( ) ) ;
-            io . out_string ( " ) \n " ) ;
+            io . out_string ( " ) n " ) ;
         }
     } ;
 
-    clone_vector ( ) : AUTO_TYPE {
-        ( new Vector2 ) . init( x , y )
+    clone_vector ( ) : AUTO_TYPE 
+    {
+        new Vector2 . init ( x , y )
     } ;
 } ;
 """

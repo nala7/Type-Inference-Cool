@@ -1,8 +1,9 @@
 import pydot
-from pandas import DataFrame
+# from pandas import DataFrame
 from PIL import Image
-import streamlit as st
+# import streamlit as st
 from cmp.automata import State, multiline_formatter
+from cmp.utils import ContainerSet
 
 
 class NFA:
@@ -87,7 +88,6 @@ class DFA(NFA):
         return value
 
 
-from cmp.utils import ContainerSet
 
 
 def move(automaton, states, symbol):
@@ -156,7 +156,7 @@ def nfa_to_dfa(automaton):
 def PrintAutomaton(automaton, name_file, text):
     automaton.graph().write_png(name_file)
     image = Image.open(name_file)
-    st.image(image, text)
+    # st.image(image, text)
 
 
 def GetDerivationTree(G, productions, of_parser_SR=False):

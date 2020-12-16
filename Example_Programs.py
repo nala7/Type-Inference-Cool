@@ -118,40 +118,6 @@ JanPoul = """
     } ;
     """
 
-program0 = """
-    class A { 
-        a : AUTO_TYPE <- 76 ;
-        g : AUTO_TYPE ;
-        f ( x : Int ) : AUTO_TYPE {
-            let x : AUTO_TYPE in 3
-        } ;
-
-    } ;
-"""
-program1 = """
-    class A {
-        a : B ;
-        suma ( a : Int , b : Int ) : Int {
-            if { 4 ; 7 + 3 ; } then a . func ( 8 + 7 , a ) else a + b + b fi
-        } ;
-        b : auto ;
-    } ;
-
-    class B inherits A {
-        c : Int <- ( 56 + 6 ) ;
-        f ( d : Int , a : A ) : self {
-            while 4 + 4
-            loop let a : F , b : A <- 4 + 6 in 5
-            pool
-        } ;
-        k ( a : Int ) : Int {
-            case new A
-            of a : r => 5 + 8 ;
-            esac
-        } ;
-    } ;
-    """
-
 class_with_attr = """
     class A {
         a : Int ;
@@ -161,7 +127,7 @@ class_with_attr = """
         a : Int ;
     } ;
     """
-class_with_herency = """
+class_with_inheritance = """
     class A inherits K {
         a : Int ;
         a : K ;
@@ -186,16 +152,16 @@ method_definition = """
     class A inherits K {
         a : Int <- 6 ;
         a : K <- 8 + 9 ;
-        def f ( ) : A {
+        f ( ) : A {
             8
         } ;
-        def k ( i : Int , j : Z ) : Int {
+        k ( i : Int , j : Z ) : Int {
             4
         } ;
     } ;
     class B {
         a : Int ;
-        def j ( m : I ) : A {
+        j ( m : I ) : A {
             1
         } ;
     } ;
@@ -204,16 +170,16 @@ using_boolean_op = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
-        def f ( ) : A {
+        f ( ) : A {
             8
         } ;
-        def k ( i : Int , j : Z ) : Int {
+        k ( i : Int , j : Z ) : Int {
             8 = 34
         } ;
     } ;
     class B {
         a : Int ;
-        def j ( m : I ) : A {
+        j ( m : I ) : A {
             1
         } ;
     } ;
@@ -222,16 +188,16 @@ large_compare_expr = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
-        def f ( ) : A {
+        f ( ) : A {
             ( 3 + 56 ) + 84 < 200 = true
         } ;
-        def k ( i : Int , j : Z ) : Int {
+        k ( i : Int , j : Z ) : Int {
             8 = 34
         } ;
     } ;
     class B {
         a : Int ;
-        def j ( m : I ) : A {
+        j ( m : I ) : A {
             true = false
         } ;
     } ;
@@ -240,16 +206,16 @@ let_program = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
-        def f ( ) : A {
+        f ( ) : A {
             ( 3 + 56 ) + 84 < 200 = true
         } ;
-        def k ( i : Int , j : Z ) : Int {
+        k ( i : Int , j : Z ) : Int {
             let x : H , y : Int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
         } ;
     } ;
     class B {
         a : Int ;
-        def j ( m : I ) : A {
+        j ( m : I ) : A {
             ( let m : K in 7 + 7 ) < 8 = false
         } ;
     } ;
@@ -258,21 +224,21 @@ while_program = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
-        def f ( ) : A {
+        f ( ) : A {
             ( 3 + 56 ) + 84 < 200 = true
         } ;
-        def k ( i : Int , j : Z ) : Int {
+        k ( i : Int , j : Z ) : Int {
             let x : H , y : Int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
         } ;
     } ;
     class B {
         a : Int ;
-        def j ( m : I ) : A {
+        j ( m : I ) : A {
             ( let m : K in 7 + 7 ) < 8 = false
         } ;
     } ;
     class C {
-        def f ( ) : Void {
+        f ( ) : Void {
             while true loop 3 pool
         } ;
     } ;
@@ -280,89 +246,26 @@ while_program = """
 func_call_program = """
     class A inherits K {
         a : K <- 8 + 9 = 9 ;
-        def f ( ) : A {
+        f ( ) : A {
             a . f ( )
         } ;
-        def k ( i : Int , j : Z ) : Int {
+        k ( i : Int , j : Z ) : Int {
             let x : H , y : Int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
         } ;
     } ;
     class B {
         a : Int ;
-        def j ( m : I ) : A {
+        j ( m : I ) : A {
             ( let m : K in 7 + 7 ) = 8 = false
         } ;
     } ;
     class C {
-        def f ( ) : Void {
+        f ( ) : Void {
             ( a . k ( 1 , 6 ) ) . f ( 7 )
         } ;
     } ;
     """
-program2 = """
-    class A {
-        a : Z ;
-        def suma ( a : Int , b : B ) : Int {
-            a + b ;
-        }
-        b : Int ;
-        c : C ;
-    }
-
-    class B : A {
-        c : A ;
-        def f ( d : Int , a : A ) : Void {
-            let f : Int = 8 ;
-            let c = new A ( ) . suma ( 5 , f ) ;
-            c ;
-        }
-        z : Int ;
-        z : A ;
-    }
-
-    class C : Z {
-    }
-
-    class D : A {
-        def suma ( a : Int , d : B ) : Int {
-            d ;
-        }
-    }
-
-    class E : A {
-        def suma ( a : A , b : B ) : Int {
-            a ;
-        }
-    }
-
-    class F : B {
-        def f ( d : Int , a : A ) : Void {
-            a ;
-        }
-    }
-    """
-
-program3 = """
-    class A {
-        a : Int ;
-        def suma ( a : Int , b : Int ) : Int {
-            " Cuba es una musica vital. "
-        } ;
-        b : Int ;
-    }
-
-    class B : A {
-        c : A ;
-        def f ( d : Int , a : A ) : Void {
-            let f : Int = 8 ;
-            let c = new A ( ) . suma ( 5 , f ) ;
-            d ;        
-        }
-    }
-    """
-
-
-text = """
+text ="""
     class A {
         a : Z ;
         suma ( a : Int , b : B ) : Int {
@@ -387,238 +290,6 @@ text = """
         b : A ;
     } ;
 """
-program1 = """
-    class A {
-        a : Int ;
-        suma ( a : Int , b : Int ) : Int {
-            if { 4 ; 7 + 3 ; } then a . func ( 8 + 7 , a ) else a + b + b fi
-        } ;
-        b : auto ;
-    } ;
-
-    class B inherits A {
-        c : Int <- ( 56 + 6 ) ;
-        f ( d : Int , a : A ) : void {
-            while 4 + 4
-            loop let a : F , b : A <- 4 + 6 in 5
-            pool
-        } ;
-        k ( a : Int ) : Int {
-            case new A
-            of a : r => 5 + 8 ;
-            esac
-        } ;
-    } ;
-    """
-
-class_with_attr = """
-    class A {
-        a : Int ;
-        a : K ;
-    } ;
-    class B {
-        a : Int ;
-    } ;
-    """
-class_with_herency = """
-    class A inherits K {
-        a : Int ;
-        a : K ;
-    } ;
-    class B {
-        a : Int ;
-    } ;
-    class W inherits B {
-        s : Int ;
-    } ;
-    """
-class_attr_assignation = """
-    class A inherits K {
-        a : Int <- 6 ;
-        a : K <- 8 + 9 ;
-    } ;
-    class B {
-        a : Int ;
-    } ;
-    """
-method_definition = """
-    class A inherits K {
-        a : Int <- 6 ;
-        a : K <- 8 + 9 ;
-        def f ( ) : A {
-            8
-        } ;
-        def k ( i : Int , j : Z ) : Int {
-            4
-        } ;
-    } ;
-    class B {
-        a : Int ;
-        def j ( m : I ) : A {
-            1
-        } ;
-    } ;
-    """
-using_boolean_op = """
-    class A inherits K {
-        a : Int <- 6 = 0 ;
-        a : K <- 8 + 9 < 9 ;
-        def f ( ) : A {
-            8
-        } ;
-        def k ( i : Int , j : Z ) : Int {
-            8 = 34
-        } ;
-    } ;
-    class B {
-        a : Int ;
-        def j ( m : I ) : A {
-            1
-        } ;
-    } ;
-    """
-large_compare_expr = """
-    class A inherits K {
-        a : Int <- 6 = 0 ;
-        a : K <- 8 + 9 < 9 ;
-        def f ( ) : A {
-            ( 3 + 56 ) + 84 < 200 = true
-        } ;
-        def k ( i : Int , j : Z ) : Int {
-            8 = 34
-        } ;
-    } ;
-    class B {
-        a : Int ;
-        def j ( m : I ) : A {
-            true = false
-        } ;
-    } ;
-    """
-let_program = """
-    class A inherits K {
-        a : Int <- 6 = 0 ;
-        a : K <- 8 + 9 < 9 ;
-        def f ( ) : A {
-            ( 3 + 56 ) + 84 < 200 = true
-        } ;
-        def k ( i : Int , j : Z ) : Int {
-            let x : H , y : Int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
-        } ;
-    } ;
-    class B {
-        a : Int ;
-        def j ( m : I ) : A {
-            ( let m : K in 7 + 7 ) < 8 = false
-        } ;
-    } ;
-    """
-while_program = """
-    class A inherits K {
-        a : Int <- 6 = 0 ;
-        a : K <- 8 + 9 < 9 ;
-        def f ( ) : A {
-            ( 3 + 56 ) + 84 < 200 = true
-        } ;
-        def k ( i : Int , j : Z ) : Int {
-            let x : H , y : Int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
-        } ;
-    } ;
-    class B {
-        a : Int ;
-        def j ( m : I ) : A {
-            ( let m : K in 7 + 7 ) < 8 = false
-        } ;
-    } ;
-    class C {
-        def f ( ) : void {
-            while true loop 3 pool
-        } ;
-    } ;
-    """
-func_call_program = """
-    class A inherits K {
-        a : K <- 8 + 9 = 9 ;
-        def f ( ) : A {
-            a . f ( )
-        } ;
-        def k ( i : Int , j : Z ) : Int {
-            let x : H , y : Int <- 34 + 87 * ( 7 ) in x + 4 * ( y + y )
-        } ;
-    } ;
-    class B {
-        a : Int ;
-        def j ( m : I ) : A {
-            ( let m : K in 7 + 7 ) = 8 = false
-        } ;
-    } ;
-    class C {
-        def f ( ) : void {
-            ( a . k ( 1 , 6 ) ) . f ( 7 )
-        } ;
-    } ;
-    """
-program2 = """
-    class A {
-        a : Z ;
-        def suma ( a : Int , b : B ) : Int {
-            a + b ;
-        }
-        b : Int ;
-        c : C ;
-    }
-
-    class B : A {
-        c : A ;
-        def f ( d : Int , a : A ) : void {
-            let f : Int = 8 ;
-            let c = new A ( ) . suma ( 5 , f ) ;
-            c ;
-        }
-        z : Int ;
-        z : A ;
-    }
-
-    class C : Z {
-    }
-
-    class D : A {
-        def suma ( a : Int , d : B ) : Int {
-            d ;
-        }
-    }
-
-    class E : A {
-        def suma ( a : A , b : B ) : Int {
-            a ;
-        }
-    }
-
-    class F : B {
-        def f ( d : Int , a : A ) : void {
-            a ;
-        }
-    }
-    """
-
-program3 = """
-    class A {
-        a : Int ;
-        def suma ( a : Int , b : Int ) : Int {
-            " Cuba es una musica vital. "
-        } ;
-        b : Int ;
-    }
-
-    class B : A {
-        c : A ;
-        def f ( d : Int , a : A ) : void {
-            let f : Int = 8 ;
-            let c = new A ( ) . suma ( 5 , f ) ;
-            d ;        
-        }
-    }
-    """
 
 text1 = """
     class A {
@@ -861,7 +532,7 @@ class A {
     } ;
 } ;
 
-class B : A {
+class B inherits A {
     f ( ) : AUTO_TYPE {
         5 < 6
     } ;
@@ -870,7 +541,7 @@ class B : A {
 text18 = """
 class A {
     f ( a : AUTO_TYPE ) Int {
-        if ( a = 7 ) then "str" else ( 0 = 0 ) fi
+        if ( a = 7 ) then " str " else ( 0 = 0 ) fi
     } ;
 } ;
 """
@@ -887,7 +558,7 @@ class Main inherits IO {
             out_string ( " Introduzca su email: " ) ;
             email <- self . in_string ( ) ;
             let user : AUTO_TYPE <- ( new User ) . init ( id , name , email ) in
-                out_string ( " Created user: " . concat ( user . get_name ( ) ) . concat ( " \n " ) ) ;
+                out_string ( ( " Created user: " . concat ( user . get_name ( ) ) ) . concat ( " \n " ) ) ;
         }
     } ;
 } ;
@@ -897,12 +568,14 @@ class User {
     name : AUTO_TYPE ;
     email : AUTO_TYPE ;
 
-    init ( id_ : AUTO_TYPE , name_ : AUTO_TYPE , email_ : AUTO_TYPE ) : AUTO_TYPE { {
-        id <- id_ ;
-        name <- name_ ;
-        email <- email_ ;
-        self ;
-    } } ;
+    init ( id_ : AUTO_TYPE , name_ : AUTO_TYPE , email_ : AUTO_TYPE ) : AUTO_TYPE {
+        {
+            id <- id_ ;
+            name <- name_ ;
+            email <- email_ ;
+            self ;
+        }
+     } ;
 
     get_name ( ) : AUTO_TYPE {
         name
@@ -1033,12 +706,12 @@ class A {
 } ;
 """
 
-cyclic_inheretence = """
+cyclic_inheretance = """
 class B inherits B { } ;
 class A inherits B { } ;
 """
 
-cyclic_inheretence1 = """
+cyclic_inheretance1 = """
 class C inherits B { } ;
 class A inherits B { } ;
 class B inherits A { } ;
@@ -1097,7 +770,7 @@ class A {
 } ;
 """
 
-noerrors = """
+no_errors = """
 class A {
     a : C ;
     suma ( a : Int , b : B ) : Int {
@@ -1164,7 +837,7 @@ class User {
 } ;
 """
 
-informe = """
+form = """
 class A {
     f ( a : AUTO_TYPE ) : Int {
         a
@@ -1240,7 +913,7 @@ class Vector2 {
 } ;
 """
 
-informe2 = """
+form2 = """
 class A {
     fact ( n : AUTO_TYPE ) : AUTO_TYPE {
         if n < 0 then 1 else fact ( n - 1 ) fi
@@ -1459,3 +1132,9 @@ class B inherits A {
     } ;
 } ;
 """
+
+examples = [
+    (example_name, example_text)
+    for (example_name, example_text) in locals().items()
+    if not example_name.startswith("__")
+]

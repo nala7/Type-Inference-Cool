@@ -31,4 +31,4 @@ class Serializer:
 if __name__ == "__main__":
     sys.setrecursionlimit(5000)
     parser = LR1Parser(G)
-    Serializer.save(parser, os.getcwd() + "/parser")
+    Serializer.save(parser, os.getcwd() + "/compiled_parser")

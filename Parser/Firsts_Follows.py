@@ -1,5 +1,5 @@
 from cmp.utils import ContainerSet
-import streamlit as st
+# import streamlit as st
 
 # Computes First(alpha), given First(Vt) and First(Vn)
 
@@ -151,10 +151,10 @@ def SLPrintFirsts(G, firsts):
             except:
                 firstsProductions[str(prod.Right)] = p.Name
 
-    st.write("Firsts")
-    st.write("Terminals", firstsTerminals)
-    st.write("NonTerminals", firstsNonTerminals)
-    st.write("Productions", firstsProductions)
+    # st.write("Firsts")
+    # st.write("Terminals", firstsTerminals)
+    # st.write("NonTerminals", firstsNonTerminals)
+    # st.write("Productions", firstsProductions)
 
 
 def SLPrintFollows(G, follows):
@@ -166,5 +166,5 @@ def SLPrintFollows(G, follows):
             except:
                 followsNonTerminals[nonTerminal.Name] = [nt.Name]
 
-    st.write("Follows")
-    st.write("NonTerminals", followsNonTerminals)
+    # st.write("Follows")
+    # st.write("NonTerminals", followsNonTerminals)

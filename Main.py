@@ -2,6 +2,7 @@ import AST.AST_Print as AST_Print
 import os
 
 from cmp.evaluation import evaluate_reverse_parse
+from Example_Programs import examples
 from Tokenizer import *
 from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
@@ -14,7 +15,7 @@ from Serializer import Serializer
 
 def run_pipeline(text):
     tokens = tokenize_text(text)
-    parser = Serializer.load(os.getcwd() + "/parser")
+    parser = Serializer.load(os.getcwd() + "/compiled_parser")
 
     parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
 
@@ -67,3 +68,19 @@ def run_pipeline(text):
     )
 
     return ret_text
+
+
+def run_example_files():
+    fail = []
+    for example_name, example_text in examples:
+        print(example_name)
+        try:
+            print(run_pipeline(example_text))
+        except:
+            fail.append(example_name)
+
+    print(f"FAILING EXAMPLES: {fail}")
+
+
+if __name__ == "__main__":
+    run_example_files()

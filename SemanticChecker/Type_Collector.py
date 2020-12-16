@@ -1,8 +1,6 @@
-import cmp.nbpackage
 import cmp.visitor as visitor
 from AST.AST_Hierarchy import *
 from cmp.semantic import ObjType, SemanticError
-from cmp.semantic import Attribute, Method, Type
 from cmp.semantic import VoidType, ErrorType
 from cmp.semantic import IntType, StrType, SelfType, AutoType, BoolType
 from cmp.semantic import Context

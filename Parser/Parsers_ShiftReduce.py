@@ -1,4 +1,4 @@
-from pandas import DataFrame
+# from pandas import DataFrame
 
 
 class ShiftReduceParser:
@@ -74,13 +74,13 @@ def encode_value(value):
         return value
 
 
-def table_to_dataframe(table):
-    d = {}
-    for (state, symbol), value in table.items():
-        value = encode_value(value)
-        try:
-            d[state][symbol] = value
-        except KeyError:
-            d[state] = {symbol: value}
-
-    return DataFrame.from_dict(d, orient="index", dtype=str)
+# def table_to_dataframe(table):
+#     d = {}
+#     for (state, symbol), value in table.items():
+#         value = encode_value(value)
+#         try:
+#             d[state][symbol] = value
+#         except KeyError:
+#             d[state] = {symbol: value}
+#
+#     return DataFrame.from_dict(d, orient="index", dtype=str)

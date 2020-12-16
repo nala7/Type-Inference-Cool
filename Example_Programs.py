@@ -1,4 +1,4 @@
-program01 = '''
+program01 = """
     class A {
         a : Int ;
         suma ( a : Int , b : Int ) : Int {
@@ -26,8 +26,8 @@ program01 = '''
             let let_name : Int <- 5 + 2 , k : Int <- 95 , m : AUTO_TYPE <- 5 in m + 9
         } ; 
     } ;
-    '''
-program02 = '''
+    """
+program02 = """
     class A {
         f ( a : Int ) : Int {
             a
@@ -54,8 +54,8 @@ program02 = '''
             let d : B <- new B in d @ Z . f ( 7 )
         } ;
     } ;
-    '''
-program03 = '''
+    """
+program03 = """
     class A {
         a : SELF_TYPE ;
     } ;
@@ -78,8 +78,8 @@ program03 = '''
             8 = 1
         } ;
     } ;
-    '''
-program04 = '''
+    """
+program04 = """
     class A {
         a : A ;
     } ;
@@ -92,8 +92,8 @@ program04 = '''
             esac
         } ;
     } ;
-    '''
-program05 = '''
+    """
+program05 = """
     class Main {
         f ( a : Int ) : Int {
             7 + 8
@@ -105,9 +105,9 @@ program05 = '''
             self . f ( 7 )
         } ;
     } ;
-    '''
+    """
 
-JanPoul = '''
+JanPoul = """
     class Main inherits IO {
         main ( ) : AUTO_TYPE {
             let x : AUTO_TYPE <- 3 in
@@ -116,9 +116,9 @@ JanPoul = '''
                 esac
         } ;
     } ;
-    '''
+    """
 
-program0 = '''
+program0 = """
     class A { 
         a : AUTO_TYPE <- 76 ;
         g : AUTO_TYPE ;
@@ -127,8 +127,8 @@ program0 = '''
         } ;
 
     } ;
-'''
-program1 = '''
+"""
+program1 = """
     class A {
         a : B ;
         suma ( a : Int , b : Int ) : Int {
@@ -150,9 +150,9 @@ program1 = '''
             esac
         } ;
     } ;
-    '''
+    """
 
-class_with_attr = '''
+class_with_attr = """
     class A {
         a : Int ;
         a : K ;
@@ -160,8 +160,8 @@ class_with_attr = '''
     class B {
         a : Int ;
     } ;
-    '''
-class_with_herency = '''
+    """
+class_with_herency = """
     class A inherits K {
         a : Int ;
         a : K ;
@@ -172,8 +172,8 @@ class_with_herency = '''
     class W inherits B {
         s : Int ;
     } ;
-    '''
-class_attr_assignation = '''
+    """
+class_attr_assignation = """
     class A inherits K {
         a : Int <- 6 ;
         a : K <- 8 + 9 ;
@@ -181,8 +181,8 @@ class_attr_assignation = '''
     class B {
         a : Int ;
     } ;
-    '''
-method_definition = '''
+    """
+method_definition = """
     class A inherits K {
         a : Int <- 6 ;
         a : K <- 8 + 9 ;
@@ -199,8 +199,8 @@ method_definition = '''
             1
         } ;
     } ;
-    '''
-using_boolean_op = '''
+    """
+using_boolean_op = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
@@ -217,8 +217,8 @@ using_boolean_op = '''
             1
         } ;
     } ;
-    '''
-large_compare_expr = '''
+    """
+large_compare_expr = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
@@ -235,8 +235,8 @@ large_compare_expr = '''
             true = false
         } ;
     } ;
-    '''
-let_program = '''
+    """
+let_program = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
@@ -253,8 +253,8 @@ let_program = '''
             ( let m : K in 7 + 7 ) < 8 = false
         } ;
     } ;
-    '''
-while_program = '''
+    """
+while_program = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
@@ -276,8 +276,8 @@ while_program = '''
             while true loop 3 pool
         } ;
     } ;
-    '''
-func_call_program = '''
+    """
+func_call_program = """
     class A inherits K {
         a : K <- 8 + 9 = 9 ;
         def f ( ) : A {
@@ -298,8 +298,8 @@ func_call_program = '''
             ( a . k ( 1 , 6 ) ) . f ( 7 )
         } ;
     } ;
-    '''
-program2 = '''
+    """
+program2 = """
     class A {
         a : Z ;
         def suma ( a : Int , b : B ) : Int {
@@ -340,9 +340,9 @@ program2 = '''
             a ;
         }
     }
-    '''
+    """
 
-program3 = '''
+program3 = """
     class A {
         a : Int ;
         def suma ( a : Int , b : Int ) : Int {
@@ -359,10 +359,10 @@ program3 = '''
             d ;        
         }
     }
-    '''
+    """
 
 
-text = '''
+text = """
     class A {
         a : Z ;
         suma ( a : Int , b : B ) : Int {
@@ -386,8 +386,8 @@ text = '''
     class C inherits Z {
         b : A ;
     } ;
-'''
-program1 = '''
+"""
+program1 = """
     class A {
         a : Int ;
         suma ( a : Int , b : Int ) : Int {
@@ -409,9 +409,9 @@ program1 = '''
             esac
         } ;
     } ;
-    '''
+    """
 
-class_with_attr = '''
+class_with_attr = """
     class A {
         a : Int ;
         a : K ;
@@ -419,8 +419,8 @@ class_with_attr = '''
     class B {
         a : Int ;
     } ;
-    '''
-class_with_herency = '''
+    """
+class_with_herency = """
     class A inherits K {
         a : Int ;
         a : K ;
@@ -431,8 +431,8 @@ class_with_herency = '''
     class W inherits B {
         s : Int ;
     } ;
-    '''
-class_attr_assignation = '''
+    """
+class_attr_assignation = """
     class A inherits K {
         a : Int <- 6 ;
         a : K <- 8 + 9 ;
@@ -440,8 +440,8 @@ class_attr_assignation = '''
     class B {
         a : Int ;
     } ;
-    '''
-method_definition = '''
+    """
+method_definition = """
     class A inherits K {
         a : Int <- 6 ;
         a : K <- 8 + 9 ;
@@ -458,8 +458,8 @@ method_definition = '''
             1
         } ;
     } ;
-    '''
-using_boolean_op = '''
+    """
+using_boolean_op = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
@@ -476,8 +476,8 @@ using_boolean_op = '''
             1
         } ;
     } ;
-    '''
-large_compare_expr = '''
+    """
+large_compare_expr = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
@@ -494,8 +494,8 @@ large_compare_expr = '''
             true = false
         } ;
     } ;
-    '''
-let_program = '''
+    """
+let_program = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
@@ -512,8 +512,8 @@ let_program = '''
             ( let m : K in 7 + 7 ) < 8 = false
         } ;
     } ;
-    '''
-while_program = '''
+    """
+while_program = """
     class A inherits K {
         a : Int <- 6 = 0 ;
         a : K <- 8 + 9 < 9 ;
@@ -535,8 +535,8 @@ while_program = '''
             while true loop 3 pool
         } ;
     } ;
-    '''
-func_call_program = '''
+    """
+func_call_program = """
     class A inherits K {
         a : K <- 8 + 9 = 9 ;
         def f ( ) : A {
@@ -557,8 +557,8 @@ func_call_program = '''
             ( a . k ( 1 , 6 ) ) . f ( 7 )
         } ;
     } ;
-    '''
-program2 = '''
+    """
+program2 = """
     class A {
         a : Z ;
         def suma ( a : Int , b : B ) : Int {
@@ -599,9 +599,9 @@ program2 = '''
             a ;
         }
     }
-    '''
+    """
 
-program3 = '''
+program3 = """
     class A {
         a : Int ;
         def suma ( a : Int , b : Int ) : Int {
@@ -618,15 +618,15 @@ program3 = '''
             d ;        
         }
     }
-    '''
+    """
 
-text1 = '''
+text1 = """
     class A {
         a : String <- " Halleluya pa todas aqu " ;
     } ;
-'''
+"""
 
-text2 = '''
+text2 = """
 class A inherits IO {
 	f ( x : Int , y : Int ) : Int {
         x + y
@@ -667,9 +667,9 @@ class D inherits B {
     } ;
 } ;
 
-'''
+"""
 
-text6 = '''
+text6 = """
 class A { } ;
 class B inherits A { } ;
 class C inherits B { } ;
@@ -681,17 +681,17 @@ class Main inherits IO {
 	test : Int <- let x : Int <- 1 / 2 - 3 + 4 * ( new A ) . type_name ( ) . concat ( ( new B ) . type_name ( ) . concat ( ( new C ) . type_name ( ) ) ) . length ( )
 				in x <- x * ( new A ) . type_name ( ) . concat ( ( new B ) . type_name ( ) . concat ( ( new C ) . type_name ( ) ) ) ;
 } ;
-'''
+"""
 
-text7 = '''
+text7 = """
     class A {
         f ( ) : Void {
             ( ( new A ) . type_name ( ) ) . length ( ) + 8
         } ;
     } ;
-    '''
+    """
 
-text8 = '''
+text8 = """
 class A inherits IO {
 	f ( x : Int , y : Int ) : Int { x + y } ;
 	g ( x : Int ) : Int { x + x } ;
@@ -720,24 +720,24 @@ class Main inherits IO {
 	test : B <- ( ( new D ) . back ( " Hello " ) ) . back ( " World! " ) ;
 } ;
 
-'''
+"""
 
-text9 = '''
+text9 = """
 class Main inherits IO {
 	main ( ) : IO { out_string ( " Hello World! " ) } ;
 
 	test : B <- ( ( new D ) . back ( " Hello " ) ) . back ( " World! " ) ;
 } ;
-'''
+"""
 
-text10 = '''
+text10 = """
     class A {
         a : AUTO_TYPE ;
         b : AUTO_TYPE <- { a ; } + 7 ;
     } ;
-    '''
+    """
 
-text11 = '''
+text11 = """
 class Ackermann {
     ackermann ( m : AUTO_TYPE , n : AUTO_TYPE ) : AUTO_TYPE {
         if m = 0 then n + 1 else
@@ -747,16 +747,16 @@ class Ackermann {
         fi
     } ;
 } ;
-'''
-text12 = '''
+"""
+text12 = """
 class A {
     f ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE {
         a
     } ;
 } ;
-'''
+"""
 
-text13 = '''
+text13 = """
 class A {
     a : AUTO_TYPE ;
     b : AUTO_TYPE ;
@@ -764,9 +764,9 @@ class A {
         a + b 
     } ;
 } ;
-'''
+"""
 
-text14 = '''
+text14 = """
 class Main {
     main ( ) : Object {
         0
@@ -784,9 +784,9 @@ class Main {
         fi
     } ;
 } ;
-'''
+"""
 
-text15 = '''
+text15 = """
 class Main inherits IO {
     main ( ) : IO {
         let vector : AUTO_TYPE <- ( new Vector2 ) . init ( 0 , 0 ) in
@@ -833,9 +833,9 @@ class Vector2 {
         ( new Vector2 ) . init ( x , y )
     } ;
 } ;
-'''
+"""
 
-text16 = '''
+text16 = """
 class Main {
     main ( ) : Object {
         0
@@ -852,9 +852,9 @@ class Main {
         }
     } ;
 } ;
-'''
+"""
 
-text17 = '''
+text17 = """
 class A {
     f ( ) : AUTO_TYPE {
         9 
@@ -866,14 +866,14 @@ class B : A {
         5 < 6
     } ;
 } ;
-'''
-text18 = '''
+"""
+text18 = """
 class A {
     f ( a : AUTO_TYPE ) Int {
         if ( a = 7 ) then "str" else ( 0 = 0 ) fi
     } ;
 } ;
-'''
+"""
 
 prog08 = """
 class Main inherits IO {
@@ -910,7 +910,7 @@ class User {
 } ;
 """
 
-proy_example = '''
+proy_example = """
 class Main inherits IO {
     main ( ) : AUTO_TYPE {
         let z : AUTO_TYPE <- 3 + 2 in {
@@ -944,9 +944,9 @@ class Point {
     succ ( n : AUTO_TYPE ) : AUTO_TYPE { n + 1 } ;
 } ;
 
-'''
+"""
 
-proy_example2 = '''
+proy_example2 = """
 class Point {
     succ ( n : AUTO_TYPE ) : AUTO_TYPE { n + 1 } ;
     translate ( n : AUTO_TYPE , m : AUTO_TYPE ) : SELF_TYPE { self } ;
@@ -961,18 +961,18 @@ class Main {
         }
     } ;
 } ;
-'''
+"""
 
-proy_example3 = '''
+proy_example3 = """
 class A {
     fact ( n : AUTO_TYPE ) : AUTO_TYPE {
         if ( n < 0 ) then 1 else n * fact ( n - 1 ) fi
     } ;
 } ;
 
-'''
+"""
 
-proy_example4 = '''
+proy_example4 = """
 class A {
     ackermann ( m : AUTO_TYPE , n : AUTO_TYPE ) : AUTO_TYPE {
         if ( m = 0 ) then n + 1 else
@@ -982,9 +982,9 @@ class A {
         fi
     } ;
 } ;
-'''
+"""
 
-proy_example5 = '''
+proy_example5 = """
 class A {
     f ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE {
         if ( a = 1 ) then b else
@@ -997,9 +997,9 @@ class A {
         fi
     } ;
 } ;
-'''
+"""
 
-proy_example6 = '''
+proy_example6 = """
 class A {
     b : AUTO_TYPE ;
     a : AUTO_TYPE ;
@@ -1009,9 +1009,9 @@ class A {
     } } ;
 } ;
 
-'''
+"""
 
-proy_example7 = '''
+proy_example7 = """
 class A {
     b : AUTO_TYPE ;
     a : AUTO_TYPE ;
@@ -1020,9 +1020,9 @@ class A {
         let x : AUTO_TYPE <- " str " , x : AUTO_TYPE <- a + b , self : AUTO_TYPE , x : AUTO_TYPE <- let c : AUTO_TYPE in a in x ;
     } } ;
 } ;
-'''
+"""
 
-proy_example8 = '''
+proy_example8 = """
 class A {
     b : AUTO_TYPE ;
     a : AUTO_TYPE ;
@@ -1031,14 +1031,14 @@ class A {
         let x : String , x : AUTO_TYPE <- a + b , self : AUTO_TYPE , x : AUTO_TYPE <- let c : AUTO_TYPE in a in x ;
     } } ;
 } ;
-'''
+"""
 
-cyclic_inheretence = '''
+cyclic_inheretence = """
 class B inherits B { } ;
 class A inherits B { } ;
-'''
+"""
 
-cyclic_inheretence1 = '''
+cyclic_inheretence1 = """
 class C inherits B { } ;
 class A inherits B { } ;
 class B inherits A { } ;
@@ -1047,9 +1047,9 @@ class D inherits E { } ;
 class E inherits F { } ;
 class F inherits D { } ;
 class G inherits F { } ;
-'''
+"""
 
-inference = '''
+inference = """
 class A inherits B {
     b : AUTO_TYPE ;
     a : AUTO_TYPE ;
@@ -1065,9 +1065,9 @@ class B {
     k : AUTO_TYPE ;
     foo ( k : AUTO_TYPE ) : AUTO_TYPE { k <- " d " } ;
 } ;
-'''
+"""
 
-inference2 = '''
+inference2 = """
 class B {
     k : AUTO_TYPE ;
 } ;
@@ -1084,9 +1084,9 @@ class A inherits B {
 
     foo ( k : AUTO_TYPE ) : AUTO_TYPE { k <- a } ;
 } ;
-'''
+"""
 
-inference3 = '''
+inference3 = """
 class A {
     b : AUTO_TYPE ;
     a : AUTO_TYPE ;
@@ -1095,9 +1095,9 @@ class A {
         b <- c . substr ( 0 , a ) ;
     } } ;
 } ;
-'''
+"""
 
-noerrors = '''
+noerrors = """
 class A {
     a : C ;
     suma ( a : Int , b : B ) : Int {
@@ -1125,9 +1125,9 @@ main ( ) : SELF_TYPE {
     a . copy ( )
 } ;
 } ;
-'''
+"""
 
-g08 = '''
+g08 = """
 class Main inherits IO {
 
     main ( ) : Object {
@@ -1162,17 +1162,17 @@ class User {
         name
     } ;
 } ;
-'''
+"""
 
-informe = '''
+informe = """
 class A {
     f ( a : AUTO_TYPE ) : Int {
         a
     } ;
 } ;
-'''
+"""
 
-g07 = '''
+g07 = """
 class Main {
     main ( ) : Object {
         let total : AUTO_TYPE <- 10 ,
@@ -1190,9 +1190,9 @@ class Main {
         if n <= 2 then 1 else fibonacci ( n - 1 ) + fibonacci ( n - 2 ) fi
     } ;
 } ;
-'''
+"""
 
-g06 = '''
+g06 = """
 class Main inherits IO {
     main ( ) : IO {
         let vector : AUTO_TYPE <- ( new Vector2 ) . init ( 0 , 0 ) in
@@ -1238,17 +1238,17 @@ class Vector2 {
         ( new Vector2 ) . init( x , y )
     } ;
 } ;
-'''
+"""
 
-informe2 = '''
+informe2 = """
 class A {
     fact ( n : AUTO_TYPE ) : AUTO_TYPE {
         if n < 0 then 1 else fact ( n - 1 ) fi
     } ;
 } ;
-'''
+"""
 
-g05 = '''
+g05 = """
 class Main {
     main ( ) : Object {
         0
@@ -1265,9 +1265,9 @@ class Main {
         }
     } ;
 } ;
-'''
+"""
 
-recursividad = '''
+recursividad = """
 class A {
     f ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE {
         if ( a = 1 ) then b else
@@ -1281,9 +1281,9 @@ class A {
     } ;
 } ;
 
-'''
+"""
 
-g04 = '''
+g04 = """
 class Main {
     main ( ) : Object {
         0
@@ -1302,9 +1302,9 @@ class Point {
 	    }
     } ;
 } ;
-'''
+"""
 
-gsem = '''
+gsem = """
 class Main inherits IO {
 	main ( ) : IO { out_string ( " hi! " ) } ;
 
@@ -1322,9 +1322,9 @@ class B inherits A {
 
 	div ( a : Int , b : Int ) : Int { a / b } ;
 } ;
-'''
+"""
 
-gdispatch = '''
+gdispatch = """
 
 class A inherits IO {
 	f ( x : Int , y : Int ) : Int { x + y } ;
@@ -1355,48 +1355,48 @@ class D inherits B {
 class Main inherits IO {
 	main ( ) : IO { out_string ( " Hello World! " ) } ;
 } ;
-'''
+"""
 
-ejemplo1 = '''
+ejemplo1 = """
 class A {
     f ( a : AUTO_TYPE ) : AUTO_TYPE {
         a + 4
     } ;
 } ;
-'''
+"""
 
-ejemplo2 = '''
+ejemplo2 = """
 class A {
     f ( a : AUTO_TYPE ) : Int {
         a
     } ;
 } ;
-'''
+"""
 
-ejemplo3 = '''
+ejemplo3 = """
 class A { 
     f ( a : Int ) : AUTO_TYPE {
         a + 7 
     } ;
 } ;
-'''
-ejemplo4 = '''
+"""
+ejemplo4 = """
 class A {
     succ ( n : AUTO_TYPE ) : AUTO_TYPE {
         n + 1
     } ;
 } ;
-'''
+"""
 
-ejemplo5 = '''
+ejemplo5 = """
 class A {
     f ( n : AUTO_TYPE ) : AUTO_TYPE {
         if 4 < 0 then 1 else 7 * f ( 1 ) fi
     } ;
 } ;
-'''
+"""
 
-ejemplo6 = '''
+ejemplo6 = """
 class A {
     a : AUTO_TYPE ;
     b : AUTO_TYPE ;
@@ -1409,9 +1409,9 @@ class A {
         }
     } ;
 } ;
-'''
+"""
 
-ejemplo7 = '''
+ejemplo7 = """
 class A {
     ackermann ( m : AUTO_TYPE , n : AUTO_TYPE ) : AUTO_TYPE {
         if m = 0 then n + 1 else
@@ -1421,9 +1421,9 @@ class A {
         fi
     } ;
 } ;
-'''
+"""
 
-ejemplo8 = '''
+ejemplo8 = """
 class A {
     f ( a0 : AUTO_TYPE , a1 : AUTO_TYPE ) : AUTO_TYPE {
         a0
@@ -1442,9 +1442,9 @@ class C inherits B {
         c1 + 1
     } ;
 } ;
-'''
+"""
 
-ejemplo9 = '''
+ejemplo9 = """
 class A {
     f ( a : AUTO_TYPE ) : AUTO_TYPE {
         {
@@ -1458,4 +1458,4 @@ class B inherits A {
         b <- " Esto es un String "
     } ;
 } ;
-'''
+"""

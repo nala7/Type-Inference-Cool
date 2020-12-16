@@ -1,5 +1,5 @@
 from Main import run_pipeline
-import streamlit as st 
+import streamlit as st
 from Grammar import *
 
 st.sidebar.header("About")
@@ -11,5 +11,5 @@ st.sidebar.text("Grupo: C-312")
 data = st.text_area("Enter code", "", 500)
 run = st.button("Run")
 if run:
-    text = run_pipeline(G, data)
+    text = run_pipeline(data)
     st.text(text)

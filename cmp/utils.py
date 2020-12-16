@@ -1,5 +1,6 @@
 from cmp.pycompiler import Production, Sentence, Symbol, EOF, Epsilon
 
+
 class ContainerSet:
     def __init__(self, *values, contains_epsilon=False):
         self.set = set(values)
@@ -42,7 +43,7 @@ class ContainerSet:
         return len(self.set) + int(self.contains_epsilon)
 
     def __str__(self):
-        return '%s-%s' % (str(self.set), self.contains_epsilon)
+        return "%s-%s" % (str(self.set), self.contains_epsilon)
 
     def __repr__(self):
         return str(self)
@@ -56,37 +57,49 @@ class ContainerSet:
     def __eq__(self, other):
         if isinstance(other, set):
             return self.set == other
-        return isinstance(other, ContainerSet) and self.set == other.set and self.contains_epsilon == other.contains_epsilon
+        return (
+            isinstance(other, ContainerSet)
+            and self.set == other.set
+            and self.contains_epsilon == other.contains_epsilon
+        )
 
 
-def inspect(item, grammar_name='G', mapper=None):
+def inspect(item, grammar_name="G", mapper=None):
     try:
         return mapper[item]
-    except (TypeError, KeyError ):
+    except (TypeError, KeyError):
         if isinstance(item, dict):
-            items = ',\n   '.join(f'{inspect(key, grammar_name, mapper)}: {inspect(value, grammar_name, mapper)}' for key, value in item.items() )
-            return f'{{\n   {items} \n}}'
+            items = ",\n   ".join(
+                f"{inspect(key, grammar_name, mapper)}: {inspect(value, grammar_name, mapper)}"
+                for key, value in item.items()
+            )
+            return f"{{\n   {items} \n}}"
         elif isinstance(item, ContainerSet):
-            args = f'{ ", ".join(inspect(x, grammar_name, mapper) for x in item.set) } ,' if item.set else ''
-            return f'ContainerSet({args} contains_epsilon={item.contains_epsilon})'
+            args = (
+                f'{ ", ".join(inspect(x, grammar_name, mapper) for x in item.set) } ,'
+                if item.set
+                else ""
+            )
+            return f"ContainerSet({args} contains_epsilon={item.contains_epsilon})"
         elif isinstance(item, EOF):
-            return f'{grammar_name}.EOF'
+            return f"{grammar_name}.EOF"
         elif isinstance(item, Epsilon):
-            return f'{grammar_name}.Epsilon'
+            return f"{grammar_name}.Epsilon"
         elif isinstance(item, Symbol):
             return f"G['{item.Name}']"
         elif isinstance(item, Sentence):
-            items = ', '.join(inspect(s, grammar_name, mapper) for s in item._symbols)
-            return f'Sentence({items})'
+            items = ", ".join(inspect(s, grammar_name, mapper) for s in item._symbols)
+            return f"Sentence({items})"
         elif isinstance(item, Production):
             left = inspect(item.Left, grammar_name, mapper)
             right = inspect(item.Right, grammar_name, mapper)
-            return f'Production({left}, {right})'
+            return f"Production({left}, {right})"
         elif isinstance(item, tuple) or isinstance(item, list):
-            ctor = ('(', ')') if isinstance(item, tuple) else ('[',']')
+            ctor = ("(", ")") if isinstance(item, tuple) else ("[", "]")
             return f'{ctor[0]} {("%s, " * len(item)) % tuple(inspect(x, grammar_name, mapper) for x in item)}{ctor[1]}'
         else:
-            raise ValueError(f'Invalid: {item}')
+            raise ValueError(f"Invalid: {item}")
+
 
 def pprint(item, header=""):
     if header:
@@ -94,14 +107,15 @@ def pprint(item, header=""):
 
     if isinstance(item, dict):
         for key, value in item.items():
-            print(f'{key}  --->  {value}')
+            print(f"{key}  --->  {value}")
     elif isinstance(item, list):
-        print('[')
+        print("[")
         for x in item:
-            print(f'   {repr(x)}')
-        print(']')
+            print(f"   {repr(x)}")
+        print("]")
     else:
         print(item)
+
 
 class Token:
     """
@@ -120,7 +134,7 @@ class Token:
         self.token_type = token_type
 
     def __str__(self):
-        return f'{self.token_type}: {self.lex}'
+        return f"{self.token_type}: {self.lex}"
 
     def __repr__(self):
         return str(self)
@@ -128,6 +142,7 @@ class Token:
     @property
     def is_valid(self):
         return True
+
 
 class UnknownToken(Token):
     def __init__(self, lex):
@@ -140,6 +155,7 @@ class UnknownToken(Token):
     def is_valid(self):
         return False
 
+
 def tokenizer(G, fixed_tokens):
     def decorate(func):
         def tokenize_text(text):
@@ -148,63 +164,65 @@ def tokenizer(G, fixed_tokens):
                 try:
                     token = fixed_tokens[lex]
                 except KeyError:
-                    
+
                     token = UnknownToken(lex)
                     try:
                         token = func(token)
                     except TypeError:
                         pass
                 tokens.append(token)
-            tokens.append(Token('$', G.EOF))
+            tokens.append(Token("$", G.EOF))
 
             # return tokens
 
             to_return_tokens = []
             str_terminal = None
             for terminal in G.terminals:
-                if terminal.Name == 'String':
+                if terminal.Name == "String":
                     # print('Found terminal: ', terminal)
                     str_terminal = terminal
             i = 0
             while i < len(tokens):
                 # print(tokens[i])
-                if(tokens[i].lex == '"'):
-                    str_value = ''
+                if tokens[i].lex == '"':
+                    str_value = ""
                     found_close = False
-                    i+=1
+                    i += 1
                     while i < len(tokens):
                         if tokens[i].lex == '"':
                             found_close = True
                             i += 1
                             break
-                        if str_value == '':
+                        if str_value == "":
                             str_value += tokens[i].lex
                         else:
-                            str_value += ' ' + tokens[i].lex
+                            str_value += " " + tokens[i].lex
                         # print(str_value)
-                        i+=1
+                        i += 1
                     if not found_close:
-                        raise Exception('String not closed')
+                        raise Exception("String not closed")
                     # print('====> ', str_value)
                     to_return_tokens.append(Token(str_value, str_terminal))
                 else:
                     to_return_tokens.append(tokens[i])
-                    i+=1
+                    i += 1
 
             # print(to_return_tokens)
             return to_return_tokens
 
-        if hasattr(func, '__call__'):
+        if hasattr(func, "__call__"):
             return tokenize_text
         elif isinstance(func, str):
             return tokenize_text(func)
         else:
             raise TypeError('Argument must be "str" or a callable object.')
+
     return decorate
+
 
 class DisjointSet:
     def __init__(self, *items):
-        self.nodes = { x: DisjointNode(x) for x in items }
+        self.nodes = {x: DisjointNode(x) for x in items}
 
     def merge(self, items):
         items = (self.nodes[x] for x in items)
@@ -217,11 +235,14 @@ class DisjointSet:
 
     @property
     def representatives(self):
-        return { n.representative for n in self.nodes.values() }
+        return {n.representative for n in self.nodes.values()}
 
     @property
     def groups(self):
-        return [[n for n in self.nodes.values() if n.representative == r] for r in self.representatives]
+        return [
+            [n for n in self.nodes.values() if n.representative == r]
+            for r in self.representatives
+        ]
 
     def __len__(self):
         return len(self.representatives)
@@ -234,6 +255,7 @@ class DisjointSet:
 
     def __repr__(self):
         return str(self)
+
 
 class DisjointNode:
     def __init__(self, value):
@@ -254,4 +276,3 @@ class DisjointNode:
 
     def __repr__(self):
         return str(self)
-

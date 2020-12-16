@@ -1,40 +1,16 @@
-from cmp.semantic import Scope
 import AST.AST_Print as print_ast
-import streamlit as st 
-import pickle
-from Serializer import Serializer
 import os
 
+from cmp.evaluation import evaluate_reverse_parse
 from Example_Programs import *
 from Tokenizer import *
-from Parser.Parser_LR1 import LR1Parser
 from Grammar import *
-from cmp.evaluation import evaluate_reverse_parse
-from SemanticChecker.Scope_Print import Scope_Print
-from SemanticChecker.Type_Collector import TypeCollector
 from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
-from SemanticChecker.Type_Inferer import TypeInferer
-
-from altair.vegalite.v4.schema.core import Parse
-from cmp.semantic import Scope
-import AST.AST_Print as print_ast
-import streamlit as st 
-import pickle
-import os
-import gc
-
-from Example_Programs import *
-from Tokenizer import *
-from Parser.Parser_LR1 import LR1Parser
-from Grammar import *
-from cmp.evaluation import evaluate_reverse_parse
-from SemanticChecker.Scope_Print import Scope_Print
 from SemanticChecker.Type_Collector import TypeCollector
-from SemanticChecker.Type_Builder import TypeBuilder
-from SemanticChecker.Type_Checker import TypeChecker
-from SemanticChecker.Type_Inferer import TypeInferer
+from SemanticChecker.Scope_Print import Scope_Print
 from Serializer import Serializer
+
 
 
 """ # Cool Intrepreter """

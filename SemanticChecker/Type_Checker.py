@@ -73,6 +73,11 @@ class TypeChecker:
     @visitor.when(AttrDeclarationNode)
     def visit(self, node:AttrDeclarationNode, scope:Scope, set_type = None):
         # print('attr declaration')
+        if node.id == 'self':
+            self.errors.append(f'"self" is used as attribute name in class "{self.current_type.name}".')
+            if node.val is not None:
+                self.visit(node.val, scope)
+            return
         var, _ = scope.my_find_var(node.id)
         attr_type = self.context.get_type(node.type)
         if var is not None:
@@ -176,6 +181,9 @@ class TypeChecker:
         child_scope = scope.create_child(self.scope_id)
         self.scope_id += 1
         for i in range(0, len(method.param_names)):
+            if method.param_names[i] == 'self':
+                self.errors.append(f'"self" is used as argument name in method: "{method.name}", type: "{self.current_type.name}".')
+                continue
             try:
                 param_type = self.infered_types[(method.name, self.current_type.name, i)]
             except:

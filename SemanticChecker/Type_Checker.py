@@ -392,7 +392,7 @@ class TypeChecker:
             if var == "self":
                 self.errors.append(
                     f'In method "{self.current_method.name}", type "{self.current_type.name}", a branch has "self" as '
-                    f'variable name. '
+                    f"variable name. "
                 )
             else:
                 child_scope.define_variable(var, var_type)

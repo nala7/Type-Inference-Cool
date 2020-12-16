@@ -1,6 +1,8 @@
 import pydot
+
 # from pandas import DataFrame
 from PIL import Image
+
 # import streamlit as st
 from cmp.automata import State, multiline_formatter
 from cmp.utils import ContainerSet
@@ -86,8 +88,6 @@ class DFA(NFA):
         value = self.current in self.finals
         self.current = self.start
         return value
-
-
 
 
 def move(automaton, states, symbol):

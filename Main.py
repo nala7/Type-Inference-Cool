@@ -25,25 +25,19 @@ def run_pipeline(text):
     formatter = AST_Print.FormatVisitor()
     tree = formatter.visit(ast)
     ret_text += str(tree) + "\n"
-    # ret_text += '============== COLLECTING TYPES ==============='  + '\n'
     errors = []
     collector = TypeCollector(errors)
     collector.visit(ast)
     context = collector.context
-    # ret_text += 'Errors:' + str(errors)  + '\n'
-    # ret_text += 'Context:'  + '\n'
-    # ret_text += str(context)  + '\n'
     ret_text += "=============== BUILDING TYPES ================" + "\n"
     builder = TypeBuilder(context, errors)
     builder.visit(ast)
-    # ret_text += 'Errors:' + str(errors) + '\n'
     ret_text += "Context:" + "\n"
     ret_text += str(context) + "\n"
     ret_text += "=============== CHECKING TYPES ================" + "\n"
     old_errors = errors.copy()
     inferred_types = {}
     checker = TypeChecker(context, old_errors, inferred_types)
-    #  checker.FirstCall(context, old_errors)
     scope, inferred_types, auto_types = checker.visit(ast)
     while True:
         old_errors = errors.copy()
@@ -64,7 +58,8 @@ def run_pipeline(text):
     ret_text += "Auto Types:\n\t" + str_auto_types + "\n"
     ret_text += "Inferred Types:" + "\n\t"
     ret_text += (
-        "\n\t".join(f"{key}: {inferred_types[key].name}" for key in inferred_types) + "\n"
+        "\n\t".join(f"{key}: {inferred_types[key].name}" for key in inferred_types)
+        + "\n"
     )
 
     return ret_text

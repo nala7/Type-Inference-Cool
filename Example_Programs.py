@@ -265,7 +265,7 @@ func_call_program = """
         } ;
     } ;
     """
-text ="""
+text = """
     class A {
         a : Z ;
         suma ( a : Int , b : B ) : Int {

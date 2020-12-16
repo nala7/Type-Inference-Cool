@@ -1,13 +1,13 @@
-from cmp.pycompiler import Grammar, Item
+from cmp.pycompiler import Item
 from cmp.utils import ContainerSet
 from cmp.automata import State, multiline_formatter
 from Parser.Firsts_Follows import compute_firsts, compute_local_first
 
-import Parser.Parsers_ShiftReduce as psr
+import Parser.Parsers_ShiftReduce as ParserSR
 from Parser.Automata_Utils import PrintAutomaton
 
 
-class LR1Parser(psr.ShiftReduceParser):
+class LR1Parser(ParserSR.ShiftReduceParser):
     def _build_parsing_table(self):
         G = self.G.AugmentedGrammar(True)
 

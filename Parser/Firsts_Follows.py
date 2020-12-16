@@ -1,18 +1,9 @@
-from cmp.pycompiler import (
-    Symbol,
-    NonTerminal,
-    Terminal,
-    EOF,
-    Sentence,
-    SentenceList,
-    Production,
-    Grammar,
-)
-from cmp.utils import pprint, inspect
 from cmp.utils import ContainerSet
 import streamlit as st
 
 # Computes First(alpha), given First(Vt) and First(Vn)
+
+
 def compute_local_first(firsts, alpha):
     first_alpha = ContainerSet()
 

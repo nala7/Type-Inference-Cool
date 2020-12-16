@@ -107,7 +107,7 @@ program05 = """
     } ;
     """
 
-JanPoul = """
+profe = """
     class Main inherits IO {
         main ( ) : AUTO_TYPE {
             let x : AUTO_TYPE <- 3 in
@@ -1132,6 +1132,23 @@ class A {
 class B inherits A {
     f ( b : AUTO_TYPE ) : Object {
         b <- " Esto es un String "
+    } ;
+} ;
+"""
+
+c01 = """
+class Point {
+    succ ( n : AUTO_TYPE ) : AUTO_TYPE { n + 1 } ;
+    translate ( n : AUTO_TYPE , m : AUTO_TYPE ) : SELF_TYPE { self } ;
+} ;
+
+class Main {
+    step ( p : AUTO_TYPE ) : AUTO_TYPE { p . translate ( 1 , 1 ) } ;
+
+    main ( ) : Object {
+        let p : AUTO_TYPE <- new Point in {
+            step ( p ) ; 
+        }
     } ;
 } ;
 """

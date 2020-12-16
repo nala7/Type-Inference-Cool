@@ -93,9 +93,5 @@ def run_pipeline(G, text):
    ret_text += '\n\t'.join(f'{key}: {infered_types[key]}' for key in infered_types) + '\n'
 
    return ret_text
-   
-   # st.write('Infered Types\n', infered_types)
-
-#if (run_analysis):
 
 

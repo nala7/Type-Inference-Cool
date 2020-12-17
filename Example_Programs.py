@@ -1270,14 +1270,12 @@ tc08 = '''
 class Main { main ( ) : Int { 0 } ; } ;
 
 class Point {
-    x : AUTO_TYPE ;
     y : AUTO_TYPE ;
 
-    init ( x0 : AUTO_TYPE , y0 : AUTO_TYPE , z0 : AUTO_TYPE ) : AUTO_TYPE
+    init ( y0 : AUTO_TYPE , z0 : AUTO_TYPE ) : AUTO_TYPE
     {
         {
-            x <- x = x0 ;
-            y <- y0 = z0 ;
+            y <- ( y0 = z0 ) ;
             self ;
         }
     } ;

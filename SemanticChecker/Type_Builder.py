@@ -2,7 +2,7 @@ import cmp.visitor as visitor
 from AST.AST_Hierarchy import *
 from cmp.semantic import SemanticError
 from cmp.semantic import Attribute, Method, Type
-from cmp.semantic import VoidType, ErrorType, ObjType
+from cmp.semantic import ErrorType, ObjType
 from cmp.semantic import Context
 
 

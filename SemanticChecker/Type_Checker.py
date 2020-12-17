@@ -1,4 +1,3 @@
-from inspect import currentframe
 import cmp.visitor as visitor
 from cmp.semantic import Scope, StrType
 from cmp.semantic import SemanticError

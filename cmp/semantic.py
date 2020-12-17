@@ -169,22 +169,6 @@ class ObjType(Type):
     def bypass(self):
         return True
 
-
-class VoidType(Type):
-    def __init__(self):
-        Type.__init__(self, "Void")
-        self.parent = ObjType()
-
-    def conforms_to(self, other):
-        raise Exception("Invalid type: void type.")
-
-    def bypass(self):
-        return True
-
-    def __eq__(self, other):
-        return isinstance(other, VoidType)
-
-
 class IntType(Type):
     def __init__(self):
         Type.__init__(self, "Int")

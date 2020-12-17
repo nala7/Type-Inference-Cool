@@ -1,8 +1,7 @@
 import cmp.visitor as visitor
 from AST.AST_Hierarchy import *
 from cmp.semantic import ObjType, SemanticError
-from cmp.semantic import VoidType, ErrorType
-from cmp.semantic import IntType, StrType, SelfType, AutoType, BoolType
+from cmp.semantic import IntType, StrType, SelfType, AutoType, BoolType, ErrorType
 from cmp.semantic import Context
 
 
@@ -49,8 +48,6 @@ class TypeCollector(object):
         self.context.types["Object"] = obj_type
         self.context.types["<error>"] = ErrorType()
         self.context.types["<error>"].set_parent(obj_type)
-        self.context.types["Void"] = VoidType()
-        self.context.types["Void"].set_parent(obj_type)
         self.context.types["SELF_TYPE"] = SelfType()
         self.context.types["SELF_TYPE"].set_parent(obj_type)
         self.context.types["AUTO_TYPE"] = AutoType()

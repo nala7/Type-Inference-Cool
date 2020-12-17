@@ -2,7 +2,7 @@ import AST.AST_Print as AST_Print
 import os
 
 from cmp.evaluation import evaluate_reverse_parse
-from Example_Programs import examples
+from Example_Programs import examples, inference
 from Tokenizer import *
 from SemanticChecker.Type_Builder import TypeBuilder
 from SemanticChecker.Type_Checker import TypeChecker
@@ -83,6 +83,8 @@ def run_example_files():
 
     print(f"FAILING EXAMPLES: {fail}")
     print(f"SUCCEEDED EXAMPLES: {len(examples) - len(fail)}/{len(examples)}")
+
+    # run_pipeline(inference)
 
 
 if __name__ == "__main__":

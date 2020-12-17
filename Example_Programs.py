@@ -1153,6 +1153,67 @@ class Main {
 } ;
 """
 
+tc = '''
+class P {
+ f ( ) : Int { 1 } ; 
+} ;
+
+class C inherits P {
+ f ( ) : String { 1 } ;
+
+} ;
+'''
+tc1 = '''
+class Silly {
+    copy ( ) : SELF_TYPE { self } ;
+} ;  
+
+class Sally inherits Silly { } ;
+
+class Main {
+    x : Sally <- ( new Sally ) . copy ( ) ;
+    main ( ) : Sally { x } ;
+} ;
+'''
+
+tc2 = '''
+class Point {
+    x : AUTO_TYPE ;
+    y : AUTO_TYPE ;
+
+    init ( n : Int , m : Int ) : SELF_TYPE 
+    {
+        {
+            x <- n ;
+            y <- m ;
+        }
+    } ;
+    
+    step ( ) : AUTO_TYPE 
+    { 
+        { 
+            p . translate ( 1 , 1 ) ;
+            let p : AUTO_TYPE <- new Point in { step ( p ) } ; 
+        } 
+    } ;
+
+} ;
+'''
+
+tc5 = '''
+class Main inherits IO {
+    main() : AUTO_TYPE 
+    {
+        let x : AUTO_TYPE <- 3 + 2 in 
+        {
+            case x of
+                y : Int => out_string ( " Ok " ) ;
+            esac ;
+        }
+    };
+};
+'''
+
 examples = [
     (example_name, example_text)
     for (example_name, example_text) in locals().items()

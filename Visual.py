@@ -10,5 +10,8 @@ st.sidebar.text("Grupo: C-312")
 data = st.text_area("Enter code", "", 500)
 run = st.button("Run")
 if run:
-    text = run_pipeline(data)
-    st.text(text)
+    text, parse_error = run_pipeline(data)
+    if parse_error:
+        st.text(parse_error)
+    else:
+        st.text(text)

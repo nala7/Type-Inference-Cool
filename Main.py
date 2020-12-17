@@ -16,13 +16,15 @@ from Serializer import Serializer
 def run_pipeline(text):
     tokens = tokenize_text(text)
     parser = Serializer.load(os.getcwd() + "/compiled_parser")
+    parse_error = None
 
+    ret_text = ""
     try:
         parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
     except:
-        return "Input could not be parsed. Please check your code"
+        parse_error = "Input could not be parsed. Please check your code"
+        return ret_text, parse_error
 
-    ret_text = ""
     ret_text += "==================== AST ====================== \n"
     ast = evaluate_reverse_parse(parse, operations, tokens)
     formatter = AST_Print.FormatVisitor()
@@ -50,7 +52,6 @@ def run_pipeline(text):
         if len(auto_types) == old_len:
             errors = old_errors
             break
-    del checker
 
     ret_text += "Scope:" + "\n"
     scope_tree = ScopePrint().visit(scope)
@@ -61,11 +62,11 @@ def run_pipeline(text):
     ret_text += "Auto Types:\n\t" + str_auto_types + "\n"
     ret_text += "Inferred Types:" + "\n\t"
     ret_text += (
-        "\n\t".join(f"{key}: {inferred_types[key].name}" for key in inferred_types)
-        + "\n"
+            "\n\t".join(f"{key}: {inferred_types[key].name}" for key in inferred_types)
+            + "\n"
     )
 
-    return ret_text
+    return ret_text, parse_error
 
 
 def run_example_files():
@@ -73,12 +74,15 @@ def run_example_files():
     for example_name, example_text in examples:
         print(example_name)
         try:
+            text, parse_error = run_pipeline(example_text)
+            if parse_error:
+                fail.append(example_name)
             print(run_pipeline(example_text))
         except:
             fail.append(example_name)
 
     print(f"FAILING EXAMPLES: {fail}")
-    print(f"SUCCEDED EXAMPLES: {len(examples) - len(fail)}/{len(examples)}")
+    print(f"SUCCEEDED EXAMPLES: {len(examples) - len(fail)}/{len(examples)}")
 
 
 if __name__ == "__main__":

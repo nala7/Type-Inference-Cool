@@ -268,4 +268,5 @@ Infered Types {
 ```
 En un recorrido por el __TypeBuilder__ no se debería detectar ningún error, pero una vez inferidos los tipos se detectan errores. Cuando se está visitando la declaración de la función __f__ en __B__ esta tendrá como tipo del argumento **Int**, que fue inferido en **A**. Al intentar realizar la asignación entonces estaremos intentando guardar un string en un entero.
 
-En el pr
+__Nota__:
+En __Main.py__ en el método __run_example_files__, se corren todos los casos de prueba de __Example_Programs.py__. En consola se imprimen los resultados.

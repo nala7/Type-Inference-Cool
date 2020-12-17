@@ -1193,7 +1193,7 @@ class Point {
     { 
         { 
             p . translate ( 1 , 1 ) ;
-            let p : AUTO_TYPE <- new Point in { step ( p ) } ; 
+            let p : AUTO_TYPE <- new Point in { step ( p ) ; } ; 
         } 
     } ;
 
@@ -1202,16 +1202,16 @@ class Point {
 
 tc5 = '''
 class Main inherits IO {
-    main() : AUTO_TYPE 
+    main ( ) : AUTO_TYPE 
     {
         let x : AUTO_TYPE <- 3 + 2 in 
         {
             case x of
                 y : Int => out_string ( " Ok " ) ;
             esac ;
-        }
-    };
-};
+        } ;
+    } ;
+} ;
 '''
 
 examples = [

@@ -24,7 +24,7 @@ func_call, obj, arg_list, other_arg = G.NonTerminals(
 
 
 # terminals
-classx, defx, printx, inherits = G.Terminals("class def print inherits")
+classx, inherits = G.Terminals("class inherits")
 ifx, thenx, elsex, fi = G.Terminals("if then else fi")
 whilex, loopx, poolx = G.Terminals("while loop pool")
 letx, inx = G.Terminals("let in")

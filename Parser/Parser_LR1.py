@@ -20,9 +20,6 @@ class LR1Parser(ParserSR.ShiftReduceParser):
         for node in automaton:
             idx = node.idx
             for item in node.state:
-                # Your code here!!!
-                # - Fill `self.Action` and `self.Goto` according to `item`)
-                # - Feel free to use `self._register(...)`)
                 if item.IsReduceItem:
                     if item.production.Left == G.startSymbol:
                         key = (idx, G.EOF.Name)
@@ -50,7 +47,6 @@ class LR1Parser(ParserSR.ShiftReduceParser):
     def _register(table, key, value):
         conflict = False
         if key in table and not table[key] == value:
-            #'Shift-Reduce or Reduce-Reduce conflict!!!'
             conflict = True
         table[key] = value
         return conflict
@@ -62,12 +58,10 @@ def expand(item, firsts):
         return []
 
     lookaheads = ContainerSet()
-    # Your code here!!! (Compute lookahead for child items)
     for preview in item.Preview():
         lookaheads.hard_update(compute_local_first(firsts, preview))
 
     assert not lookaheads.contains_epsilon
-    # Your code here!!! (Build and return child items)
     return [Item(prod, 0, lookaheads) for prod in next_symbol.productions]
 
 
@@ -134,7 +128,6 @@ def Build_Automaton_LR1(G):
         current_state = visited[current]
 
         for symbol in G.terminals + G.nonTerminals:
-            # Your code here!!! (Get/Build `next_state`)
             closure = closure_lr1(current, firsts)
             goto = goto_lr1(closure, symbol, firsts, True)
             if not goto:

@@ -1,9 +1,6 @@
 import pydot
 
-# from pandas import DataFrame
 from PIL import Image
-
-# import streamlit as st
 from cmp.automata import State, multiline_formatter
 from cmp.utils import ContainerSet
 
@@ -102,8 +99,8 @@ def move(automaton, states, symbol):
 
 
 def epsilon_closure(automaton, states):
-    pending = [s for s in states]  # equivalente a list(states) pero me gusta así :p
-    closure = {s for s in states}  # equivalente a  set(states) pero me gusta así :p
+    pending = [s for s in states]
+    closure = {s for s in states}
 
     while pending:
         state = pending.pop()
@@ -156,7 +153,6 @@ def nfa_to_dfa(automaton):
 def PrintAutomaton(automaton, name_file, text):
     automaton.graph().write_png(name_file)
     image = Image.open(name_file)
-    # st.image(image, text)
 
 
 def GetDerivationTree(G, productions, of_parser_SR=False):
@@ -164,16 +160,13 @@ def GetDerivationTree(G, productions, of_parser_SR=False):
         productions = invert_list(productions)
 
     stack = []
-    # se asume que existe almenos una produccion aplicada por lo que se empieza con el distinguido en la pila
     start_node = State(G.startSymbol)
     stack.append(start_node)
-    # siempre el no terminal al tope de la pila es el que sera esperado en la proxima produccion
     for production in productions:
         node_papa = stack.pop()
         while not node_papa.state.IsNonTerminal:
             node_papa = stack.pop()
         if not production.Left == node_papa.state:
-            # Se esperaba una produccion con otro no terminal
             pass
         alpha = production.Right
         if alpha.IsEpsilon:
@@ -193,7 +186,6 @@ def GetDerivationTree(G, productions, of_parser_SR=False):
     try:
         stack[0]
     except:
-        # Quedaron no terminales sin analizar
         pass
 
     return start_node

@@ -1,6 +1,5 @@
 from Main import run_pipeline
 import streamlit as st
-from Grammar import *
 
 st.sidebar.header("About")
 st.sidebar.subheader("Segundo Proyecto de Compilacion: Cool Type Inferer")

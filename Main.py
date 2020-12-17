@@ -20,7 +20,7 @@ def run_pipeline(text):
     try:
         parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
     except:
-        return "Input not parsed. Please check your code"
+        return "Input could not be parsed. Please check your code"
 
     ret_text = ""
     ret_text += "==================== AST ====================== \n"

@@ -1,9 +1,5 @@
 from cmp.utils import ContainerSet
 
-# import streamlit as st
-
-# Computes First(alpha), given First(Vt) and First(Vn)
-
 
 def compute_local_first(firsts, alpha):
     first_alpha = ContainerSet()
@@ -13,16 +9,9 @@ def compute_local_first(firsts, alpha):
     except:
         alpha_is_epsilon = False
 
-    # alpha == epsilon ? First(alpha) = { epsilon }
-
     if alpha_is_epsilon:
         first_alpha.set_epsilon()
         return first_alpha
-
-    # alpha = X1 ... XN
-    # First(Xi) subconjunto First(alpha)
-    # epsilon pertenece a First(X1)...First(Xi) ? First(Xi+1) subconjunto de First(X) y First(alpha)
-    # epsilon pertenece a First(X1)...First(XN) ? epsilon pertence a First(X) y al First(alpha)
 
     for x in alpha:
         first_alpha.update(firsts[x])
@@ -31,7 +20,6 @@ def compute_local_first(firsts, alpha):
 
     first_alpha.set_epsilon()
 
-    # First(alpha)
     return first_alpha
 
 
@@ -75,10 +63,6 @@ def compute_firsts(G):
     # First(Vt) + First(Vt) + First(RightSides)
     return firsts
 
-
-from itertools import islice
-
-
 def compute_follows(G, firsts):
     follows = {}
     change = True
@@ -99,10 +83,6 @@ def compute_follows(G, firsts):
             alpha = production.Right
 
             follow_X = follows[X]
-
-            # X -> zeta Y beta
-            # First(beta) - { epsilon } subset of Follow(Y)
-            # beta ->* epsilon or X -> zeta Y ? Follow(X) subset of Follow(Y)
 
             if alpha.IsEpsilon:
                 continue
@@ -152,11 +132,6 @@ def SLPrintFirsts(G, firsts):
             except:
                 firstsProductions[str(prod.Right)] = p.Name
 
-    # st.write("Firsts")
-    # st.write("Terminals", firstsTerminals)
-    # st.write("NonTerminals", firstsNonTerminals)
-    # st.write("Productions", firstsProductions)
-
 
 def SLPrintFollows(G, follows):
     followsNonTerminals = {}
@@ -166,6 +141,3 @@ def SLPrintFollows(G, follows):
                 followsNonTerminals[nonTerminal.Name].append(nt.Name)
             except:
                 followsNonTerminals[nonTerminal.Name] = [nt.Name]
-
-    # st.write("Follows")
-    # st.write("NonTerminals", followsNonTerminals)

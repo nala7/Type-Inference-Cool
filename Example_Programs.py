@@ -1209,8 +1209,187 @@ class Main inherits IO {
             case x of
                 y : Int => out_string ( " Ok " ) ;
             esac ;
-        } ;
+        }
     } ;
+} ;
+'''
+
+tc6 = '''
+class Main {
+    x : AUTO_TYPE ;
+
+    main ( ) : AUTO_TYPE {
+        x <- new A
+     } ;
+    succ ( n : AUTO_TYPE ) : AUTO_TYPE { n + 1 } ;
+} ;
+
+class A inherits IO {
+    methodA ( ) : AUTO_TYPE {
+        out_string ( " Hello " )
+    } ;
+} ;
+'''
+
+tc7 = '''
+class Main inherits IO {
+    main ( ) : SELF_TYPE {
+    out_string ( " Hello, World.\n " )
+    } ;
+    f ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE 
+    {
+        if ( a = 1 ) then b else g ( a + 1 , b / 2 ) fi
+    } ;
+    g ( a : AUTO_TYPE , b : AUTO_TYPE ) : AUTO_TYPE 
+    {
+        if ( b = 1 ) then a else f ( a / 2 , b + 1 )
+            fi
+    } ;
+} ;
+'''
+
+tc8 = '''
+class Main { main ( ) : Int { 0 } ; } ;
+
+class Point {
+    x : AUTO_TYPE ;
+    y : AUTO_TYPE ;
+
+    init ( x0 : Int , y0 : Int ) : AUTO_TYPE
+    {
+        {
+            x <- x0 ;
+            y <- y0 ;
+            self ;
+        }
+    } ;
+} ;
+'''
+
+tc08 = '''
+class Main { main ( ) : Int { 0 } ; } ;
+
+class Point {
+    x : AUTO_TYPE ;
+    y : AUTO_TYPE ;
+
+    init ( x0 : AUTO_TYPE , y0 : AUTO_TYPE , z0 : AUTO_TYPE ) : AUTO_TYPE
+    {
+        {
+            x <- x = x0 ;
+            y <- y0 = z0 ;
+            self ;
+        }
+    } ;
+} ;
+'''
+
+tc9 = '''
+class Main { } ;
+
+class A inherits B { } ;
+
+class C inherits D { } ;
+
+class B inherits D { } ;
+
+class D  inherits A { } ;
+'''
+
+tc12 = '''
+class Main {
+    main ( ) : Int {
+        0
+     } ;
+     boo ( ) : AUTO_TYPE {
+        foo ( 2 )
+     } ;
+     foo ( a : AUTO_TYPE ) : AUTO_TYPE {
+        a = 1
+     } ;
+} ; 
+'''
+
+tc13 = '''
+class Main {
+    main ( ) : Int {
+        1
+     } ;
+
+    iterative_fibonacci ( n : AUTO_TYPE ) : AUTO_TYPE {
+        let  i : AUTO_TYPE <- 2 , n1 : AUTO_TYPE <- 1 , n2 : AUTO_TYPE <- 1 in {
+            while i < n loop
+                let temp : AUTO_TYPE <- n2 in {
+                    n2 <- n2 + n1 ;
+                    n1 <- temp ;
+                    i <- i + 1 ;
+                }
+            pool ;
+            n2 ;
+            }
+        } ;
+} ;
+'''
+
+tc14 = '''
+class Foo inherits Bazz {
+     a : Razz <- case self of
+            n : Razz => ( new Bar ) ;
+            n : Foo => ( new Razz ) ;
+            n : Bar => n ;
+        esac ;
+
+     b : Int <- a . doh ( ) + doh ( ) + doh ( ) + printh ( ) ;
+
+     doh ( ) : Int { ( let i : Int <- h in { h <- h + 2 ; i ; } ) } ;
+
+} ;
+
+class Bar inherits Razz {
+
+     c : Int <- doh ( ) ;
+
+     d : Object <- printh ( ) ;
+} ;
+
+
+class Razz inherits Foo {
+
+     e : Bar <- case self of
+      n : Razz => ( new Bar ) ;
+      n : Bar => n ;
+    esac ;
+    
+    f : Int <- a @ Bazz . doh ( ) + g . doh ( ) + e . doh ( ) + doh ( ) + printh ( ) ;
+
+} ;
+
+class Bazz inherits IO {
+
+     h : Int <- 1 ;
+
+     g : Foo  <- case self of
+		     	n : Bazz => ( new Foo ) ; 
+		     	n : Razz => ( new Bar ) ;
+			n : Foo  => ( new Razz ) ;
+			n : Bar => n ;
+		  esac ;
+
+     i : Object <- printh ( ) ;
+
+     printh ( ) : Int { { out_int ( h ) ; 0 ; } } ;
+
+     doh ( ) : Int { (let i: Int <- h in { h <- h + 1 ; i ; } ) } ;
+} ;
+
+class Main {
+  a : Bazz <- new Bazz ;
+  b : Foo <- new Foo ;
+  c : Razz <- new Razz ;
+  d : Bar <- new Bar ;
+
+  main ( ) : String { " do nothing " } ;
+
 } ;
 '''
 

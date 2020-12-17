@@ -533,7 +533,6 @@ class TypeChecker:
                     self.errors.append(
                         INVALID_OPERATION % (left_type.name, right_type.name)
                     )
-
             return BoolType()
 
         int_type = self.context.get_type(IntType().name)

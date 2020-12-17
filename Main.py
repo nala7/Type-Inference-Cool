@@ -17,7 +17,10 @@ def run_pipeline(text):
     tokens = tokenize_text(text)
     parser = Serializer.load(os.getcwd() + "/compiled_parser")
 
-    parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
+    try:
+        parse, operations = parser([t.token_type for t in tokens], get_shift_reduce=True)
+    except:
+        return "Input not parsed. Please check your code"
 
     ret_text = ""
     ret_text += "==================== AST ====================== \n"
@@ -75,6 +78,7 @@ def run_example_files():
             fail.append(example_name)
 
     print(f"FAILING EXAMPLES: {fail}")
+    print(f"SUCCEDED EXAMPLES: {len(examples) - len(fail)}/{len(examples)}")
 
 
 if __name__ == "__main__":

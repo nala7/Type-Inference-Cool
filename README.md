@@ -9,6 +9,11 @@ Nuestro proyecto se encuentra en github y se puede acceder con el siguiente
 link: https://github.com/nala7/Type-Inference-Cool . La rama en la que se
 ecuentra la versión final es ALabBranch2.
 
+El proyecto se corre poniendo en consola:
+```
+streamlit run Visual.py
+```
+
 Para dar solución al problema nuestro proyecto se ejecuta en cuarto fases:
 - Tokenizer
 - TypeCollector
@@ -262,3 +267,5 @@ Infered Types {
 }
 ```
 En un recorrido por el __TypeBuilder__ no se debería detectar ningún error, pero una vez inferidos los tipos se detectan errores. Cuando se está visitando la declaración de la función __f__ en __B__ esta tendrá como tipo del argumento **Int**, que fue inferido en **A**. Al intentar realizar la asignación entonces estaremos intentando guardar un string en un entero.
+
+En el pr
